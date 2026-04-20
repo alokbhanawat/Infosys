@@ -62,7 +62,7 @@ function RegisterForm() {
       </div>
 
       {/* RIGHT SIDE IMAGE */}
-      <div className="image-section"></div>
+      <div className="image-section-register"></div>
 
     </div>
   );

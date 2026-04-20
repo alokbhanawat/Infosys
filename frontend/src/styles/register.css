@@ -108,10 +108,10 @@
   color: #64748b;
 }
 
-/* RIGHT IMAGE */
-.image-section {
+/* RIGHT IMAGE (REGISTER ONLY) */
+.image-section-register {
   width: 60%;
-  background: url("https://images.unsplash.com/photo-1521737604893-d14cc237f11d")
+  background: url("https://images.unsplash.com/photo-1522202176988-66273c2fd55f")
     no-repeat center center/cover;
 }
 
@@ -122,11 +122,11 @@
   }
 
   .form-section,
-  .image-section {
+  .image-section-register {
     width: 100%;
   }
 
-  .image-section {
+  .image-section-register {
     height: 300px;
   }
 }

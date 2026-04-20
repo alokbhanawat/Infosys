@@ -63,7 +63,7 @@ function LoginForm() {
       </div>
 
       {/* RIGHT SIDE IMAGE */}
-      <div className="image-section"></div>
+      <div className="image-section-login"></div>
 
     </div>
   );
