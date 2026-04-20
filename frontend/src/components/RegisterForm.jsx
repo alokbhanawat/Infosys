@@ -5,52 +5,47 @@ import "../styles/register.css";
 function RegisterForm() {
 
   const [formData, setFormData] = useState({
-      name:"",
-      email:"",
-      phone:"",
-      password:"",
-      confirmPassword:""
+    name: "",
+    email: "",
+    phone: "",
+    password: "",
+    confirmPassword: ""
   });
 
   const handleChange = (e) => {
-
     setFormData({
       ...formData,
       [e.target.name]: e.target.value
     });
-
   };
-
 
   const validateForm = () => {
 
-    if(!formData.name.trim()){
+    if (!formData.name.trim()) {
       alert("Name is required");
       return false;
     }
 
-    if(!formData.email.includes("@")){
+    if (!formData.email.includes("@")) {
       alert("Invalid email");
       return false;
     }
 
-    if(formData.phone.length < 10){
+    if (formData.phone.length < 10) {
       alert("Invalid phone number");
       return false;
     }
 
-    // Same rule as backend
     const passwordRegex =
-    /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/;
+      /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/;
 
-    if(!passwordRegex.test(formData.password)){
-      alert(
-       "Password must contain uppercase, lowercase, number and special character"
-      );
+    // ✅ FIXED ERROR HERE
+    if (!passwordRegex.test(formData.password)) {
+      alert("Password must contain uppercase, lowercase, number and special character");
       return false;
     }
 
-    if(formData.password !== formData.confirmPassword){
+    if (formData.password !== formData.confirmPassword) {
       alert("Passwords do not match");
       return false;
     }
@@ -58,18 +53,13 @@ function RegisterForm() {
     return true;
   };
 
-
   const handleSubmit = async (e) => {
-
     e.preventDefault();
 
-    if(!validateForm()){
-      return;
-    }
+    if (!validateForm()) return;
 
     try {
 
-      // Don't send confirmPassword to backend
       const payload = {
         name: formData.name,
         email: formData.email,
@@ -82,93 +72,86 @@ function RegisterForm() {
       alert("Registration Successful");
 
       setFormData({
-        name:"",
-        email:"",
-        phone:"",
-        password:"",
-        confirmPassword:""
+        name: "",
+        email: "",
+        phone: "",
+        password: "",
+        confirmPassword: ""
       });
 
     } catch (error) {
 
-  console.error(error);
-
-  if (error.response) {
-
-    console.log(error.response.data);
-
-    alert(
-      "Error: " +
-      JSON.stringify(error.response.data)
-    );
-
-  } else {
-
-    alert("Server connection error");
-
-  }
-
-}
-
+      if (error.response) {
+        alert("Error: " + JSON.stringify(error.response.data));
+      } else {
+        alert("Server connection error");
+      }
+    }
   };
 
+  return (
 
+    <div className="container">
 
- return (
+      {/* LEFT FORM */}
+      <div className="form-section">
 
-  <form
-    className="register-form"
-    onSubmit={handleSubmit}
-  >
+        <h2>Register</h2>
+        <p className="subtitle">Create your account</p>
 
-    <h2>Create Account</h2>
+        <form onSubmit={handleSubmit} className="register-form">
 
-    <input
-      name="name"
-      placeholder="Full Name"
-      value={formData.name}
-      onChange={handleChange}
-    />
+          <input
+            name="name"
+            placeholder="Full Name"
+            value={formData.name}
+            onChange={handleChange}
+          />
 
-    <input
-      type="email"
-      name="email"
-      placeholder="Email"
-      value={formData.email}
-      onChange={handleChange}
-    />
+          <input
+            type="email"
+            name="email"
+            placeholder="Email"
+            value={formData.email}
+            onChange={handleChange}
+          />
 
-    <input
-      name="phone"
-      placeholder="Phone Number"
-      value={formData.phone}
-      onChange={handleChange}
-    />
+          <input
+            name="phone"
+            placeholder="Phone Number"
+            value={formData.phone}
+            onChange={handleChange}
+          />
 
-    <input
-      type="password"
-      name="password"
-      placeholder="Password"
-      value={formData.password}
-      onChange={handleChange}
-    />
+          <input
+            type="password"
+            name="password"
+            placeholder="Password"
+            value={formData.password}
+            onChange={handleChange}
+          />
 
-    <input
-      type="password"
-      name="confirmPassword"
-      placeholder="Confirm Password"
-      value={formData.confirmPassword}
-      onChange={handleChange}
-    />
+          <input
+            type="password"
+            name="confirmPassword"
+            placeholder="Confirm Password"
+            value={formData.confirmPassword}
+            onChange={handleChange}
+          />
 
-    <button type="submit">
-      Register
-    </button>
+          <button type="submit">REGISTER</button>
 
-  </form>
+        </form>
 
- );
+        <p className="footer">2023 – All Rights Reserved</p>
 
+      </div>
+
+      {/* RIGHT IMAGE */}
+      <div className="image-section"></div>
+
+    </div>
+  );
 }
 
 export default RegisterForm;
