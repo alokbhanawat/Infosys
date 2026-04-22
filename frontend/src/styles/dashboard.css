@@ -1,0 +1,69 @@
+/* Full page background */
+.dashboard-container {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(135deg, #0f172a, #1e293b);
+  font-family: "Inter", sans-serif;
+}
+
+/* Card */
+.dashboard-card {
+  background: #ffffff;
+  padding: 40px 35px;
+  border-radius: 16px;
+  width: 350px;
+  text-align: center;
+
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  transition: 0.3s;
+}
+
+/* Hover effect */
+.dashboard-card:hover {
+  transform: translateY(-5px);
+}
+
+/* Heading */
+.dashboard-card h1 {
+  font-size: 26px;
+  color: #0f172a;
+  margin-bottom: 10px;
+}
+
+/* Email text */
+.dashboard-card p {
+  font-size: 15px;
+  color: #64748b;
+  margin-bottom: 25px;
+}
+
+/* Logout button */
+.logout-btn {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  color: white;
+
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+/* Hover */
+.logout-btn:hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
+}
+
+/* Responsive */
+@media (max-width: 500px) {
+  .dashboard-card {
+    width: 90%;
+    padding: 30px 20px;
+  }
+}

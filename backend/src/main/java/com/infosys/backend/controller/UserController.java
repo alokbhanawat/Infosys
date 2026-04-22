@@ -20,16 +20,19 @@ public class UserController {
         return userService.registerUser(user);
     }
 
-    // ✅ LOGIN
-    @PostMapping("/login")
-    public User loginUser(@RequestBody User user) {
+    // ✅ LOGIN (UPDATED)
+   @PostMapping("/login")
+public String loginUser(@RequestBody User user) {
+    System.out.println("EMAIL: " + user.getEmail());
+    System.out.println("PASSWORD: " + user.getPassword());
 
-        User loggedUser = userService.loginUser(user.getEmail(), user.getPassword());
+    return userService.loginUser(user.getEmail(), user.getPassword());
+}
 
-        if (loggedUser != null) {
-            return loggedUser;
-        } else {
-            throw new RuntimeException("Invalid email or password");
-        }
-    }
+@GetMapping("/profile")
+public String getProfile() {
+    return "Protected API working ✅";
+}
+
+
 }

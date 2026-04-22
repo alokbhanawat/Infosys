@@ -1,18 +1,38 @@
+import { jwtDecode } from "jwt-decode";
+import "../styles/dashboard.css";
+
 function Dashboard() {
 
-  const user = JSON.parse(localStorage.getItem("user"));
+  const token = localStorage.getItem("token");
+
+  let user = null;
+
+  try {
+    if (token) {
+      user = jwtDecode(token);
+    }
+  } catch (error) {
+    console.log("Invalid token");
+  }
 
   return (
-    <div>
-      <h1>Welcome {user?.name}</h1>
-      <p>Email: {user?.email}</p>
+    <div className="dashboard-container">
+      <div className="dashboard-card">
 
-      <button onClick={() => {
-        localStorage.removeItem("user");
-        window.location.href = "/login";
-      }}>
-        Logout
-      </button>
+        <h1>Welcome {user?.name || "User"}</h1>
+        <p>Email: {user?.sub || "Not available"}</p>
+
+        <button
+          className="logout-btn"
+          onClick={() => {
+            localStorage.removeItem("token");
+            window.location.href = "/login";
+          }}
+        >
+          Logout
+        </button>
+
+      </div>
     </div>
   );
 }

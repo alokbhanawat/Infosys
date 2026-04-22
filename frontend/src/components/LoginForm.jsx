@@ -21,9 +21,13 @@ function LoginForm() {
 
     try {
       const res = await loginUser(formData);
-      localStorage.setItem("user", JSON.stringify(res.data));
+
+      // ✅ STORE TOKEN
+      localStorage.setItem("token", res.data);
+
       alert("Login Successful");
       navigate("/dashboard");
+
     } catch (err) {
       alert("Invalid email or password");
     }
@@ -32,9 +36,7 @@ function LoginForm() {
   return (
     <div className="container">
 
-      {/* LEFT SIDE */}
       <div className="form-section">
-
         <h2>Login</h2>
         <p className="subtitle">Welcome back</p>
 
@@ -59,10 +61,8 @@ function LoginForm() {
         </form>
 
         <p className="footer">2026 – All Rights Reserved</p>
-
       </div>
 
-      {/* RIGHT SIDE IMAGE */}
       <div className="image-section-login"></div>
 
     </div>

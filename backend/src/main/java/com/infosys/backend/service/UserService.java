@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.infosys.backend.model.User;
 import com.infosys.backend.repository.UserRepository;
+import com.infosys.backend.security.JwtUtil;
 
 @Service
 public class UserService {
@@ -18,6 +19,9 @@ public class UserService {
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
+    @Autowired
+    private JwtUtil jwtUtil;
+
     // ✅ REGISTER
     public User registerUser(User user) {
         String hashedPassword = passwordEncoder.encode(user.getPassword());
@@ -25,8 +29,8 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    // ✅ LOGIN
-    public User loginUser(String email, String password) {
+    // ✅ LOGIN (UPDATED FOR JWT)
+    public String loginUser(String email, String password) {
 
         Optional<User> userOptional = userRepository.findByEmail(email);
 
@@ -36,10 +40,11 @@ public class UserService {
             boolean isMatch = passwordEncoder.matches(password, user.getPassword());
 
             if (isMatch) {
-                return user;
+                // 🔐 RETURN TOKEN INSTEAD OF USER
+                return jwtUtil.generateToken(user.getEmail(), user.getName());
             }
         }
 
-        return null;
+        throw new RuntimeException("Invalid email or password");
     }
 }
