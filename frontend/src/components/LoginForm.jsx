@@ -1,19 +1,24 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { loginUser } from "../services/authService";
 import "../styles/login.css";
 
 function LoginForm() {
-
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     email: "",
-    password: ""
+    password: "",
   });
+  const [message, setMessage] = useState("");
+  const [messageType, setMessageType] = useState("");
 
   const handleChange = (e) => {
-    setFormData({...formData, [e.target.name]: e.target.value});
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+    if (message) {
+      setMessage("");
+      setMessageType("");
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -22,26 +27,25 @@ function LoginForm() {
     try {
       const res = await loginUser(formData);
 
-      // ✅ STORE TOKEN
       localStorage.setItem("token", res.data);
-
-      alert("Login Successful");
-      navigate("/dashboard");
-
+      setMessage("Login successful.");
+      setMessageType("success");
+      setTimeout(() => {
+        navigate("/dashboard");
+      }, 800);
     } catch (err) {
-      alert("Invalid email or password");
+      setMessage("Invalid email or password.");
+      setMessageType("error");
     }
   };
 
   return (
     <div className="container">
-
       <div className="form-section">
         <h2>Login</h2>
         <p className="subtitle">Welcome back</p>
 
         <form onSubmit={handleSubmit} className="register-form">
-
           <input
             type="email"
             name="email"
@@ -57,14 +61,20 @@ function LoginForm() {
           />
 
           <button type="submit">Login</button>
-
         </form>
 
-        <p className="footer">2026 – All Rights Reserved</p>
+        {message && (
+          <p className={`form-message ${messageType}`}>{message}</p>
+        )}
+
+        <p className="auth-switch">
+          Don&apos;t have an account? <Link to="/register">Register</Link>
+        </p>
+
+        <p className="footer">2026 - All Rights Reserved</p>
       </div>
 
       <div className="image-section-login"></div>
-
     </div>
   );
 }
