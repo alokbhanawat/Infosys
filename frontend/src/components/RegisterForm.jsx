@@ -47,43 +47,53 @@ function RegisterForm() {
   };
 
   return (
-    <div className="container">
-      <div className="form-section">
-        <h2>Register</h2>
-        <p className="subtitle">Create your account</p>
+    <div className="auth-shell register-shell">
+      <section className="auth-hero register-hero">
+        <div className="hero-overlay"></div>
+        <div className="hero-content">
+          <h1>Register Here</h1>
+          <p className="hero-copy">Create your account and get started.</p>
+        </div>
+      </section>
 
-        <form onSubmit={handleSubmit} className="register-form">
-          <input name="name" placeholder="Name" onChange={handleChange} />
-          <input name="email" placeholder="Email" onChange={handleChange} />
-          <input name="phone" placeholder="Phone" onChange={handleChange} />
-          <input
-            type="password"
-            name="password"
-            placeholder="Password"
-            onChange={handleChange}
-          />
-          <input
-            type="password"
-            name="confirmPassword"
-            placeholder="Confirm Password"
-            onChange={handleChange}
-          />
+      <section className="auth-panel">
+        <div className="auth-card">
+          <h2>Register</h2>
+          <p className="subtitle">Create your account</p>
 
-          <button type="submit">Register</button>
-        </form>
+          <form onSubmit={handleSubmit} className="register-form">
+            <div className="input-grid">
+              <input name="name" placeholder="Full name" onChange={handleChange} />
+              <input name="email" placeholder="Email" onChange={handleChange} />
+            </div>
+            <input name="phone" placeholder="Phone number" onChange={handleChange} />
+            <input
+              type="password"
+              name="password"
+              placeholder="Create password"
+              onChange={handleChange}
+            />
+            <input
+              type="password"
+              name="confirmPassword"
+              placeholder="Confirm password"
+              onChange={handleChange}
+            />
 
-        {message && (
-          <p className={`form-message ${messageType}`}>{message}</p>
-        )}
+            <button type="submit">Create account</button>
+          </form>
 
-        <p className="auth-switch">
-          Already have an account? <Link to="/login">Login</Link>
-        </p>
+          {message && (
+            <p className={`form-message ${messageType}`}>{message}</p>
+          )}
 
-        <p className="footer">2026 - All Rights Reserved</p>
-      </div>
+          <p className="auth-switch">
+            Already have an account? <Link to="/login">Login</Link>
+          </p>
 
-      <div className="image-section-register"></div>
+          <p className="footer">2026 - All Rights Reserved</p>
+        </div>
+      </section>
     </div>
   );
 }

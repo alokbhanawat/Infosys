@@ -40,41 +40,49 @@ function LoginForm() {
   };
 
   return (
-    <div className="container">
-      <div className="form-section">
-        <h2>Login</h2>
-        <p className="subtitle">Welcome back</p>
+    <div className="auth-shell login-shell">
+      <section className="auth-panel">
+        <div className="auth-card">
+          <h2>Login</h2>
+          <p className="subtitle">Welcome back</p>
 
-        <form onSubmit={handleSubmit} className="register-form">
-          <input
-            type="email"
-            name="email"
-            placeholder="Email"
-            onChange={handleChange}
-          />
+          <form onSubmit={handleSubmit} className="register-form">
+            <input
+              type="email"
+              name="email"
+              placeholder="Email"
+              onChange={handleChange}
+            />
 
-          <input
-            type="password"
-            name="password"
-            placeholder="Password"
-            onChange={handleChange}
-          />
+            <input
+              type="password"
+              name="password"
+              placeholder="Password"
+              onChange={handleChange}
+            />
 
-          <button type="submit">Login</button>
-        </form>
+            <button type="submit">Login</button>
+          </form>
 
-        {message && (
-          <p className={`form-message ${messageType}`}>{message}</p>
-        )}
+          {message && (
+            <p className={`form-message ${messageType}`}>{message}</p>
+          )}
 
-        <p className="auth-switch">
-          Don&apos;t have an account? <Link to="/register">Register</Link>
-        </p>
+          <p className="auth-switch">
+            Don&apos;t have an account? <Link to="/register">Register</Link>
+          </p>
 
-        <p className="footer">2026 - All Rights Reserved</p>
-      </div>
+          <p className="footer">2026 - All Rights Reserved</p>
+        </div>
+      </section>
 
-      <div className="image-section-login"></div>
+      <section className="auth-hero login-hero">
+        <div className="hero-overlay"></div>
+        <div className="hero-content">
+          <h1>Login Here</h1>
+          <p className="hero-copy">Sign in to continue to your account.</p>
+        </div>
+      </section>
     </div>
   );
 }

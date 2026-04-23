@@ -1,69 +1,288 @@
-/* Full page background */
 .dashboard-container {
-  height: 100vh;
+  position: relative;
+  min-height: 100vh;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at top left, rgba(34, 197, 94, 0.18), transparent 24%),
+    radial-gradient(circle at bottom right, rgba(56, 189, 248, 0.16), transparent 22%),
+    linear-gradient(135deg, #0f172a, #132238 48%, #0b1c2f 100%);
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.dashboard-backdrop {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.04), transparent),
+    repeating-linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.03) 0,
+      rgba(255, 255, 255, 0.03) 1px,
+      transparent 1px,
+      transparent 120px
+    );
+  opacity: 0.45;
+}
+
+.dashboard-layout {
+  position: relative;
+  z-index: 1;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 48px 24px;
+}
+
+.simple-dashboard-layout {
+  min-height: 100vh;
   display: flex;
-  justify-content: center;
   align-items: center;
-  background: linear-gradient(135deg, #0f172a, #1e293b);
-  font-family: "Inter", sans-serif;
+  justify-content: center;
 }
 
-/* Card */
-.dashboard-card {
-  background: #ffffff;
-  padding: 40px 35px;
-  border-radius: 16px;
-  width: 350px;
+.simple-dashboard-card {
+  width: min(100%, 420px);
+  padding: 36px 32px;
   text-align: center;
-
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-  transition: 0.3s;
 }
 
-/* Hover effect */
-.dashboard-card:hover {
-  transform: translateY(-5px);
-}
-
-/* Heading */
-.dashboard-card h1 {
-  font-size: 26px;
+.simple-dashboard-card h1 {
+  margin: 0 0 12px;
+  font-size: 2rem;
   color: #0f172a;
-  margin-bottom: 10px;
 }
 
-/* Email text */
-.dashboard-card p {
-  font-size: 15px;
+.simple-dashboard-card p {
+  margin: 0 0 24px;
   color: #64748b;
-  margin-bottom: 25px;
+  font-size: 1rem;
 }
 
-/* Logout button */
+.dashboard-hero-card {
+  padding: 34px;
+  border-radius: 28px;
+  background: linear-gradient(135deg, rgba(15, 23, 42, 0.62), rgba(17, 94, 89, 0.35));
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  box-shadow: 0 30px 80px rgba(2, 6, 23, 0.35);
+  backdrop-filter: blur(16px);
+}
+
+.dashboard-topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+.dashboard-label {
+  display: inline-flex;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px solid rgba(110, 231, 183, 0.18);
+  color: #bbf7d0;
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.dashboard-hero-card h1 {
+  margin: 16px 0 12px;
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  line-height: 1.05;
+  color: #f8fafc;
+}
+
+.dashboard-subtitle {
+  max-width: 720px;
+  margin-bottom: 28px;
+  color: #cbd5e1;
+  line-height: 1.75;
+}
+
+.dashboard-highlight-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr 1fr;
+  gap: 18px;
+}
+
+.highlight-card,
+.dashboard-card {
+  border-radius: 24px;
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 18px 44px rgba(15, 23, 42, 0.16);
+}
+
+.highlight-card {
+  padding: 24px;
+}
+
+.highlight-card span {
+  display: block;
+  margin-bottom: 10px;
+  color: #64748b;
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.highlight-card strong {
+  display: block;
+  font-size: 1.6rem;
+  color: #0f172a;
+}
+
+.highlight-card p {
+  margin-top: 10px;
+  color: #64748b;
+  line-height: 1.65;
+}
+
+.spotlight {
+  background: linear-gradient(135deg, #ffffff, #effdf6);
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 22px;
+  margin-top: 22px;
+}
+
+.dashboard-card {
+  padding: 28px;
+}
+
+.section-heading span {
+  display: inline-block;
+  margin-bottom: 10px;
+  color: #64748b;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+
+.section-heading h2 {
+  margin: 0;
+  color: #0f172a;
+  font-size: 1.55rem;
+}
+
+.progress-list {
+  display: grid;
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.progress-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  align-items: center;
+}
+
+.progress-copy strong {
+  display: block;
+  margin-bottom: 6px;
+  color: #111827;
+}
+
+.progress-copy span {
+  color: #64748b;
+  font-size: 0.92rem;
+  line-height: 1.6;
+}
+
+.progress-row b {
+  color: #0f172a;
+  font-size: 1rem;
+}
+
+.progress-bar {
+  height: 12px;
+  border-radius: 999px;
+  background: #e2e8f0;
+  overflow: hidden;
+}
+
+.progress-bar span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(135deg, #10b981, #34d399);
+}
+
+.progress-bar.warm span {
+  background: linear-gradient(135deg, #f97316, #fb923c);
+}
+
+.insight-list {
+  display: grid;
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.insight-item {
+  padding: 18px;
+  border-radius: 18px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+}
+
+.insight-item strong {
+  display: block;
+  margin-bottom: 8px;
+  color: #0f172a;
+}
+
+.insight-item p {
+  color: #64748b;
+  line-height: 1.6;
+}
+
 .logout-btn {
-  width: 100%;
-  padding: 12px;
+  padding: 12px 18px;
   border: none;
-  border-radius: 8px;
-
-  background: linear-gradient(135deg, #ef4444, #dc2626);
-  color: white;
-
-  font-weight: 600;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #ef4444, #f97316);
+  color: #fff;
+  font-weight: 700;
   cursor: pointer;
-  transition: 0.3s;
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    opacity 0.25s ease;
 }
 
-/* Hover */
 .logout-btn:hover {
-  opacity: 0.9;
   transform: translateY(-2px);
+  box-shadow: 0 14px 24px rgba(239, 68, 68, 0.22);
 }
 
-/* Responsive */
-@media (max-width: 500px) {
-  .dashboard-card {
-    width: 90%;
-    padding: 30px 20px;
+@media (max-width: 960px) {
+  .dashboard-highlight-grid,
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .dashboard-topbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .logout-btn {
+    width: 100%;
+  }
+}
+
+@media (max-width: 640px) {
+  .dashboard-layout {
+    padding: 24px 16px;
+  }
+
+  .dashboard-hero-card,
+  .dashboard-card,
+  .highlight-card {
+    padding: 22px;
   }
 }

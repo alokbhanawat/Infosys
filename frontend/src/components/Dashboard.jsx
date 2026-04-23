@@ -2,9 +2,7 @@ import { jwtDecode } from "jwt-decode";
 import "../styles/dashboard.css";
 
 function Dashboard() {
-
   const token = localStorage.getItem("token");
-
   let user = null;
 
   try {
@@ -17,21 +15,22 @@ function Dashboard() {
 
   return (
     <div className="dashboard-container">
-      <div className="dashboard-card">
+      <div className="dashboard-backdrop"></div>
+      <div className="dashboard-layout simple-dashboard-layout">
+        <div className="dashboard-card simple-dashboard-card">
+          <h1>{user?.name || "User"}</h1>
+          <p>{user?.sub || "Not available"}</p>
 
-        <h1>Welcome {user?.name || "User"}</h1>
-        <p>Email: {user?.sub || "Not available"}</p>
-
-        <button
-          className="logout-btn"
-          onClick={() => {
-            localStorage.removeItem("token");
-            window.location.href = "/login";
-          }}
-        >
-          Logout
-        </button>
-
+          <button
+            className="logout-btn"
+            onClick={() => {
+              localStorage.removeItem("token");
+              window.location.href = "/login";
+            }}
+          >
+            Logout
+          </button>
+        </div>
       </div>
     </div>
   );
