@@ -1,5 +1,4 @@
 package com.infosys.backend.controller;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,13 +13,13 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    // ✅ REGISTER
+    
     @PostMapping("/register")
     public User registerUser(@RequestBody User user) {
         return userService.registerUser(user);
     }
 
-    // ✅ LOGIN (UPDATED)
+    
    @PostMapping("/login")
 public String loginUser(@RequestBody User user) {
     System.out.println("EMAIL: " + user.getEmail());
@@ -29,9 +28,9 @@ public String loginUser(@RequestBody User user) {
     return userService.loginUser(user.getEmail(), user.getPassword());
 }
 
-@GetMapping("/profile")
+@GetMapping("/dashboard")
 public String getProfile() {
-    return "Protected API working ✅";
+    return "Protected API working ";
 }
 
 
