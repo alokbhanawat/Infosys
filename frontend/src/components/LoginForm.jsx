@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { loginUser } from "../services/authService";
+import { clearStoredToken } from "../utils/auth";
 import "../styles/login.css";
 
 function LoginForm() {
@@ -27,6 +28,7 @@ function LoginForm() {
     try {
       const res = await loginUser(formData);
 
+      clearStoredToken();
       localStorage.setItem("token", res.data);
       setMessage("Login successful.");
       setMessageType("success");

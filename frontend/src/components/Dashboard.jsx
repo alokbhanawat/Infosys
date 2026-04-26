@@ -1,17 +1,15 @@
-import { jwtDecode } from "jwt-decode";
+import { useNavigate } from "react-router-dom";
 import "../styles/dashboard.css";
+import { clearStoredToken, getCurrentUser } from "../utils/auth";
 
 function Dashboard() {
-  const token = localStorage.getItem("token");
-  let user = null;
+  const navigate = useNavigate();
+  const user = getCurrentUser();
 
-  try {
-    if (token) {
-      user = jwtDecode(token);
-    }
-  } catch (error) {
-    console.log("Invalid token");
-  }
+  const handleLogout = () => {
+    clearStoredToken();
+    navigate("/login", { replace: true });
+  };
 
   return (
     <div className="dashboard-container">
@@ -23,10 +21,7 @@ function Dashboard() {
 
           <button
             className="logout-btn"
-            onClick={() => {
-              localStorage.removeItem("token");
-              window.location.href = "/login";
-            }}
+            onClick={handleLogout}
           >
             Logout
           </button>
