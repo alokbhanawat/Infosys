@@ -21,7 +21,7 @@ export function isTokenValid(token = getStoredToken()) {
     }
 
     return decodedToken.exp * 1000 > Date.now();
-  } catch (error) {
+  } catch {
     return false;
   }
 }
@@ -35,7 +35,15 @@ export function getCurrentUser() {
 
   try {
     return jwtDecode(token);
-  } catch (error) {
+  } catch {
     return null;
   }
+}
+
+export function getHomeRoute(user = getCurrentUser()) {
+  if (!user) {
+    return "/login";
+  }
+
+  return user.role === "ADMIN" ? "/admin" : "/dashboard";
 }

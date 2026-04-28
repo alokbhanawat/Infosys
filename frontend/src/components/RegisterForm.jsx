@@ -10,6 +10,7 @@ function RegisterForm() {
     name: "",
     email: "",
     phone: "",
+    adminKey: "",
     password: "",
     confirmPassword: "",
   });
@@ -27,6 +28,12 @@ function RegisterForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (!formData.name || !formData.email || !formData.phone || !formData.password) {
+      setMessage("Please fill in all required fields.");
+      setMessageType("error");
+      return;
+    }
+
     if (formData.password !== formData.confirmPassword) {
       setMessage("Passwords do not match.");
       setMessageType("error");
@@ -34,14 +41,24 @@ function RegisterForm() {
     }
 
     try {
-      await registerUser(formData);
-      setMessage("Registration successful.");
+      const payload = {
+        name: formData.name.trim(),
+        email: formData.email.trim(),
+        phone: formData.phone.trim(),
+        password: formData.password,
+        adminKey: formData.adminKey.trim(),
+      };
+
+      const res = await registerUser(payload);
+      const role = res?.data?.role || "USER";
+
+      setMessage(`Registration successful. Role assigned: ${role}.`);
       setMessageType("success");
       setTimeout(() => {
         navigate("/login");
       }, 800);
     } catch (err) {
-      setMessage("Error registering.");
+      setMessage(err?.response?.data?.message || "Error registering.");
       setMessageType("error");
     }
   };
@@ -63,20 +80,44 @@ function RegisterForm() {
 
           <form onSubmit={handleSubmit} className="register-form">
             <div className="input-grid">
-              <input name="name" placeholder="Full name" onChange={handleChange} />
-              <input name="email" placeholder="Email" onChange={handleChange} />
+              <input
+                name="name"
+                placeholder="Full name"
+                value={formData.name}
+                onChange={handleChange}
+              />
+              <input
+                type="email"
+                name="email"
+                placeholder="Email"
+                value={formData.email}
+                onChange={handleChange}
+              />
             </div>
-            <input name="phone" placeholder="Phone number" onChange={handleChange} />
+            <input
+              name="phone"
+              placeholder="Phone number"
+              value={formData.phone}
+              onChange={handleChange}
+            />
+            <input
+              name="adminKey"
+              placeholder="Admin key (optional)"
+              value={formData.adminKey}
+              onChange={handleChange}
+            />
             <input
               type="password"
               name="password"
               placeholder="Create password"
+              value={formData.password}
               onChange={handleChange}
             />
             <input
               type="password"
               name="confirmPassword"
               placeholder="Confirm password"
+              value={formData.confirmPassword}
               onChange={handleChange}
             />
 

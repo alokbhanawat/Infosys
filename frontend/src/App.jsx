@@ -15,8 +15,12 @@ function App() {
           <Route path="/register" element={<RegisterForm />} />
         </Route>
 
-        <Route element={<ProtectedRoute />}>
-          <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/dashboard" element={<ProtectedRoute allowedRoles={["USER"]} />}>
+          <Route element={<Dashboard />} index />
+        </Route>
+
+        <Route path="/admin" element={<ProtectedRoute allowedRoles={["ADMIN"]} />}>
+          <Route element={<Dashboard />} index />
         </Route>
 
         <Route path="*" element={<Navigate to="/" replace />} />

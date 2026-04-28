@@ -1,8 +1,16 @@
 package com.infosys.backend.controller;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
 
-import com.infosys.backend.model.User;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.infosys.backend.dto.AuthResponse;
+import com.infosys.backend.dto.LoginRequest;
+import com.infosys.backend.dto.RegisterRequest;
+import com.infosys.backend.dto.UserResponse;
 import com.infosys.backend.service.UserService;
 
 @RestController
@@ -10,28 +18,24 @@ import com.infosys.backend.service.UserService;
 @CrossOrigin("*")
 public class UserController {
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
-    
-    @PostMapping("/register")
-    public User registerUser(@RequestBody User user) {
-        return userService.registerUser(user);
+    public UserController(UserService userService) {
+        this.userService = userService;
     }
 
-    
-   @PostMapping("/login")
-public String loginUser(@RequestBody User user) {
-    System.out.println("EMAIL: " + user.getEmail());
-    System.out.println("PASSWORD: " + user.getPassword());
+    @PostMapping("/register")
+    public UserResponse registerUser(@RequestBody RegisterRequest request) {
+        return new UserResponse(userService.registerUser(request));
+    }
 
-    return userService.loginUser(user.getEmail(), user.getPassword());
-}
+    @PostMapping("/login")
+    public AuthResponse loginUser(@RequestBody LoginRequest request) {
+        return new AuthResponse(userService.loginUser(request.getEmail(), request.getPassword()));
+    }
 
-@GetMapping("/dashboard")
-public String getProfile() {
-    return "Protected API working ";
-}
-
-
+    @GetMapping("/dashboard")
+    public String getProfile() {
+        return "Protected API working ";
+    }
 }

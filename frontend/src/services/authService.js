@@ -1,13 +1,11 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:8080/api/users";
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "/api";
 
-// ✅ Create axios instance
 const api = axios.create({
-  baseURL: API_URL,
+  baseURL: API_BASE_URL,
 });
 
-// ✅ Add interceptor (AUTO ADD TOKEN)
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem("token");
 
@@ -18,9 +16,10 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-// APIs
-export const registerUser = (data) => api.post("/register", data);
-export const loginUser = (data) => api.post("/login", data);
+export const registerUser = (data) => api.post("/users/register", data);
+export const loginUser = (data) => api.post("/users/login", data);
+export const getDashboardMessage = () => api.get("/users/dashboard");
+export const getProducts = () => api.get("/products/all");
+export const addProduct = (data) => api.post("/products/add", data);
 
-// Example protected API
-export const getUserData = () => api.get("/profile");
+export default api;

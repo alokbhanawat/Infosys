@@ -7,8 +7,8 @@ public class JwtAuthenticationToken extends AbstractAuthenticationToken {
 
     private final String email;
 
-    public JwtAuthenticationToken(String email) {
-        super(AuthorityUtils.NO_AUTHORITIES); // ✅ FIX HERE
+    public JwtAuthenticationToken(String email, String role) {
+        super(AuthorityUtils.createAuthorityList("ROLE_" + role));
         this.email = email;
         setAuthenticated(true);
     }

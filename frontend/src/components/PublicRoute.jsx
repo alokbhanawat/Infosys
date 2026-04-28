@@ -1,9 +1,9 @@
 import { Navigate, Outlet } from "react-router-dom";
-import { isTokenValid } from "../utils/auth";
+import { getCurrentUser, getHomeRoute, isTokenValid } from "../utils/auth";
 
 function PublicRoute() {
   if (isTokenValid()) {
-    return <Navigate to="/dashboard" replace />;
+    return <Navigate to={getHomeRoute(getCurrentUser())} replace />;
   }
 
   return <Outlet />;

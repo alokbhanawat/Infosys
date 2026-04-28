@@ -19,13 +19,18 @@ public class User {
 
     private String phone;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 20, columnDefinition = "varchar(20) default 'USER'")
+    private Role role = Role.USER;
+
     public User() {}
 
-    public User(String name, String email, String password, String phone) {
+    public User(String name, String email, String password, String phone, Role role) {
         this.name = name;
         this.email = email;
         this.password = password;
         this.phone = phone;
+        this.role = role;
     }
 
     public int getUserId() { return userId; }
@@ -42,4 +47,7 @@ public class User {
 
     public String getPhone() { return phone; }
     public void setPhone(String phone) { this.phone = phone; }
+
+    public Role getRole() { return role; }
+    public void setRole(Role role) { this.role = role; }
 }

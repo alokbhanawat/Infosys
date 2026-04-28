@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { loginUser } from "../services/authService";
-import { clearStoredToken } from "../utils/auth";
+import { clearStoredToken, getCurrentUser, getHomeRoute } from "../utils/auth";
 import "../styles/login.css";
 
 function LoginForm() {
@@ -27,16 +27,22 @@ function LoginForm() {
 
     try {
       const res = await loginUser(formData);
+      const token = res?.data?.token;
+
+      if (!token) {
+        throw new Error("Token missing in response");
+      }
 
       clearStoredToken();
-      localStorage.setItem("token", res.data);
+      localStorage.setItem("token", token);
+      const user = getCurrentUser();
       setMessage("Login successful.");
       setMessageType("success");
       setTimeout(() => {
-        navigate("/dashboard");
+        navigate(getHomeRoute(user), { replace: true });
       }, 800);
     } catch (err) {
-      setMessage("Invalid email or password.");
+      setMessage(err?.response?.data?.message || "Invalid email or password.");
       setMessageType("error");
     }
   };
