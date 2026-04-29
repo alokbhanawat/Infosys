@@ -1,5 +1,6 @@
 package com.infosys.backend.controller;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,17 +28,37 @@ public class ProductController {
     }
 
     @GetMapping
-    public List<Product> getAllProducts() {
-        return productService.getAllProducts();
+    public List<Product> getAllProducts(
+            @RequestParam(value = "search", required = false) String search,
+            @RequestParam(value = "category", required = false) String category,
+            @RequestParam(value = "minPrice", required = false) BigDecimal minPrice,
+            @RequestParam(value = "maxPrice", required = false) BigDecimal maxPrice,
+            @RequestParam(value = "inStock", required = false) Boolean inStock) {
+        return productService.filterActiveProducts(search, category, minPrice, maxPrice, inStock);
     }
 
     @GetMapping("/all")
-    public List<Product> getAllProductsAlias() {
-        return productService.getAllProducts();
+    public List<Product> getAllProductsAlias(
+            @RequestParam(value = "search", required = false) String search,
+            @RequestParam(value = "category", required = false) String category,
+            @RequestParam(value = "minPrice", required = false) BigDecimal minPrice,
+            @RequestParam(value = "maxPrice", required = false) BigDecimal maxPrice,
+            @RequestParam(value = "inStock", required = false) Boolean inStock) {
+        return productService.filterActiveProducts(search, category, minPrice, maxPrice, inStock);
     }
 
     @GetMapping("/getAll")
-    public List<Product> getAllProductsLegacyAlias() {
-        return productService.getAllProducts();
+    public List<Product> getAllProductsLegacyAlias(
+            @RequestParam(value = "search", required = false) String search,
+            @RequestParam(value = "category", required = false) String category,
+            @RequestParam(value = "minPrice", required = false) BigDecimal minPrice,
+            @RequestParam(value = "maxPrice", required = false) BigDecimal maxPrice,
+            @RequestParam(value = "inStock", required = false) Boolean inStock) {
+        return productService.filterActiveProducts(search, category, minPrice, maxPrice, inStock);
+    }
+
+    @GetMapping("/{id}")
+    public Product getProductById(@PathVariable Long id) {
+        return productService.getActiveProductById(id);
     }
 }

@@ -45,5 +45,5 @@ export function getHomeRoute(user = getCurrentUser()) {
     return "/login";
   }
 
-  return user.role === "ADMIN" ? "/admin" : "/dashboard";
+  return user.role === "ADMIN" ? "/admin" : "/products";
 }

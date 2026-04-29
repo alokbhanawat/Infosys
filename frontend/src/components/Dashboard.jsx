@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/dashboard.css";
+import ProductCatalog from "./ProductCatalog";
+import ProductFilters from "./ProductFilters";
 import { clearStoredToken, getCurrentUser } from "../utils/auth";
 import {
   addProduct,
-  getDashboardMessage,
+  getProtectedProductsMessage,
   getProducts,
 } from "../services/authService";
 
@@ -14,9 +16,12 @@ function Dashboard() {
   const isAdmin = user?.role === "ADMIN";
   const [statusMessage, setStatusMessage] = useState("Loading protected data...");
   const [products, setProducts] = useState([]);
+  const [catalogLoading, setCatalogLoading] = useState(false);
   const [feedback, setFeedback] = useState("");
   const [feedbackType, setFeedbackType] = useState("");
+  const [catalogFeedback, setCatalogFeedback] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showProductForm, setShowProductForm] = useState(false);
   const [productForm, setProductForm] = useState({
     name: "",
     description: "",
@@ -24,6 +29,13 @@ function Dashboard() {
     stock: "",
     category: "",
     imageUrl: "",
+  });
+  const [filters, setFilters] = useState({
+    search: "",
+    category: "",
+    minPrice: "",
+    maxPrice: "",
+    inStock: false,
   });
 
   const getErrorMessage = (error, fallbackMessage) => {
@@ -44,34 +56,33 @@ function Dashboard() {
     return fallbackMessage;
   };
 
-  const loadProducts = async () => {
+  const loadProducts = async (appliedFilters = filters) => {
+    setCatalogLoading(true);
     try {
-      const productsRes = await getProducts();
+      const productsRes = await getProducts(appliedFilters);
       setProducts(Array.isArray(productsRes.data) ? productsRes.data : []);
+      setCatalogFeedback("");
     } catch (error) {
-      setFeedback(getErrorMessage(error, "Unable to load products."));
-      setFeedbackType("error");
+      setCatalogFeedback(getErrorMessage(error, "Unable to load products."));
+    } finally {
+      setCatalogLoading(false);
     }
   };
 
   useEffect(() => {
-    const loadDashboard = async () => {
+    const loadProtectedProducts = async () => {
       try {
-        const dashboardRes = await getDashboardMessage();
-        setStatusMessage(dashboardRes.data || "Protected API working.");
+        const productsRes = await getProtectedProductsMessage();
+        setStatusMessage(productsRes.data || "Protected API working.");
       } catch {
-        setStatusMessage("Unable to load protected dashboard data.");
-      }
-
-      if (!isAdmin) {
-        return;
+        setStatusMessage("Unable to load protected products data.");
       }
 
       await loadProducts();
     };
 
-    loadDashboard();
-  }, [isAdmin]);
+    loadProtectedProducts();
+  }, []);
 
   const handleLogout = () => {
     clearStoredToken();
@@ -83,6 +94,33 @@ function Dashboard() {
       ...current,
       [e.target.name]: e.target.value,
     }));
+  };
+
+  const handleFilterChange = (e) => {
+    const { name, type, checked, value } = e.target;
+
+    setFilters((current) => ({
+      ...current,
+      [name]: type === "checkbox" ? checked : value,
+    }));
+  };
+
+  const handleFilterSubmit = async (e) => {
+    e.preventDefault();
+    await loadProducts(filters);
+  };
+
+  const handleResetFilters = async () => {
+    const resetFilters = {
+      search: "",
+      category: "",
+      minPrice: "",
+      maxPrice: "",
+      inStock: false,
+    };
+
+    setFilters(resetFilters);
+    await loadProducts(resetFilters);
   };
 
   const handleProductSubmit = async (e) => {
@@ -108,7 +146,7 @@ function Dashboard() {
         stock,
       });
 
-      await loadProducts();
+      await loadProducts(filters);
       setProductForm({
         name: "",
         description: "",
@@ -119,6 +157,7 @@ function Dashboard() {
       });
       setFeedback("Product added successfully.");
       setFeedbackType("success");
+      setShowProductForm(false);
     } catch (error) {
       setFeedback(getErrorMessage(error, "Unable to add product."));
       setFeedbackType("error");
@@ -166,110 +205,98 @@ function Dashboard() {
         </section>
 
         {isAdmin && (
-          <section className="dashboard-grid admin-grid">
-            <article className="dashboard-card">
-              <div className="section-heading">
-                <span>Admin</span>
-                <h2>Add product</h2>
+          <section className="admin-workspace">
+            <article
+              className={`dashboard-card admin-panel-card ${showProductForm ? "admin-panel-card-expanded" : ""}`}
+            >
+              <div className="admin-panel-header">
+                <button
+                  type="button"
+                  className="primary-btn compact-btn"
+                  onClick={() => setShowProductForm((current) => !current)}
+                >
+                  {showProductForm ? "Close form" : "Add product"}
+                </button>
               </div>
 
-              <form className="product-form" onSubmit={handleProductSubmit}>
-                <div className="input-grid">
-                  <input
-                    name="name"
-                    placeholder="Product name"
-                    value={productForm.name}
+              {showProductForm && (
+                <form className="product-form compact-form" onSubmit={handleProductSubmit}>
+                  <div className="input-grid">
+                    <input
+                      name="name"
+                      placeholder="Product name"
+                      value={productForm.name}
+                      onChange={handleProductChange}
+                      required
+                    />
+                    <input
+                      name="category"
+                      placeholder="Category"
+                      value={productForm.category}
+                      onChange={handleProductChange}
+                    />
+                  </div>
+                  <textarea
+                    name="description"
+                    placeholder="Description"
+                    value={productForm.description}
                     onChange={handleProductChange}
-                    required
+                    rows="4"
                   />
+                  <div className="input-grid">
+                    <input
+                      type="number"
+                      min="0"
+                      step="0.01"
+                      name="price"
+                      placeholder="Price"
+                      value={productForm.price}
+                      onChange={handleProductChange}
+                      required
+                    />
+                    <input
+                      type="number"
+                      min="0"
+                      name="stock"
+                      placeholder="Stock"
+                      value={productForm.stock}
+                      onChange={handleProductChange}
+                      required
+                    />
+                  </div>
                   <input
-                    name="category"
-                    placeholder="Category"
-                    value={productForm.category}
+                    name="imageUrl"
+                    placeholder="Image URL"
+                    value={productForm.imageUrl}
                     onChange={handleProductChange}
                   />
-                </div>
-                <textarea
-                  name="description"
-                  placeholder="Description"
-                  value={productForm.description}
-                  onChange={handleProductChange}
-                  rows="4"
-                />
-                <div className="input-grid">
-                  <input
-                    type="number"
-                    min="0"
-                    step="0.01"
-                    name="price"
-                    placeholder="Price"
-                    value={productForm.price}
-                    onChange={handleProductChange}
-                    required
-                  />
-                  <input
-                    type="number"
-                    min="0"
-                    name="stock"
-                    placeholder="Stock"
-                    value={productForm.stock}
-                    onChange={handleProductChange}
-                    required
-                  />
-                </div>
-                <input
-                  name="imageUrl"
-                  placeholder="Image URL"
-                  value={productForm.imageUrl}
-                  onChange={handleProductChange}
-                />
-                <button type="submit" className="primary-btn" disabled={isSubmitting}>
-                  {isSubmitting ? "Saving..." : "Add product"}
-                </button>
-              </form>
+                  <button type="submit" className="primary-btn" disabled={isSubmitting}>
+                    {isSubmitting ? "Saving..." : "Save product"}
+                  </button>
+                </form>
+              )}
 
               {feedback && <p className={`form-message ${feedbackType}`}>{feedback}</p>}
-            </article>
-
-            <article className="dashboard-card">
-              <div className="section-heading">
-                <span>Catalog</span>
-                <h2>Current products</h2>
-              </div>
-
-              <button type="button" className="secondary-btn" onClick={loadProducts}>
-                Refresh products
-              </button>
-
-              <div className="product-list">
-                {products.length === 0 ? (
-                  <p className="empty-state">No products found yet.</p>
-                ) : (
-                  products.map((product) => (
-                    <div key={product.id} className="product-item">
-                      <div>
-                        <strong>{product.name}</strong>
-                        <p>{product.description || "No description provided."}</p>
-                      </div>
-                      <div className="product-meta">
-                        <span>{product.category || "Uncategorized"}</span>
-                        <span>Rs. {product.price}</span>
-                        <span>Stock: {product.stock}</span>
-                      </div>
-                    </div>
-                  ))
-                )}
-              </div>
             </article>
           </section>
         )}
 
-        {!isAdmin && (
-          <div className="dashboard-card access-note">
-            Admin-only product management is hidden because your current JWT role is{" "}
-            {user?.role || "USER"}.
-          </div>
-        )}
+        <div className="catalog-layout">
+          <ProductFilters
+            filters={filters}
+            catalogLoading={catalogLoading}
+            onFilterChange={handleFilterChange}
+            onFilterSubmit={handleFilterSubmit}
+            onResetFilters={handleResetFilters}
+          />
+          <ProductCatalog
+            isAdmin={isAdmin}
+            products={products}
+            catalogLoading={catalogLoading}
+            catalogFeedback={catalogFeedback}
+            onRefresh={() => loadProducts(filters)}
+          />
+        </div>
       </div>
     </div>
   );

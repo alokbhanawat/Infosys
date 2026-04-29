@@ -4,6 +4,8 @@ import LoginForm from "./components/LoginForm";
 import Dashboard from "./components/Dashboard";
 import ProtectedRoute from "./components/ProtectedRoute";
 import PublicRoute from "./components/PublicRoute";
+import ProductDetailPage from "./pages/ProductDetailPage";
+import ProductsPage from "./pages/ProductsPage";
 
 function App() {
   return (
@@ -15,8 +17,9 @@ function App() {
           <Route path="/register" element={<RegisterForm />} />
         </Route>
 
-        <Route path="/dashboard" element={<ProtectedRoute allowedRoles={["USER"]} />}>
-          <Route element={<Dashboard />} index />
+        <Route path="/products" element={<ProtectedRoute allowedRoles={["USER"]} />}>
+          <Route element={<ProductsPage />} index />
+          <Route path=":productId" element={<ProductDetailPage />} />
         </Route>
 
         <Route path="/admin" element={<ProtectedRoute allowedRoles={["ADMIN"]} />}>

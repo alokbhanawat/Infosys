@@ -34,7 +34,7 @@ public class UserController {
         return new AuthResponse(userService.loginUser(request.getEmail(), request.getPassword()));
     }
 
-    @GetMapping("/dashboard")
+    @GetMapping("/products")
     public String getProfile() {
         return "Protected API working ";
     }
