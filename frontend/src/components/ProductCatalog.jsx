@@ -15,8 +15,10 @@ function ProductCatalog({
   onDecreaseQuantity,
   onIncreaseQuantity,
   compactQuantity = false,
+  showAddToCart = false,
+  onAddToCart,
 }) {
-  const renderProductCard = (product) => (
+  const renderProductCardBody = (product) => (
     <>
       <div className="product-visual">
         {product.imageUrl ? (
@@ -36,32 +38,7 @@ function ProductCatalog({
       <div className="product-meta">
         <span>{product.category || "Uncategorized"}</span>
         <span>Rs. {product.price}</span>
-        {clickableCards ? (
-          <div
-            className={`quantity-picker ${compactQuantity ? "quantity-picker-compact" : ""}`}
-            onClick={(event) => event.preventDefault()}
-          >
-            <button
-              type="button"
-              className="quantity-btn"
-              onClick={() => onDecreaseQuantity?.(product)}
-              aria-label={`Decrease quantity for ${product.name}`}
-            >
-              -
-            </button>
-            <span className="quantity-value">{quantities[product.id] ?? 1}</span>
-            <button
-              type="button"
-              className="quantity-btn"
-              onClick={() => onIncreaseQuantity?.(product)}
-              aria-label={`Increase quantity for ${product.name}`}
-            >
-              +
-            </button>
-          </div>
-        ) : (
-          <span>Stock: {product.stock}</span>
-        )}
+        {isAdmin ? <span>Stock: {product.stock}</span> : null}
       </div>
     </>
   );
@@ -74,9 +51,11 @@ function ProductCatalog({
           <h2>{heading || (isAdmin ? "Product showcase" : "Browse products")}</h2>
         </div>
 
-        <button type="button" className="secondary-btn header-btn" onClick={onRefresh}>
-          {catalogLoading ? "Refreshing..." : "Refresh products"}
-        </button>
+        <div className="catalog-header-actions">
+          <button type="button" className="secondary-btn header-btn" onClick={onRefresh}>
+            {catalogLoading ? "Refreshing..." : "Refresh products"}
+          </button>
+        </div>
       </div>
 
       {catalogFeedback && <p className="form-message error">{catalogFeedback}</p>}
@@ -96,11 +75,44 @@ function ProductCatalog({
           products.map((product) => (
             <article key={product.id} className="product-item">
               {clickableCards ? (
-                <Link className="product-card-link" to={`${detailBasePath}/${product.id}`}>
-                  {renderProductCard(product)}
-                </Link>
+                <>
+                  <Link className="product-card-link" to={`${detailBasePath}/${product.id}`}>
+                    {renderProductCardBody(product)}
+                  </Link>
+
+                  <div className="product-card-actions">
+                    <div className={`quantity-picker ${compactQuantity ? "quantity-picker-compact" : ""}`}>
+                      <button
+                        type="button"
+                        className="quantity-btn"
+                        onClick={() => onDecreaseQuantity?.(product)}
+                        aria-label={`Decrease quantity for ${product.name}`}
+                      >
+                        -
+                      </button>
+                      <span className="quantity-value">{quantities[product.id] ?? 1}</span>
+                      <button
+                        type="button"
+                        className="quantity-btn"
+                        onClick={() => onIncreaseQuantity?.(product)}
+                        aria-label={`Increase quantity for ${product.name}`}
+                      >
+                        +
+                      </button>
+                    </div>
+
+                    <button
+                      type="button"
+                      className="primary-btn product-cart-btn"
+                      onClick={() => onAddToCart?.(product)}
+                      disabled={Number(product.stock) <= 0}
+                    >
+                      {Number(product.stock) > 0 ? "Add to cart" : "Out of stock"}
+                    </button>
+                  </div>
+                </>
               ) : (
-                renderProductCard(product)
+                renderProductCardBody(product)
               )}
             </article>
           ))

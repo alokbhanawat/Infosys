@@ -94,12 +94,7 @@ function ProductsPage() {
       <div className="storefront-shell">
         <section className="storefront-hero">
           <div className="storefront-hero-copy">
-            <span className="storefront-badge">Fresh picks for your store</span>
             <h1>Shop Products</h1>
-            <p>
-              Browse products, refine results with filters, and open any card to explore the full
-              product details on its own page.
-            </p>
           </div>
 
           <div className="storefront-hero-side">
@@ -147,6 +142,7 @@ function ProductsPage() {
             quantities={quantities}
             onDecreaseQuantity={handleDecreaseQuantity}
             onIncreaseQuantity={handleIncreaseQuantity}
+            showAddToCart
             compactQuantity
           />
         </section>

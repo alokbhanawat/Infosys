@@ -172,7 +172,7 @@ function Dashboard() {
       <div className="dashboard-layout">
         <section className="dashboard-hero-card">
           <div className="dashboard-topbar">
-            <div>
+            <div className="dashboard-hero-copy">
               <span className="dashboard-label">
                 {isAdmin ? "Admin workspace" : "User workspace"}
               </span>
@@ -186,20 +186,15 @@ function Dashboard() {
           </div>
 
           <div className="dashboard-highlight-grid">
-            <article className="highlight-card spotlight">
+            <article className="highlight-card spotlight compact-highlight">
               <span>Signed in as</span>
               <strong>{user?.sub || "Not available"}</strong>
               <p>Your identity is decoded from the JWT returned by the backend login API.</p>
             </article>
-            <article className="highlight-card">
+            <article className="highlight-card compact-highlight">
               <span>Role</span>
               <strong>{user?.role || "USER"}</strong>
               <p>Product APIs are available only when the backend issues an admin role.</p>
-            </article>
-            <article className="highlight-card">
-              <span>Session</span>
-              <strong>{user?.exp ? "Active" : "Unknown"}</strong>
-              <p>The frontend validates token expiry before allowing protected routes.</p>
             </article>
           </div>
         </section>
@@ -210,6 +205,10 @@ function Dashboard() {
               className={`dashboard-card admin-panel-card ${showProductForm ? "admin-panel-card-expanded" : ""}`}
             >
               <div className="admin-panel-header">
+                <div className="admin-panel-copy">
+                  <span className="admin-panel-label">Product</span>
+                  <h2>Add New Product</h2>
+                </div>
                 <button
                   type="button"
                   className="primary-btn compact-btn"

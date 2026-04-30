@@ -92,6 +92,10 @@ function ProductDetailPage() {
                   <span>Price</span>
                   <strong>Rs. {product?.price}</strong>
                 </article>
+                <article>
+                  <span>Status</span>
+                  <strong>{stockLabel}</strong>
+                </article>
               </div>
 
               <div className="product-detail-quantity">
@@ -122,10 +126,16 @@ function ProductDetailPage() {
               <div className="product-detail-purchase">
                 <strong>{stockLabel}</strong>
                 <p>
-                  This detail page is loaded using the backend product id from the URL:
-                  {" "}
-                  <code>{productId}</code>
+                  Product detail loaded for item <code>{productId}</code>. Choose the quantity and
+                  use the button below for the product action.
                 </p>
+                <button
+                  type="button"
+                  className="primary-btn product-detail-cart-btn"
+                  disabled={Number(product?.stock) <= 0}
+                >
+                  {Number(product?.stock) > 0 ? "Add to cart" : "Out of stock"}
+                </button>
               </div>
             </div>
           </section>

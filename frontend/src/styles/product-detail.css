@@ -140,6 +140,10 @@
   line-height: 1.7;
 }
 
+.product-detail-cart-btn {
+  margin-top: 18px;
+}
+
 .product-detail-quantity {
   display: flex;
   align-items: center;
