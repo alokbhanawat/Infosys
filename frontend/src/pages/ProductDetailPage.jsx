@@ -1,16 +1,19 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { getProductById } from "../services/authService";
-import { clearStoredToken } from "../utils/auth";
+import { addToCart, getCurrentUserProfile, getProductById } from "../services/authService";
+import { clearStoredToken, getCurrentUser } from "../utils/auth";
 import "../styles/product-detail.css";
 
 function ProductDetailPage() {
   const { productId } = useParams();
   const navigate = useNavigate();
+  const tokenUser = getCurrentUser();
+  const [user, setUser] = useState(tokenUser);
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [quantity, setQuantity] = useState(1);
+  const [cartFeedback, setCartFeedback] = useState("");
 
   useEffect(() => {
     const loadProduct = async () => {
@@ -18,6 +21,11 @@ function ProductDetailPage() {
       setError("");
 
       try {
+        if (!tokenUser?.userId) {
+          const profileResponse = await getCurrentUserProfile();
+          setUser(profileResponse.data || null);
+        }
+
         const productRes = await getProductById(productId);
         setProduct(productRes.data || null);
         setQuantity(1);
@@ -44,6 +52,30 @@ function ProductDetailPage() {
     return Number(product.stock) > 0 ? "Available now" : "Currently unavailable";
   }, [product]);
 
+  const handleAddToCart = async () => {
+    if (!product) {
+      return;
+    }
+
+    if (!user?.userId) {
+      setCartFeedback("Unable to determine the current user. Please log in again.");
+      return;
+    }
+
+    try {
+      await addToCart({
+        userId: user.userId,
+        productId: product.id,
+        quantity,
+      });
+      setCartFeedback(`${product.name} added to cart successfully.`);
+    } catch (requestError) {
+      setCartFeedback(
+        requestError?.response?.data?.message || "Unable to add this product to cart.",
+      );
+    }
+  };
+
   return (
     <div className="product-detail-page">
       <div className="product-detail-shell">
@@ -51,9 +83,14 @@ function ProductDetailPage() {
           <Link className="back-link" to="/products">
             Back to products
           </Link>
-          <button className="logout-btn" onClick={handleLogout}>
-            Logout
-          </button>
+          <div className="product-detail-topbar-actions">
+            <Link className="back-link" to="/cart">
+              View cart
+            </Link>
+            <button className="logout-btn" onClick={handleLogout}>
+              Logout
+            </button>
+          </div>
         </div>
 
         {loading ? (
@@ -129,10 +166,12 @@ function ProductDetailPage() {
                   Product detail loaded for item <code>{productId}</code>. Choose the quantity and
                   use the button below for the product action.
                 </p>
+                {cartFeedback ? <p className="form-message success">{cartFeedback}</p> : null}
                 <button
                   type="button"
                   className="primary-btn product-detail-cart-btn"
                   disabled={Number(product?.stock) <= 0}
+                  onClick={handleAddToCart}
                 >
                   {Number(product?.stock) > 0 ? "Add to cart" : "Out of stock"}
                 </button>

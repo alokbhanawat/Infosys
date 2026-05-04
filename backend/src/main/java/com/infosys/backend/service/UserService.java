@@ -57,7 +57,7 @@ public class UserService {
             boolean isMatch = passwordEncoder.matches(password, user.getPassword());
 
             if (isMatch) {
-                return jwtUtil.generateToken(user.getEmail(), user.getName(), user.getRole().name());
+                return jwtUtil.generateToken(user.getUserId(), user.getEmail(), user.getName(), user.getRole().name());
             }
         }
 

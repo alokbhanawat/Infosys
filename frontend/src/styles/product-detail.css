@@ -20,6 +20,12 @@
   margin-bottom: 24px;
 }
 
+.product-detail-topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
 .back-link {
   display: inline-flex;
   align-items: center;
@@ -178,6 +184,10 @@
   .product-detail-topbar {
     flex-direction: column;
     align-items: stretch;
+  }
+
+  .product-detail-topbar-actions {
+    flex-direction: column;
   }
 }
 

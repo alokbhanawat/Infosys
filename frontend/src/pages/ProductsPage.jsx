@@ -1,18 +1,20 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import ProductFilters from "../components/ProductFilters";
 import ProductCatalog from "../components/ProductCatalog";
-import { getProducts } from "../services/authService";
+import { addToCart, getCurrentUserProfile, getProducts } from "../services/authService";
 import { clearStoredToken, getCurrentUser } from "../utils/auth";
 import "../styles/storefront.css";
 
 function ProductsPage() {
   const navigate = useNavigate();
-  const user = getCurrentUser();
+  const tokenUser = getCurrentUser();
+  const [user, setUser] = useState(tokenUser);
   const [products, setProducts] = useState([]);
   const [quantities, setQuantities] = useState({});
   const [catalogLoading, setCatalogLoading] = useState(false);
   const [catalogFeedback, setCatalogFeedback] = useState("");
+  const [cartFeedback, setCartFeedback] = useState("");
   const [filters, setFilters] = useState({
     search: "",
     category: "",
@@ -36,7 +38,20 @@ function ProductsPage() {
   };
 
   useEffect(() => {
-    loadProducts();
+    const initializePage = async () => {
+      await loadProducts();
+
+      if (!tokenUser?.userId) {
+        try {
+          const profileResponse = await getCurrentUserProfile();
+          setUser(profileResponse.data || null);
+        } catch {
+          setUser(tokenUser);
+        }
+      }
+    };
+
+    initializePage();
   }, []);
 
   const handleLogout = () => {
@@ -89,12 +104,33 @@ function ProductsPage() {
     }));
   };
 
+  const handleAddToCart = async (product) => {
+    if (!user?.userId) {
+      setCartFeedback("Unable to determine the current user. Please log in again.");
+      return;
+    }
+
+    try {
+      await addToCart({
+        userId: user.userId,
+        productId: product.id,
+        quantity: quantities[product.id] ?? 1,
+      });
+      setCartFeedback(`${product.name} added to cart successfully.`);
+    } catch (error) {
+      setCartFeedback(error?.response?.data?.message || "Unable to add this item to cart.");
+    }
+  };
+
   return (
     <div className="storefront-page">
       <div className="storefront-shell">
         <section className="storefront-hero">
           <div className="storefront-hero-copy">
-            <h1>Shop Products</h1>
+            <div>
+              <span className="storefront-eyebrow">Storefront</span>
+              <h1>Shop Products</h1>
+            </div>
           </div>
 
           <div className="storefront-hero-side">
@@ -113,9 +149,14 @@ function ProductsPage() {
               </article>
             </div>
 
-            <button className="logout-btn storefront-logout" onClick={handleLogout}>
-              Logout
-            </button>
+            <div className="storefront-actions">
+              <Link className="back-link storefront-cart-link" to="/cart">
+                Open cart
+              </Link>
+              <button className="logout-btn storefront-logout" onClick={handleLogout}>
+                Logout
+              </button>
+            </div>
           </div>
         </section>
 
@@ -128,23 +169,27 @@ function ProductsPage() {
             onResetFilters={handleResetFilters}
           />
 
-          <ProductCatalog
-            isAdmin={false}
-            products={products}
-            catalogLoading={catalogLoading}
-            catalogFeedback={catalogFeedback}
-            onRefresh={() => loadProducts(filters)}
-            detailBasePath="/products"
-            heading="Shop products"
-            subheading=""
-            showAccessNote={false}
-            clickableCards
-            quantities={quantities}
-            onDecreaseQuantity={handleDecreaseQuantity}
-            onIncreaseQuantity={handleIncreaseQuantity}
-            showAddToCart
-            compactQuantity
-          />
+          <div>
+            {cartFeedback ? <p className="form-message success">{cartFeedback}</p> : null}
+            <ProductCatalog
+              isAdmin={false}
+              products={products}
+              catalogLoading={catalogLoading}
+              catalogFeedback={catalogFeedback}
+              onRefresh={() => loadProducts(filters)}
+              detailBasePath="/products"
+              heading="Shop products"
+              subheading=""
+              showAccessNote={false}
+              clickableCards
+              quantities={quantities}
+              onDecreaseQuantity={handleDecreaseQuantity}
+              onIncreaseQuantity={handleIncreaseQuantity}
+              showAddToCart
+              onAddToCart={handleAddToCart}
+              compactQuantity
+            />
+          </div>
         </section>
       </div>
     </div>

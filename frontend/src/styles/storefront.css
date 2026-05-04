@@ -52,6 +52,20 @@
   min-height: 100%;
 }
 
+.storefront-eyebrow {
+  display: inline-flex;
+  margin-bottom: 12px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  color: rgba(255, 255, 255, 0.82);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
 .storefront-hero h1 {
   margin: 0;
   font-size: clamp(3rem, 6vw, 4.8rem);
@@ -104,6 +118,17 @@
   width: 100%;
   max-width: 330px;
   height: fit-content;
+}
+
+.storefront-actions {
+  display: grid;
+  gap: 12px;
+  width: 100%;
+  max-width: 330px;
+}
+
+.storefront-cart-link {
+  justify-content: center;
 }
 
 .storefront-layout {

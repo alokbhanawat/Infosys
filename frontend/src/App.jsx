@@ -4,6 +4,7 @@ import LoginForm from "./components/LoginForm";
 import Dashboard from "./components/Dashboard";
 import ProtectedRoute from "./components/ProtectedRoute";
 import PublicRoute from "./components/PublicRoute";
+import CartPage from "./pages/CartPage";
 import ProductDetailPage from "./pages/ProductDetailPage";
 import ProductsPage from "./pages/ProductsPage";
 
@@ -20,6 +21,10 @@ function App() {
         <Route path="/products" element={<ProtectedRoute allowedRoles={["USER"]} />}>
           <Route element={<ProductsPage />} index />
           <Route path=":productId" element={<ProductDetailPage />} />
+        </Route>
+
+        <Route path="/cart" element={<ProtectedRoute allowedRoles={["USER"]} />}>
+          <Route index element={<CartPage />} />
         </Route>
 
         <Route path="/admin" element={<ProtectedRoute allowedRoles={["ADMIN"]} />}>

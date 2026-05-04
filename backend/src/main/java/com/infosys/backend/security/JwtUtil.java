@@ -18,8 +18,9 @@ public class JwtUtil {
     private final String SECRET = "mysecretkeymysecretkeymysecretkey";
     private final Key secretKey = Keys.hmacShaKeyFor(SECRET.getBytes());
 
-    public String generateToken(String email, String name, String role) {
+    public String generateToken(int userId, String email, String name, String role) {
         Map<String, Object> claims = new HashMap<>();
+        claims.put("userId", userId);
         claims.put("name", name);
         claims.put("role", role);
 
@@ -27,7 +28,7 @@ public class JwtUtil {
                 .setClaims(claims)
                 .setSubject(email)
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + 1000L * 60 * 60))
+                .setExpiration(new Date(System.currentTimeMillis() + 1000L * 60 * 60)) // 1 hour
                 .signWith(secretKey, SignatureAlgorithm.HS256)
                 .compact();
     }

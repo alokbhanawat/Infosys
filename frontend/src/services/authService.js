@@ -19,6 +19,7 @@ api.interceptors.request.use((config) => {
 export const registerUser = (data) => api.post("/users/register", data);
 export const loginUser = (data) => api.post("/users/login", data);
 export const getProtectedProductsMessage = () => api.get("/users/products");
+export const getCurrentUserProfile = () => api.get("/users/me");
 export const getProducts = (filters = {}) => {
   const params = Object.fromEntries(
     Object.entries(filters).filter(([, value]) => value !== "" && value !== null && value !== undefined),
@@ -38,5 +39,14 @@ export const getProductById = async (id) => {
   }
 };
 export const addProduct = (data) => api.post("/products/add", data);
+export const addToCart = ({ userId, productId, quantity }) =>
+  api.post("/cart", null, {
+    params: {
+      userId,
+      productId,
+      quantity,
+    },
+  });
+export const getCartByUserId = (userId) => api.get(`/cart/${userId}`);
 
 export default api;

@@ -6,11 +6,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import java.security.Principal;
 
 import com.infosys.backend.dto.AuthResponse;
 import com.infosys.backend.dto.LoginRequest;
 import com.infosys.backend.dto.RegisterRequest;
 import com.infosys.backend.dto.UserResponse;
+import com.infosys.backend.service.CurrentUserService;
 import com.infosys.backend.service.UserService;
 
 @RestController
@@ -19,9 +21,11 @@ import com.infosys.backend.service.UserService;
 public class UserController {
 
     private final UserService userService;
+    private final CurrentUserService currentUserService;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, CurrentUserService currentUserService) {
         this.userService = userService;
+        this.currentUserService = currentUserService;
     }
 
     @PostMapping("/register")
@@ -37,5 +41,10 @@ public class UserController {
     @GetMapping("/products")
     public String getProfile() {
         return "Protected API working ";
+    }
+
+    @GetMapping("/me")
+    public UserResponse getCurrentUser(Principal principal) {
+        return currentUserService.getCurrentUser(principal.getName());
     }
 }
