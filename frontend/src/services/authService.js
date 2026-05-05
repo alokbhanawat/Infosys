@@ -48,5 +48,20 @@ export const addToCart = ({ userId, productId, quantity }) =>
     },
   });
 export const getCartByUserId = (userId) => api.get(`/cart/${userId}`);
+export const updateCart = ({ userId, productId, quantity }) =>
+  api.put("/cart", null, {
+    params: {
+      userId,
+      productId,
+      quantity,
+    },
+  });
+export const removeFromCart = ({ userId, productId }) =>
+  api.delete("/cart", {
+    params: {
+      userId,
+      productId,
+    },
+  });
 
 export default api;

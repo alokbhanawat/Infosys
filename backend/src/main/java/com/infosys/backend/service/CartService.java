@@ -63,6 +63,42 @@ public class CartService {
                 .toList();
     }
 
+    @Transactional
+    public CartResponse updateCart(int userId, Long productId, Integer quantity) {
+        if (quantity == null || quantity < 1) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Quantity must be at least 1.");
+        }
+
+        if (!userRepository.existsById(userId)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found.");
+        }
+
+        Product product = productRepository.findByIdAndIsActiveTrue(productId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found."));
+
+        if (product.getStock() == null || product.getStock() < quantity) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Requested quantity is not available.");
+        }
+
+        Cart cart = cartRepository.findByUser_UserIdAndProduct_Id(userId, productId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cart item not found."));
+
+        cart.setQuantity(quantity);
+        return new CartResponse(cartRepository.save(cart));
+    }
+
+    @Transactional
+    public void removeFromCart(int userId, Long productId) {
+        if (!userRepository.existsById(userId)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found.");
+        }
+
+        Cart cart = cartRepository.findByUser_UserIdAndProduct_Id(userId, productId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cart item not found."));
+
+        cartRepository.delete(cart);
+    }
+
     private Cart updateExistingCart(Cart cart, Integer quantityToAdd, Product product) {
         int updatedQuantity = cart.getQuantity() + quantityToAdd;
 

@@ -1,6 +1,11 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { getCartByUserId, getCurrentUserProfile } from "../services/authService";
+import {
+  getCartByUserId,
+  getCurrentUserProfile,
+  removeFromCart,
+  updateCart,
+} from "../services/authService";
 import { clearStoredToken, getCurrentUser } from "../utils/auth";
 import "../styles/cart.css";
 
@@ -11,6 +16,9 @@ function CartPage() {
   const [cartItems, setCartItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [actionMessage, setActionMessage] = useState("");
+  const [actionStatus, setActionStatus] = useState("success");
+  const [activeCartItemId, setActiveCartItemId] = useState(null);
 
   const loadCart = async () => {
     setLoading(true);
@@ -40,6 +48,64 @@ function CartPage() {
   const handleLogout = () => {
     clearStoredToken();
     navigate("/login", { replace: true });
+  };
+
+  const handleUpdateQuantity = async (item, nextQuantity) => {
+    if (!user?.userId || !item?.product?.id || nextQuantity < 1) {
+      return;
+    }
+
+    setActiveCartItemId(item.cartId);
+    setActionMessage("");
+    setActionStatus("success");
+
+    try {
+      const response = await updateCart({
+        userId: user.userId,
+        productId: item.product.id,
+        quantity: nextQuantity,
+      });
+
+      setCartItems((currentItems) =>
+        currentItems.map((cartItem) =>
+          cartItem.cartId === item.cartId ? response.data || { ...cartItem, quantity: nextQuantity } : cartItem,
+        ),
+      );
+    } catch (requestError) {
+      setActionStatus("error");
+      setActionMessage(
+        requestError?.response?.data?.message || "Unable to update the cart quantity.",
+      );
+    } finally {
+      setActiveCartItemId(null);
+    }
+  };
+
+  const handleRemoveItem = async (item) => {
+    if (!user?.userId || !item?.product?.id) {
+      return;
+    }
+
+    setActiveCartItemId(item.cartId);
+    setActionMessage("");
+    setActionStatus("success");
+
+    try {
+      const response = await removeFromCart({
+        userId: user.userId,
+        productId: item.product.id,
+      });
+
+      setCartItems((currentItems) => currentItems.filter((cartItem) => cartItem.cartId !== item.cartId));
+      setActionMessage(response?.data?.message || "Product removed from cart successfully.");
+    } catch (requestError) {
+      setActionStatus("error");
+      setActionMessage(
+        requestError?.response?.data?.message || "Unable to remove this product from cart.",
+      );
+    } finally {
+      setActiveCartItemId(null);
+    }
   };
 
   const totalItems = cartItems.reduce((sum, item) => sum + (Number(item.quantity) || 0), 0);
@@ -90,6 +156,8 @@ function CartPage() {
             </button>
           </div>
 
+          {actionMessage ? <p className={`form-message ${actionStatus}`}>{actionMessage}</p> : null}
+
           {loading ? (
             <p className="empty-state">Loading cart items...</p>
           ) : error ? (
@@ -113,7 +181,39 @@ function CartPage() {
 
                   <div className="cart-item-meta">
                     <span>Quantity</span>
-                    <strong>{item.quantity}</strong>
+                    <div className="cart-quantity-controls">
+                      <button
+                        type="button"
+                        className="quantity-btn"
+                        onClick={() => handleUpdateQuantity(item, Number(item.quantity) - 1)}
+                        disabled={activeCartItemId === item.cartId || Number(item.quantity) <= 1}
+                        aria-label={`Decrease quantity for ${item.product?.name || "cart item"}`}
+                      >
+                        -
+                      </button>
+                      <strong className="quantity-value cart-quantity-value">{item.quantity}</strong>
+                      <button
+                        type="button"
+                        className="quantity-btn"
+                        onClick={() => handleUpdateQuantity(item, Number(item.quantity) + 1)}
+                        disabled={activeCartItemId === item.cartId}
+                        aria-label={`Increase quantity for ${item.product?.name || "cart item"}`}
+                      >
+                        +
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="cart-item-actions">
+                    <button
+                      type="button"
+                      className="cart-remove-btn"
+                      onClick={() => handleRemoveItem(item)}
+                      disabled={activeCartItemId === item.cartId}
+                      aria-label={`Remove ${item.product?.name || "product"} from cart`}
+                    >
+                      &times;
+                    </button>
                   </div>
                 </article>
               ))}
