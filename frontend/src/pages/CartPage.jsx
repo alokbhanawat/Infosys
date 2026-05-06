@@ -20,6 +20,8 @@ function CartPage() {
   const [actionStatus, setActionStatus] = useState("success");
   const [activeCartItemId, setActiveCartItemId] = useState(null);
 
+  const formatCurrency = (value) => `Rs. ${Number(value || 0).toFixed(2)}`;
+
   const loadCart = async () => {
     setLoading(true);
     setError("");
@@ -109,6 +111,10 @@ function CartPage() {
   };
 
   const totalItems = cartItems.reduce((sum, item) => sum + (Number(item.quantity) || 0), 0);
+  const totalCartValue = cartItems.reduce(
+    (sum, item) => sum + (Number(item.product?.price) || 0) * (Number(item.quantity) || 0),
+    0,
+  );
 
   return (
     <div className="cart-page">
@@ -143,82 +149,143 @@ function CartPage() {
             <span>Total quantity</span>
             <strong>{totalItems}</strong>
           </article>
+          <article>
+            <span>Total cart value</span>
+            <strong>{formatCurrency(totalCartValue)}</strong>
+          </article>
         </section>
 
-        <section className="cart-card">
-          <div className="cart-card-header">
-            <div>
-              <span>Live cart</span>
-              <h2>Added products</h2>
+        <section className="cart-content-grid">
+          <div className="cart-card">
+            <div className="cart-card-header">
+              <div>
+                <span>Live cart</span>
+                <h2>Added products</h2>
+              </div>
+              <button type="button" className="secondary-btn header-btn" onClick={loadCart}>
+                Refresh cart
+              </button>
             </div>
-            <button type="button" className="secondary-btn header-btn" onClick={loadCart}>
-              Refresh cart
-            </button>
+
+            {actionMessage ? <p className={`form-message ${actionStatus}`}>{actionMessage}</p> : null}
+
+            {loading ? (
+              <p className="empty-state">Loading cart items...</p>
+            ) : error ? (
+              <p className="form-message error">{error}</p>
+            ) : cartItems.length === 0 ? (
+              <p className="empty-state">No products in cart yet.</p>
+            ) : (
+              <div className="cart-list">
+                {cartItems.map((item) => {
+                  const unitPrice = Number(item.product?.price) || 0;
+                  const quantity = Number(item.quantity) || 0;
+                  const itemTotal = unitPrice * quantity;
+
+                  return (
+                    <article key={item.cartId} className="cart-item">
+                      <div className="cart-item-main">
+                        <div className="cart-item-media">
+                          {item.product?.imageUrl ? (
+                            <img src={item.product.imageUrl} alt={item.product?.name || "Product"} />
+                          ) : (
+                            <div className="cart-item-placeholder">
+                              <span>{(item.product?.name || "P").slice(0, 1).toUpperCase()}</span>
+                            </div>
+                          )}
+                        </div>
+
+                        <div className="cart-item-copy">
+                          <span className="cart-item-label">Product</span>
+                          <strong>{item.product?.name || `Product #${item.product?.id}`}</strong>
+                          <p>Product ID: {item.product?.id}</p>
+                        </div>
+                      </div>
+
+                      <div className="cart-item-meta">
+                        <span>Unit price</span>
+                        <strong>{formatCurrency(unitPrice)}</strong>
+                      </div>
+
+                      <div className="cart-item-meta">
+                        <span>Quantity</span>
+                        <div className="cart-quantity-controls">
+                          <button
+                            type="button"
+                            className="quantity-btn"
+                            onClick={() => handleUpdateQuantity(item, quantity - 1)}
+                            disabled={activeCartItemId === item.cartId || quantity <= 1}
+                            aria-label={`Decrease quantity for ${item.product?.name || "cart item"}`}
+                          >
+                            -
+                          </button>
+                          <strong className="quantity-value cart-quantity-value">{quantity}</strong>
+                          <button
+                            type="button"
+                            className="quantity-btn"
+                            onClick={() => handleUpdateQuantity(item, quantity + 1)}
+                            disabled={activeCartItemId === item.cartId}
+                            aria-label={`Increase quantity for ${item.product?.name || "cart item"}`}
+                          >
+                            +
+                          </button>
+                        </div>
+                      </div>
+
+                      <div className="cart-item-meta cart-item-total">
+                        <span>Item total</span>
+                        <strong>{formatCurrency(itemTotal)}</strong>
+                      </div>
+
+                      <div className="cart-item-actions">
+                        <button
+                          type="button"
+                          className="cart-remove-btn"
+                          onClick={() => handleRemoveItem(item)}
+                          disabled={activeCartItemId === item.cartId}
+                          aria-label={`Remove ${item.product?.name || "product"} from cart`}
+                        >
+                          &times;
+                        </button>
+                      </div>
+                    </article>
+                  );
+                })}
+              </div>
+            )}
           </div>
 
-          {actionMessage ? <p className={`form-message ${actionStatus}`}>{actionMessage}</p> : null}
-
-          {loading ? (
-            <p className="empty-state">Loading cart items...</p>
-          ) : error ? (
-            <p className="form-message error">{error}</p>
-          ) : cartItems.length === 0 ? (
-            <p className="empty-state">No products in cart yet.</p>
-          ) : (
-            <div className="cart-list">
-              {cartItems.map((item) => (
-                <article key={item.cartId} className="cart-item">
-                  <div className="cart-item-copy">
-                    <span className="cart-item-label">Product</span>
-                    <strong>{item.product?.name || `Product #${item.product?.id}`}</strong>
-                    <p>Product ID: {item.product?.id}</p>
-                  </div>
-
-                  <div className="cart-item-meta">
-                    <span>Cart ID</span>
-                    <strong>{item.cartId}</strong>
-                  </div>
-
-                  <div className="cart-item-meta">
-                    <span>Quantity</span>
-                    <div className="cart-quantity-controls">
-                      <button
-                        type="button"
-                        className="quantity-btn"
-                        onClick={() => handleUpdateQuantity(item, Number(item.quantity) - 1)}
-                        disabled={activeCartItemId === item.cartId || Number(item.quantity) <= 1}
-                        aria-label={`Decrease quantity for ${item.product?.name || "cart item"}`}
-                      >
-                        -
-                      </button>
-                      <strong className="quantity-value cart-quantity-value">{item.quantity}</strong>
-                      <button
-                        type="button"
-                        className="quantity-btn"
-                        onClick={() => handleUpdateQuantity(item, Number(item.quantity) + 1)}
-                        disabled={activeCartItemId === item.cartId}
-                        aria-label={`Increase quantity for ${item.product?.name || "cart item"}`}
-                      >
-                        +
-                      </button>
-                    </div>
-                  </div>
-
-                  <div className="cart-item-actions">
-                    <button
-                      type="button"
-                      className="cart-remove-btn"
-                      onClick={() => handleRemoveItem(item)}
-                      disabled={activeCartItemId === item.cartId}
-                      aria-label={`Remove ${item.product?.name || "product"} from cart`}
-                    >
-                      &times;
-                    </button>
-                  </div>
-                </article>
-              ))}
+          <aside className="cart-card cart-overview-card">
+            <div className="cart-card-header cart-overview-header">
+              <div>
+                <span>Summary</span>
+                <h2>Cart overview</h2>
+              </div>
             </div>
-          )}
+
+            <div className="cart-overview-list">
+              <div className="cart-overview-row">
+                <span>Products added</span>
+                <strong>{cartItems.length}</strong>
+              </div>
+              <div className="cart-overview-row">
+                <span>Total quantity</span>
+                <strong>{totalItems}</strong>
+              </div>
+              <div className="cart-overview-row">
+                <span>Customer</span>
+                <strong>{user?.name || "Shopper"}</strong>
+              </div>
+              <div className="cart-overview-row cart-overview-total">
+                <span>Total cart value</span>
+                <strong>{formatCurrency(totalCartValue)}</strong>
+              </div>
+            </div>
+
+            <p className="cart-overview-note">
+              Review prices, adjust quantities, and keep your cart updated before checkout.
+            </p>
+          </aside>
         </section>
       </div>
     </div>

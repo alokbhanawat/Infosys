@@ -13,7 +13,10 @@ public class CartResponse {
         this.quantity = cart.getQuantity();
         this.product = new CartProductResponse(
                 cart.getProduct().getId(),
-                cart.getProduct().getName());
+                cart.getProduct().getName(),
+                cart.getProduct().getPrice()
+                );
+                
     }
 
     public Long getCartId() {
