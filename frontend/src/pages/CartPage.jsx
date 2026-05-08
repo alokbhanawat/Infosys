@@ -1,13 +1,23 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
+  checkoutOrder,
   getCartByUserId,
   getCurrentUserProfile,
   removeFromCart,
   updateCart,
 } from "../services/authService";
-import { clearStoredToken, getCurrentUser } from "../utils/auth";
+import {
+  clearStoredToken,
+  getCurrentUser,
+  getStoredToken,
+  getStoredUserId,
+  setStoredSession,
+} from "../utils/auth";
+import "../styles/dashboard.css";
 import "../styles/cart.css";
+
+const ORDER_SUCCESS_STORAGE_KEY = "latestOrder";
 
 function CartPage() {
   const navigate = useNavigate();
@@ -19,6 +29,7 @@ function CartPage() {
   const [actionMessage, setActionMessage] = useState("");
   const [actionStatus, setActionStatus] = useState("success");
   const [activeCartItemId, setActiveCartItemId] = useState(null);
+  const [isCheckingOut, setIsCheckingOut] = useState(false);
 
   const formatCurrency = (value) => `Rs. ${Number(value || 0).toFixed(2)}`;
 
@@ -27,12 +38,25 @@ function CartPage() {
     setError("");
 
     try {
-      const activeUser =
-        tokenUser?.userId
-          ? tokenUser
-          : (await getCurrentUserProfile()).data;
+      const storedUserId = getStoredUserId();
+      let activeUser = null;
+
+      if (tokenUser) {
+        activeUser = {
+          ...tokenUser,
+          userId: tokenUser.userId ?? storedUserId,
+        };
+      }
+
+      if (!activeUser?.userId) {
+        activeUser = (await getCurrentUserProfile()).data;
+      }
 
       setUser(activeUser);
+      setStoredSession({
+        token: getStoredToken(),
+        userId: activeUser?.userId,
+      });
 
       const cartResponse = await getCartByUserId(activeUser.userId);
       setCartItems(Array.isArray(cartResponse.data) ? cartResponse.data : []);
@@ -51,6 +75,21 @@ function CartPage() {
     clearStoredToken();
     navigate("/login", { replace: true });
   };
+
+  const getOrderDetails = (responseData) => ({
+    orderId:
+      responseData?.orderId ??
+      responseData?.id ??
+      responseData?.data?.orderId ??
+      responseData?.data?.id,
+    totalAmount:
+      responseData?.totalAmount ??
+      responseData?.amount ??
+      responseData?.grandTotal ??
+      responseData?.data?.totalAmount ??
+      responseData?.data?.amount ??
+      totalCartValue,
+  });
 
   const handleUpdateQuantity = async (item, nextQuantity) => {
     if (!user?.userId || !item?.product?.id || nextQuantity < 1) {
@@ -107,6 +146,62 @@ function CartPage() {
       );
     } finally {
       setActiveCartItemId(null);
+    }
+  };
+
+  const handleCheckout = async () => {
+    const storedToken = getStoredToken();
+    const storedUserId = getStoredUserId();
+    const checkoutUserId = user?.userId || storedUserId;
+
+    if (!cartItems.length) {
+      setActionStatus("error");
+      setActionMessage("Your cart is empty. Add products before checkout.");
+      return;
+    }
+
+    if (!checkoutUserId || !storedToken) {
+      setActionStatus("error");
+      setActionMessage("Your session is missing. Please log in again.");
+      return;
+    }
+
+    setIsCheckingOut(true);
+    setActionMessage("");
+    setActionStatus("success");
+    setError("");
+
+    try {
+      const response = await checkoutOrder(checkoutUserId);
+      const orderDetails = getOrderDetails(response?.data);
+
+      if (!orderDetails.orderId) {
+        throw new Error("Order ID missing in checkout response.");
+      }
+
+      sessionStorage.setItem(ORDER_SUCCESS_STORAGE_KEY, JSON.stringify(orderDetails));
+      setCartItems([]);
+      setActionMessage("Order placed successfully");
+      setActionStatus("success");
+
+      window.setTimeout(() => {
+        navigate("/order-success", {
+          replace: true,
+          state: orderDetails,
+        });
+      }, 700);
+    } catch (requestError) {
+      const apiMessage = requestError?.response?.data?.message;
+      const fallbackMessage =
+        cartItems.length === 0
+          ? "Your cart is empty. Add products before checkout."
+          : "Unable to place the order right now.";
+
+      setActionStatus("error");
+      setActionMessage(apiMessage || requestError.message || fallbackMessage);
+      window.alert(apiMessage || requestError.message || fallbackMessage);
+    } finally {
+      setIsCheckingOut(false);
     }
   };
 
@@ -285,6 +380,15 @@ function CartPage() {
             <p className="cart-overview-note">
               Review prices, adjust quantities, and keep your cart updated before checkout.
             </p>
+
+            <button
+              type="button"
+              className="primary-btn cart-checkout-btn"
+              onClick={handleCheckout}
+              disabled={loading || isCheckingOut || !cartItems.length}
+            >
+              {isCheckingOut ? "Placing order..." : "Checkout"}
+            </button>
           </aside>
         </section>
       </div>

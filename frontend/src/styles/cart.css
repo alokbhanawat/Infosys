@@ -58,6 +58,20 @@
   min-width: 220px;
 }
 
+.cart-hero-actions .back-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 18px;
+  border-radius: 999px;
+  background: #ffffff;
+  border: 1px solid #dbeafe;
+  color: #0f172a;
+  font-weight: 700;
+  text-decoration: none;
+  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.08);
+}
+
 .cart-summary-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -261,6 +275,11 @@
   margin: 18px 0 0;
   color: #475569;
   line-height: 1.7;
+}
+
+.cart-checkout-btn {
+  width: 100%;
+  margin-top: 22px;
 }
 
 .cart-remove-btn {

@@ -5,6 +5,7 @@ import Dashboard from "./components/Dashboard";
 import ProtectedRoute from "./components/ProtectedRoute";
 import PublicRoute from "./components/PublicRoute";
 import CartPage from "./pages/CartPage";
+import OrderSuccessPage from "./pages/OrderSuccessPage";
 import ProductDetailPage from "./pages/ProductDetailPage";
 import ProductsPage from "./pages/ProductsPage";
 
@@ -25,6 +26,10 @@ function App() {
 
         <Route path="/cart" element={<ProtectedRoute allowedRoles={["USER"]} />}>
           <Route index element={<CartPage />} />
+        </Route>
+
+        <Route path="/order-success" element={<ProtectedRoute allowedRoles={["USER"]} />}>
+          <Route index element={<OrderSuccessPage />} />
         </Route>
 
         <Route path="/admin" element={<ProtectedRoute allowedRoles={["ADMIN"]} />}>

@@ -1,6 +1,8 @@
 package com.infosys.backend.model;
 
 import jakarta.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -22,6 +24,12 @@ public class User {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20, columnDefinition = "varchar(20) default 'USER'")
     private Role role = Role.USER;
+
+    @OneToMany(mappedBy = "user")
+    private List<Cart> carts = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user")
+    private List<Order> orders = new ArrayList<>();
 
     public User() {}
 
@@ -50,4 +58,10 @@ public class User {
 
     public Role getRole() { return role; }
     public void setRole(Role role) { this.role = role; }
+
+    public List<Cart> getCarts() { return carts; }
+    public void setCarts(List<Cart> carts) { this.carts = carts; }
+
+    public List<Order> getOrders() { return orders; }
+    public void setOrders(List<Order> orders) { this.orders = orders; }
 }

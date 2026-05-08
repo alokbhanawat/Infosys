@@ -1,7 +1,12 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { loginUser } from "../services/authService";
-import { clearStoredToken, getCurrentUser, getHomeRoute } from "../utils/auth";
+import {
+  clearStoredToken,
+  getCurrentUser,
+  getHomeRoute,
+  setStoredSession,
+} from "../utils/auth";
 import "../styles/login.css";
 
 function LoginForm() {
@@ -34,7 +39,10 @@ function LoginForm() {
       }
 
       clearStoredToken();
-      localStorage.setItem("token", token);
+      setStoredSession({
+        token,
+        userId: res?.data?.userId ?? res?.data?.id,
+      });
       const user = getCurrentUser();
       setMessage("Login successful.");
       setMessageType("success");
