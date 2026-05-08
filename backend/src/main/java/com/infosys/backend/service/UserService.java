@@ -7,6 +7,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.infosys.backend.dto.AuthResponse;
 import com.infosys.backend.dto.RegisterRequest;
 import com.infosys.backend.model.Role;
 import com.infosys.backend.model.User;
@@ -49,7 +50,7 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public String loginUser(String email, String password) {
+    public AuthResponse loginUser(String email, String password) {
         Optional<User> userOptional = userRepository.findByEmail(email);
 
         if (userOptional.isPresent()) {
@@ -57,7 +58,8 @@ public class UserService {
             boolean isMatch = passwordEncoder.matches(password, user.getPassword());
 
             if (isMatch) {
-                return jwtUtil.generateToken(user.getUserId(), user.getEmail(), user.getName(), user.getRole().name());
+                String token = jwtUtil.generateToken(user.getUserId(), user.getEmail(), user.getName(), user.getRole().name());
+                return new AuthResponse(token, user.getUserId(), user.getName(), user.getEmail(), user.getRole());
             }
         }
 

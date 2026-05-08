@@ -2,6 +2,7 @@ package com.infosys.backend.controller;
 
 import com.infosys.backend.dto.OrderResponse;
 import com.infosys.backend.service.OrderService;
+import java.security.Principal;
 import java.util.List;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,6 +26,11 @@ public class OrderController {
     @PostMapping("/checkout")
     public OrderResponse checkout(@RequestParam int userId) {
         return orderService.checkout(userId);
+    }
+
+    @GetMapping("/my")
+    public List<OrderResponse> getCurrentUserOrders(Principal principal) {
+        return orderService.getOrdersForCurrentUser(principal.getName());
     }
 
     @GetMapping("/{userId}")

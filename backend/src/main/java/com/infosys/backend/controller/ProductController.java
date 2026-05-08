@@ -2,10 +2,12 @@ package com.infosys.backend.controller;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import com.infosys.backend.dto.BulkProductActionRequest;
 import com.infosys.backend.model.Product;
 import com.infosys.backend.service.ProductService;
 
@@ -60,5 +62,24 @@ public class ProductController {
     @GetMapping("/{id}")
     public Product getProductById(@PathVariable Long id) {
         return productService.getActiveProductById(id);
+    }
+
+    @GetMapping("/admin/all")
+    public List<Product> getAllProductsForAdmin() {
+        return productService.getAllProductsForAdmin();
+    }
+
+    @DeleteMapping("/{id}")
+    public Map<String, String> removeProduct(@PathVariable Long id) {
+        productService.deactivateProduct(id);
+        return Map.of("message", "Product removed successfully.");
+    }
+
+    @DeleteMapping("/bulk")
+    public Map<String, Object> removeProducts(@RequestBody BulkProductActionRequest request) {
+        int removedCount = productService.deactivateProducts(request.getProductIds());
+        return Map.of(
+                "message", "Selected products removed successfully.",
+                "removedCount", removedCount);
     }
 }

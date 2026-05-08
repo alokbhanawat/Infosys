@@ -1,0 +1,233 @@
+.orders-page {
+  min-height: 100vh;
+  padding: 32px 20px 48px;
+  background:
+    radial-gradient(circle at top left, rgba(255, 215, 160, 0.24), transparent 28%),
+    linear-gradient(180deg, #fffaf3 0%, #f4f7fb 55%, #eef3f8 100%);
+}
+
+.orders-shell {
+  max-width: 1180px;
+  margin: 0 auto;
+  display: grid;
+  gap: 24px;
+}
+
+.orders-hero,
+.orders-summary-grid article,
+.order-card,
+.orders-content {
+  border: 1px solid rgba(22, 44, 74, 0.08);
+  box-shadow: 0 18px 40px rgba(20, 33, 61, 0.08);
+}
+
+.orders-hero,
+.orders-content {
+  background: rgba(255, 255, 255, 0.92);
+  border-radius: 28px;
+  padding: 28px;
+}
+
+.orders-hero {
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  align-items: flex-start;
+}
+
+.orders-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 7px 14px;
+  border-radius: 999px;
+  background: #eef6ff;
+  color: #1d4f91;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.orders-hero h1 {
+  margin: 14px 0 10px;
+  font-size: clamp(2rem, 3vw, 3rem);
+  color: #162c4a;
+}
+
+.orders-hero p {
+  margin: 0;
+  max-width: 680px;
+  color: #51627b;
+  line-height: 1.6;
+}
+
+.orders-hero-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.orders-summary-grid {
+  display: grid;
+  gap: 18px;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+}
+
+.orders-summary-grid article {
+  background: rgba(255, 255, 255, 0.92);
+  border-radius: 22px;
+  padding: 20px;
+  display: grid;
+  gap: 8px;
+}
+
+.orders-summary-grid span,
+.orders-card-header span,
+.order-card-top span,
+.order-meta-grid span,
+.ordered-product-row span {
+  color: #6f8099;
+  font-size: 0.85rem;
+}
+
+.orders-summary-grid strong,
+.order-card-top h3,
+.order-card-highlight strong,
+.order-meta-grid strong,
+.ordered-product-row strong {
+  color: #162c4a;
+}
+
+.orders-content {
+  display: grid;
+  gap: 22px;
+}
+
+.orders-card-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  align-items: center;
+}
+
+.orders-card-header h2 {
+  margin: 8px 0 0;
+  color: #162c4a;
+}
+
+.orders-list {
+  display: grid;
+  gap: 20px;
+}
+
+.order-card {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(244, 247, 251, 0.96));
+  border-radius: 24px;
+  padding: 22px;
+  display: grid;
+  gap: 18px;
+}
+
+.order-card-top,
+.ordered-product-row,
+.order-meta-grid {
+  display: grid;
+  gap: 16px;
+}
+
+.order-card-top {
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  align-items: start;
+}
+
+.order-card-top h3 {
+  margin: 6px 0 0;
+  font-size: 1.5rem;
+}
+
+.order-card-highlight {
+  padding: 16px 18px;
+  border-radius: 18px;
+  background: #162c4a;
+}
+
+.order-card-highlight span,
+.order-card-highlight strong {
+  color: #f8fbff;
+}
+
+.order-meta-grid {
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+}
+
+.order-meta-grid > div,
+.ordered-product-row {
+  padding: 16px 18px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(22, 44, 74, 0.06);
+}
+
+.ordered-product-list {
+  display: grid;
+  gap: 14px;
+}
+
+.ordered-product-row {
+  grid-template-columns: minmax(220px, 2fr) repeat(3, minmax(120px, 1fr));
+  align-items: center;
+}
+
+.ordered-product-copy p {
+  margin: 6px 0 0;
+  color: #6f8099;
+}
+
+.ordered-product-meta,
+.ordered-product-copy {
+  display: grid;
+  gap: 6px;
+}
+
+.ordered-product-total strong {
+  color: #0b7a5a;
+}
+
+.orders-empty-state {
+  display: grid;
+  justify-items: start;
+  gap: 12px;
+}
+
+.orders-empty-link {
+  text-decoration: none;
+}
+
+@media (max-width: 860px) {
+  .orders-hero,
+  .orders-card-header {
+    grid-template-columns: 1fr;
+    display: grid;
+  }
+
+  .ordered-product-row {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 560px) {
+  .orders-page {
+    padding: 20px 14px 36px;
+  }
+
+  .orders-hero,
+  .orders-content {
+    padding: 20px;
+  }
+
+  .ordered-product-row,
+  .order-card-top,
+  .order-meta-grid {
+    grid-template-columns: 1fr;
+  }
+}

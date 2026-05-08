@@ -1,4 +1,4 @@
 #NOTE: This is a Maven Resolver internal implementation file, its format can be changed without prior notice.
-#Fri May 08 17:42:36 IST 2026
-@default-central-https\://repo.maven.apache.org/maven2/.lastUpdated=1778242356885
+#Fri May 08 23:26:00 IST 2026
+@default-central-https\://repo.maven.apache.org/maven2/.lastUpdated=1778262960877
 https\://repo.maven.apache.org/maven2/.error=Could not transfer artifact org.springframework.boot\:spring-boot-starter-parent\:pom\:4.0.5 from/to central (https\://repo.maven.apache.org/maven2)\: Permission denied\: no further information

@@ -10,9 +10,6 @@ function ProductFilters({
       <div className="section-heading">
         <span>Search</span>
         <h2>Filter products</h2>
-        <p className="filter-intro">
-          Fine-tune the catalog by keyword, category, price, and stock status.
-        </p>
       </div>
 
       <form className="filter-form" onSubmit={onFilterSubmit}>

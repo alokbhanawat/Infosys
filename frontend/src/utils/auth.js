@@ -8,7 +8,11 @@ export function getStoredUserId() {
   return localStorage.getItem("userId");
 }
 
-export function setStoredSession({ token, userId }) {
+export function getStoredRole() {
+  return localStorage.getItem("role");
+}
+
+export function setStoredSession({ token, userId, role }) {
   if (token) {
     localStorage.setItem("token", token);
   }
@@ -16,11 +20,16 @@ export function setStoredSession({ token, userId }) {
   if (userId !== undefined && userId !== null) {
     localStorage.setItem("userId", String(userId));
   }
+
+  if (role) {
+    localStorage.setItem("role", role);
+  }
 }
 
 export function clearStoredToken() {
   localStorage.removeItem("token");
   localStorage.removeItem("userId");
+  localStorage.removeItem("role");
 }
 
 export function isTokenValid(token = getStoredToken()) {
@@ -43,13 +52,23 @@ export function isTokenValid(token = getStoredToken()) {
 
 export function getCurrentUser() {
   const token = getStoredToken();
+  const storedRole = getStoredRole();
 
   if (!isTokenValid(token)) {
     return null;
   }
 
   try {
-    return jwtDecode(token);
+    const decodedToken = jwtDecode(token);
+
+    if (!decodedToken?.role && storedRole) {
+      return {
+        ...decodedToken,
+        role: storedRole,
+      };
+    }
+
+    return decodedToken;
   } catch {
     return null;
   }

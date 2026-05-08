@@ -42,6 +42,7 @@ function LoginForm() {
       setStoredSession({
         token,
         userId: res?.data?.userId ?? res?.data?.id,
+        role: res?.data?.role,
       });
       const user = getCurrentUser();
       setMessage("Login successful.");

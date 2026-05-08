@@ -74,6 +74,13 @@ public class OrderService {
                 .toList();
     }
 
+    @Transactional(readOnly = true)
+    public List<OrderResponse> getOrdersForCurrentUser(String email) {
+        return orderRepository.findByUser_EmailOrderByCreatedAtDesc(email).stream()
+                .map(OrderResponse::new)
+                .toList();
+    }
+
     private void validateCartStock(List<Cart> cartItems) {
         for (Cart cartItem : cartItems) {
             Product product = cartItem.getProduct();

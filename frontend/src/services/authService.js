@@ -27,6 +27,7 @@ export const getProducts = (filters = {}) => {
 
   return api.get("/products/all", { params });
 };
+export const getAdminProducts = () => api.get("/products/admin/all");
 export const getProductById = async (id) => {
   try {
     return await api.get(`/products/${id}`);
@@ -39,6 +40,8 @@ export const getProductById = async (id) => {
   }
 };
 export const addProduct = (data) => api.post("/products/add", data);
+export const removeProduct = (id) => api.delete(`/products/${id}`);
+export const removeProducts = (productIds) => api.delete("/products/bulk", { data: { productIds } });
 export const addToCart = ({ userId, productId, quantity }) =>
   api.post("/cart", null, {
     params: {
@@ -69,5 +72,6 @@ export const checkoutOrder = (userId) =>
       userId,
     },
   });
+export const getCurrentUserOrders = () => api.get("/orders/my");
 
 export default api;

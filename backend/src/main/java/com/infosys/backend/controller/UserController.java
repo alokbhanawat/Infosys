@@ -35,7 +35,7 @@ public class UserController {
 
     @PostMapping("/login")
     public AuthResponse loginUser(@RequestBody LoginRequest request) {
-        return new AuthResponse(userService.loginUser(request.getEmail(), request.getPassword()));
+        return userService.loginUser(request.getEmail(), request.getPassword());
     }
 
     @GetMapping("/products")

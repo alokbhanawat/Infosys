@@ -153,6 +153,9 @@ function ProductsPage() {
               <Link className="back-link storefront-cart-link" to="/cart">
                 Open cart
               </Link>
+              <Link className="back-link storefront-cart-link" to="/orders">
+                Orders
+              </Link>
               <button className="logout-btn storefront-logout" onClick={handleLogout}>
                 Logout
               </button>

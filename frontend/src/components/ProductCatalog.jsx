@@ -6,6 +6,10 @@ function ProductCatalog({
   catalogLoading,
   catalogFeedback,
   onRefresh,
+  adminRemoveMode = false,
+  onToggleAdminRemoveMode,
+  onRemoveProduct,
+  deletingProductId = null,
   detailBasePath,
   heading,
   subheading,
@@ -52,9 +56,21 @@ function ProductCatalog({
         </div>
 
         <div className="catalog-header-actions">
-          <button type="button" className="secondary-btn header-btn" onClick={onRefresh}>
-            {catalogLoading ? "Refreshing..." : "Refresh products"}
-          </button>
+          <div className="catalog-action-stack">
+            <button type="button" className="secondary-btn header-btn" onClick={onRefresh}>
+              {catalogLoading ? "Refreshing..." : "Refresh products"}
+            </button>
+
+            {isAdmin ? (
+              <button
+                type="button"
+                className={`header-btn ${adminRemoveMode ? "danger-btn" : "secondary-btn"}`}
+                onClick={onToggleAdminRemoveMode}
+              >
+                {adminRemoveMode ? "Hide remove products" : "Remove products"}
+              </button>
+            ) : null}
+          </div>
         </div>
       </div>
 
@@ -112,7 +128,22 @@ function ProductCatalog({
                   </div>
                 </>
               ) : (
-                renderProductCardBody(product)
+                <>
+                  {renderProductCardBody(product)}
+
+                  {isAdmin && adminRemoveMode ? (
+                    <div className="product-card-actions product-card-actions-admin">
+                      <button
+                        type="button"
+                        className="danger-btn product-remove-btn"
+                        onClick={() => onRemoveProduct?.(product)}
+                        disabled={deletingProductId === product.id}
+                      >
+                        {deletingProductId === product.id ? "Removing..." : "Remove product"}
+                      </button>
+                    </div>
+                  ) : null}
+                </>
               )}
             </article>
           ))

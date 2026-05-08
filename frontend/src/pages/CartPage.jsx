@@ -17,8 +17,6 @@ import {
 import "../styles/dashboard.css";
 import "../styles/cart.css";
 
-const ORDER_SUCCESS_STORAGE_KEY = "latestOrder";
-
 function CartPage() {
   const navigate = useNavigate();
   const tokenUser = getCurrentUser();
@@ -75,21 +73,6 @@ function CartPage() {
     clearStoredToken();
     navigate("/login", { replace: true });
   };
-
-  const getOrderDetails = (responseData) => ({
-    orderId:
-      responseData?.orderId ??
-      responseData?.id ??
-      responseData?.data?.orderId ??
-      responseData?.data?.id,
-    totalAmount:
-      responseData?.totalAmount ??
-      responseData?.amount ??
-      responseData?.grandTotal ??
-      responseData?.data?.totalAmount ??
-      responseData?.data?.amount ??
-      totalCartValue,
-  });
 
   const handleUpdateQuantity = async (item, nextQuantity) => {
     if (!user?.userId || !item?.product?.id || nextQuantity < 1) {
@@ -173,21 +156,23 @@ function CartPage() {
 
     try {
       const response = await checkoutOrder(checkoutUserId);
-      const orderDetails = getOrderDetails(response?.data);
+      const orderDetails = response?.data;
 
-      if (!orderDetails.orderId) {
+      if (!orderDetails?.orderId) {
         throw new Error("Order ID missing in checkout response.");
       }
 
-      sessionStorage.setItem(ORDER_SUCCESS_STORAGE_KEY, JSON.stringify(orderDetails));
       setCartItems([]);
       setActionMessage("Order placed successfully");
       setActionStatus("success");
 
       window.setTimeout(() => {
-        navigate("/order-success", {
+        navigate("/orders", {
           replace: true,
-          state: orderDetails,
+          state: {
+            checkoutSuccess: true,
+            orderId: orderDetails.orderId,
+          },
         });
       }, 700);
     } catch (requestError) {
@@ -224,6 +209,9 @@ function CartPage() {
           <div className="cart-hero-actions">
             <Link className="back-link" to="/products">
               Continue shopping
+            </Link>
+            <Link className="back-link" to="/orders">
+              View orders
             </Link>
             <button className="logout-btn" onClick={handleLogout}>
               Logout

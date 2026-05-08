@@ -8,6 +8,7 @@ import {
   addProduct,
   getProtectedProductsMessage,
   getProducts,
+  removeProduct,
 } from "../services/authService";
 
 function Dashboard() {
@@ -22,6 +23,8 @@ function Dashboard() {
   const [catalogFeedback, setCatalogFeedback] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showProductForm, setShowProductForm] = useState(false);
+  const [adminRemoveMode, setAdminRemoveMode] = useState(false);
+  const [deletingProductId, setDeletingProductId] = useState(null);
   const [productForm, setProductForm] = useState({
     name: "",
     description: "",
@@ -166,6 +169,33 @@ function Dashboard() {
     }
   };
 
+  const handleRemoveProduct = async (product) => {
+    if (!product?.id) {
+      setCatalogFeedback("Unable to remove this product right now.");
+      return;
+    }
+
+    const confirmed = window.confirm(`Remove "${product.name}" from products?`);
+
+    if (!confirmed) {
+      return;
+    }
+
+    setDeletingProductId(product.id);
+    setCatalogFeedback("");
+
+    try {
+      await removeProduct(product.id);
+      await loadProducts(filters);
+      setFeedback(`"${product.name}" removed successfully.`);
+      setFeedbackType("success");
+    } catch (error) {
+      setCatalogFeedback(getErrorMessage(error, "Unable to remove product."));
+    } finally {
+      setDeletingProductId(null);
+    }
+  };
+
   return (
     <div className="dashboard-container">
       <div className="dashboard-backdrop"></div>
@@ -294,6 +324,10 @@ function Dashboard() {
             catalogLoading={catalogLoading}
             catalogFeedback={catalogFeedback}
             onRefresh={() => loadProducts(filters)}
+            adminRemoveMode={adminRemoveMode}
+            onToggleAdminRemoveMode={() => setAdminRemoveMode((current) => !current)}
+            onRemoveProduct={handleRemoveProduct}
+            deletingProductId={deletingProductId}
           />
         </div>
       </div>
