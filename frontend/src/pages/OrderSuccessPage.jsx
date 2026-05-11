@@ -24,6 +24,7 @@ function OrderSuccessPage() {
     parsedStoredOrder;
 
   const formatCurrency = (value) => `Rs. ${Number(value || 0).toFixed(2)}`;
+  const orderedItems = Array.isArray(orderDetails?.items) ? orderDetails.items : [];
 
   useEffect(() => {
     if (!orderDetails?.orderId) {
@@ -57,9 +58,35 @@ function OrderSuccessPage() {
             </article>
             <article>
               <span>Total Amount</span>
-              <strong>{formatCurrency(orderDetails.totalAmount)}</strong>
+              <strong>{formatCurrency(orderDetails.totalPrice)}</strong>
+            </article>
+            <article>
+              <span>Items Ordered</span>
+              <strong>{orderedItems.length}</strong>
             </article>
           </div>
+
+          {orderedItems.length ? (
+            <div className="order-success-items">
+              {orderedItems.map((item) => (
+                <article key={item.orderItemId} className="order-success-item">
+                  <div>
+                    <span>Product</span>
+                    <strong>{item.productName}</strong>
+                    <p>Product ID: {item.productId}</p>
+                  </div>
+                  <div>
+                    <span>Quantity</span>
+                    <strong>{item.quantity}</strong>
+                  </div>
+                  <div>
+                    <span>Line total</span>
+                    <strong>{formatCurrency(item.lineTotal)}</strong>
+                  </div>
+                </article>
+              ))}
+            </div>
+          ) : null}
 
           <div className="order-success-actions">
             <button
@@ -69,8 +96,8 @@ function OrderSuccessPage() {
             >
               Continue Shopping
             </button>
-            <Link className="back-link order-success-link" to="/cart">
-              Back to cart
+            <Link className="back-link order-success-link" to="/orders">
+              View orders
             </Link>
           </div>
         </section>

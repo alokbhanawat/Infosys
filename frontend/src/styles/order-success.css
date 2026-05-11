@@ -51,7 +51,7 @@
 
 .order-success-summary {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   gap: 18px;
   margin-top: 28px;
 }
@@ -76,6 +76,41 @@
   display: block;
   margin-top: 12px;
   font-size: 1.55rem;
+}
+
+.order-success-items {
+  display: grid;
+  gap: 14px;
+  margin-top: 24px;
+}
+
+.order-success-item {
+  display: grid;
+  grid-template-columns: minmax(220px, 2fr) repeat(2, minmax(120px, 1fr));
+  gap: 16px;
+  padding: 20px 22px;
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.order-success-item span {
+  display: block;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.order-success-item strong {
+  display: block;
+  margin-top: 10px;
+  font-size: 1.05rem;
+}
+
+.order-success-item p {
+  margin: 8px 0 0;
+  color: rgba(255, 255, 255, 0.74);
 }
 
 .order-success-actions {
@@ -115,6 +150,10 @@
   }
 
   .order-success-summary {
+    grid-template-columns: 1fr;
+  }
+
+  .order-success-item {
     grid-template-columns: 1fr;
   }
 

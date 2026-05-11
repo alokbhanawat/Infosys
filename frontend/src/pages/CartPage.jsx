@@ -17,6 +17,8 @@ import {
 import "../styles/dashboard.css";
 import "../styles/cart.css";
 
+const ORDER_SUCCESS_STORAGE_KEY = "latestOrder";
+
 function CartPage() {
   const navigate = useNavigate();
   const tokenUser = getCurrentUser();
@@ -165,14 +167,12 @@ function CartPage() {
       setCartItems([]);
       setActionMessage("Order placed successfully");
       setActionStatus("success");
+      sessionStorage.setItem(ORDER_SUCCESS_STORAGE_KEY, JSON.stringify(orderDetails));
 
       window.setTimeout(() => {
-        navigate("/orders", {
+        navigate("/orders/success", {
           replace: true,
-          state: {
-            checkoutSuccess: true,
-            orderId: orderDetails.orderId,
-          },
+          state: orderDetails,
         });
       }, 700);
     } catch (requestError) {

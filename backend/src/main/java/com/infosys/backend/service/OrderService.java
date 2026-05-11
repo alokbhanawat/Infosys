@@ -8,9 +8,12 @@ import com.infosys.backend.model.Product;
 import com.infosys.backend.model.User;
 import com.infosys.backend.repository.CartRepository;
 import com.infosys.backend.repository.OrderRepository;
+import com.infosys.backend.repository.ProductRepository;
 import com.infosys.backend.repository.UserRepository;
 import java.math.BigDecimal;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,11 +24,17 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
     private final CartRepository cartRepository;
+    private final ProductRepository productRepository;
     private final UserRepository userRepository;
 
-    public OrderService(OrderRepository orderRepository, CartRepository cartRepository, UserRepository userRepository) {
+    public OrderService(
+            OrderRepository orderRepository,
+            CartRepository cartRepository,
+            ProductRepository productRepository,
+            UserRepository userRepository) {
         this.orderRepository = orderRepository;
         this.cartRepository = cartRepository;
+        this.productRepository = productRepository;
         this.userRepository = userRepository;
     }
 
@@ -39,13 +48,14 @@ public class OrderService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cart is empty.");
         }
 
-        validateCartStock(cartItems);
+        Map<Long, Product> lockedProducts = lockProductsForCheckout(cartItems);
+        validateCartStock(cartItems, lockedProducts);
 
         BigDecimal totalPrice = calculateTotalPrice(cartItems);
         Order order = new Order(user, totalPrice);
 
         for (Cart cartItem : cartItems) {
-            Product product = cartItem.getProduct();
+            Product product = lockedProducts.get(cartItem.getProduct().getId());
             BigDecimal lineTotal = product.getPrice().multiply(BigDecimal.valueOf(cartItem.getQuantity()));
 
             order.addItem(new OrderItem(
@@ -81,9 +91,31 @@ public class OrderService {
                 .toList();
     }
 
-    private void validateCartStock(List<Cart> cartItems) {
+    private Map<Long, Product> lockProductsForCheckout(List<Cart> cartItems) {
+        List<Long> productIds = cartItems.stream()
+                .map(cartItem -> cartItem.getProduct().getId())
+                .distinct()
+                .sorted()
+                .toList();
+
+        List<Product> lockedProducts = productRepository.findAllActiveByIdInForUpdate(productIds);
+        Map<Long, Product> lockedProductsById = new LinkedHashMap<>();
+        for (Product product : lockedProducts) {
+            lockedProductsById.put(product.getId(), product);
+        }
+
+        if (lockedProductsById.size() != productIds.size()) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "One or more products in your cart are no longer available.");
+        }
+
+        return lockedProductsById;
+    }
+
+    private void validateCartStock(List<Cart> cartItems, Map<Long, Product> lockedProducts) {
         for (Cart cartItem : cartItems) {
-            Product product = cartItem.getProduct();
+            Product product = lockedProducts.get(cartItem.getProduct().getId());
             if (product.getStock() == null || product.getStock() < cartItem.getQuantity()) {
                 throw new ResponseStatusException(
                         HttpStatus.BAD_REQUEST,

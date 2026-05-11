@@ -1,8 +1,11 @@
 package com.infosys.backend.repository;
 
 import com.infosys.backend.model.Product;
+import jakarta.persistence.LockModeType;
 import java.math.BigDecimal;
+import java.util.Collection;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -17,6 +20,16 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     List<Product> findByNameContainingIgnoreCase(String name);
 
     Optional<Product> findByIdAndIsActiveTrue(Long id);
+
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Query("""
+            SELECT p
+            FROM Product p
+            WHERE p.isActive = true
+              AND p.id IN :productIds
+            ORDER BY p.id
+            """)
+    List<Product> findAllActiveByIdInForUpdate(@Param("productIds") Collection<Long> productIds);
 
     @Query("""
             SELECT p
