@@ -1,15 +1,16 @@
 package com.infosys.backend.controller;
 
+import com.infosys.backend.dto.CheckoutRequest;
 import com.infosys.backend.dto.OrderResponse;
 import com.infosys.backend.service.OrderService;
 import java.security.Principal;
 import java.util.List;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -24,8 +25,8 @@ public class OrderController {
     }
 
     @PostMapping("/checkout")
-    public OrderResponse checkout(@RequestParam int userId) {
-        return orderService.checkout(userId);
+    public OrderResponse checkout(@RequestBody CheckoutRequest request, Principal principal) {
+        return orderService.checkout(request, principal.getName());
     }
 
     @GetMapping("/my")

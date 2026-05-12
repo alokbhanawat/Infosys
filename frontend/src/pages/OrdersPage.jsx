@@ -154,7 +154,38 @@ function OrdersPage() {
                       <span>Items</span>
                       <strong>{order.items?.length || 0}</strong>
                     </div>
+                    <div>
+                      <span>Payment</span>
+                      <strong>{order.paymentSummary?.paymentMethod || "Not available"}</strong>
+                    </div>
                   </div>
+
+                  {order.shippingAddress ? (
+                    <div className="ordered-product-row">
+                      <div className="ordered-product-copy">
+                        <span>Shipping address</span>
+                        <strong>{order.shippingAddress.fullName}</strong>
+                        <p>
+                          {order.shippingAddress.addressLine1}
+                          {order.shippingAddress.addressLine2 ? `, ${order.shippingAddress.addressLine2}` : ""}
+                        </p>
+                        <p>
+                          {order.shippingAddress.city}, {order.shippingAddress.state}{" "}
+                          {order.shippingAddress.postalCode}, {order.shippingAddress.country}
+                        </p>
+                      </div>
+
+                      <div className="ordered-product-meta">
+                        <span>Phone</span>
+                        <strong>{order.shippingAddress.phone}</strong>
+                      </div>
+
+                      <div className="ordered-product-meta">
+                        <span>Reference</span>
+                        <strong>{order.paymentSummary?.paymentReference || "Not available"}</strong>
+                      </div>
+                    </div>
+                  ) : null}
 
                   <div className="ordered-product-list">
                     {(order.items || []).map((item) => (

@@ -25,6 +25,8 @@ function OrderSuccessPage() {
 
   const formatCurrency = (value) => `Rs. ${Number(value || 0).toFixed(2)}`;
   const orderedItems = Array.isArray(orderDetails?.items) ? orderDetails.items : [];
+  const shippingAddress = orderDetails?.shippingAddress;
+  const paymentSummary = orderDetails?.paymentSummary;
 
   useEffect(() => {
     if (!orderDetails?.orderId) {
@@ -65,6 +67,34 @@ function OrderSuccessPage() {
               <strong>{orderedItems.length}</strong>
             </article>
           </div>
+
+          {shippingAddress ? (
+            <div className="order-success-items">
+              <article className="order-success-item">
+                <div>
+                  <span>Deliver to</span>
+                  <strong>{shippingAddress.fullName}</strong>
+                  <p>
+                    {shippingAddress.addressLine1}
+                    {shippingAddress.addressLine2 ? `, ${shippingAddress.addressLine2}` : ""}
+                  </p>
+                  <p>
+                    {shippingAddress.city}, {shippingAddress.state} {shippingAddress.postalCode}
+                  </p>
+                  <p>{shippingAddress.country}</p>
+                </div>
+                <div>
+                  <span>Phone</span>
+                  <strong>{shippingAddress.phone}</strong>
+                </div>
+                <div>
+                  <span>Payment</span>
+                  <strong>{paymentSummary?.paymentMethod || "Not available"}</strong>
+                  <p>{paymentSummary?.paymentReference || ""}</p>
+                </div>
+              </article>
+            </div>
+          ) : null}
 
           {orderedItems.length ? (
             <div className="order-success-items">

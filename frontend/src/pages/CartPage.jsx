@@ -18,6 +18,20 @@ import "../styles/dashboard.css";
 import "../styles/cart.css";
 
 const ORDER_SUCCESS_STORAGE_KEY = "latestOrder";
+const DEFAULT_CHECKOUT_FORM = {
+  fullName: "",
+  phone: "",
+  addressLine1: "",
+  addressLine2: "",
+  city: "",
+  state: "",
+  postalCode: "",
+  country: "India",
+  paymentMethod: "CARD",
+  cardHolderName: "",
+  cardNumber: "",
+  upiId: "",
+};
 
 function CartPage() {
   const navigate = useNavigate();
@@ -30,6 +44,7 @@ function CartPage() {
   const [actionStatus, setActionStatus] = useState("success");
   const [activeCartItemId, setActiveCartItemId] = useState(null);
   const [isCheckingOut, setIsCheckingOut] = useState(false);
+  const [checkoutForm, setCheckoutForm] = useState(DEFAULT_CHECKOUT_FORM);
 
   const formatCurrency = (value) => `Rs. ${Number(value || 0).toFixed(2)}`;
 
@@ -53,6 +68,11 @@ function CartPage() {
       }
 
       setUser(activeUser);
+      setCheckoutForm((currentForm) => ({
+        ...currentForm,
+        fullName: currentForm.fullName || activeUser?.name || "",
+        phone: currentForm.phone || activeUser?.phone || "",
+      }));
       setStoredSession({
         token: getStoredToken(),
         userId: activeUser?.userId,
@@ -157,7 +177,10 @@ function CartPage() {
     setError("");
 
     try {
-      const response = await checkoutOrder(checkoutUserId);
+      const response = await checkoutOrder({
+        userId: checkoutUserId,
+        ...checkoutForm,
+      });
       const orderDetails = response?.data;
 
       if (!orderDetails?.orderId) {
@@ -167,6 +190,12 @@ function CartPage() {
       setCartItems([]);
       setActionMessage("Order placed successfully");
       setActionStatus("success");
+      setCheckoutForm((currentForm) => ({
+        ...DEFAULT_CHECKOUT_FORM,
+        fullName: currentForm.fullName,
+        phone: currentForm.phone,
+        country: currentForm.country || "India",
+      }));
       sessionStorage.setItem(ORDER_SUCCESS_STORAGE_KEY, JSON.stringify(orderDetails));
 
       window.setTimeout(() => {
@@ -189,6 +218,17 @@ function CartPage() {
       setIsCheckingOut(false);
     }
   };
+
+  const handleCheckoutInputChange = ({ target }) => {
+    const { name, value } = target;
+    setCheckoutForm((currentForm) => ({
+      ...currentForm,
+      [name]: value,
+    }));
+  };
+
+  const isCardPayment = checkoutForm.paymentMethod === "CARD";
+  const isUpiPayment = checkoutForm.paymentMethod === "UPI";
 
   const totalItems = cartItems.reduce((sum, item) => sum + (Number(item.quantity) || 0), 0);
   const totalCartValue = cartItems.reduce(
@@ -341,8 +381,8 @@ function CartPage() {
           <aside className="cart-card cart-overview-card">
             <div className="cart-card-header cart-overview-header">
               <div>
-                <span>Summary</span>
-                <h2>Cart overview</h2>
+                <span>Checkout</span>
+                <h2>Address & payment</h2>
               </div>
             </div>
 
@@ -366,8 +406,150 @@ function CartPage() {
             </div>
 
             <p className="cart-overview-note">
-              Review prices, adjust quantities, and keep your cart updated before checkout.
+              Review your items, enter delivery details, and choose how you want to pay before placing the order.
             </p>
+
+            <div className="checkout-form-grid">
+              <label className="checkout-field">
+                <span>Full name</span>
+                <input
+                  type="text"
+                  name="fullName"
+                  value={checkoutForm.fullName}
+                  onChange={handleCheckoutInputChange}
+                  placeholder="Enter full name"
+                />
+              </label>
+
+              <label className="checkout-field">
+                <span>Phone</span>
+                <input
+                  type="tel"
+                  name="phone"
+                  value={checkoutForm.phone}
+                  onChange={handleCheckoutInputChange}
+                  placeholder="Enter phone number"
+                />
+              </label>
+
+              <label className="checkout-field checkout-field-full">
+                <span>Address line 1</span>
+                <input
+                  type="text"
+                  name="addressLine1"
+                  value={checkoutForm.addressLine1}
+                  onChange={handleCheckoutInputChange}
+                  placeholder="House number, street, locality"
+                />
+              </label>
+
+              <label className="checkout-field checkout-field-full">
+                <span>Address line 2</span>
+                <input
+                  type="text"
+                  name="addressLine2"
+                  value={checkoutForm.addressLine2}
+                  onChange={handleCheckoutInputChange}
+                  placeholder="Apartment, landmark, optional"
+                />
+              </label>
+
+              <label className="checkout-field">
+                <span>City</span>
+                <input
+                  type="text"
+                  name="city"
+                  value={checkoutForm.city}
+                  onChange={handleCheckoutInputChange}
+                  placeholder="City"
+                />
+              </label>
+
+              <label className="checkout-field">
+                <span>State</span>
+                <input
+                  type="text"
+                  name="state"
+                  value={checkoutForm.state}
+                  onChange={handleCheckoutInputChange}
+                  placeholder="State"
+                />
+              </label>
+
+              <label className="checkout-field">
+                <span>Postal code</span>
+                <input
+                  type="text"
+                  name="postalCode"
+                  value={checkoutForm.postalCode}
+                  onChange={handleCheckoutInputChange}
+                  placeholder="PIN / ZIP code"
+                />
+              </label>
+
+              <label className="checkout-field">
+                <span>Country</span>
+                <input
+                  type="text"
+                  name="country"
+                  value={checkoutForm.country}
+                  onChange={handleCheckoutInputChange}
+                  placeholder="Country"
+                />
+              </label>
+
+              <label className="checkout-field checkout-field-full">
+                <span>Payment method</span>
+                <select
+                  name="paymentMethod"
+                  value={checkoutForm.paymentMethod}
+                  onChange={handleCheckoutInputChange}
+                >
+                  <option value="CARD">Card</option>
+                  <option value="UPI">UPI</option>
+                  <option value="COD">Cash on delivery</option>
+                </select>
+              </label>
+
+              {isCardPayment ? (
+                <>
+                  <label className="checkout-field">
+                    <span>Card holder</span>
+                    <input
+                      type="text"
+                      name="cardHolderName"
+                      value={checkoutForm.cardHolderName}
+                      onChange={handleCheckoutInputChange}
+                      placeholder="Name on card"
+                    />
+                  </label>
+
+                  <label className="checkout-field">
+                    <span>Card number</span>
+                    <input
+                      type="text"
+                      name="cardNumber"
+                      value={checkoutForm.cardNumber}
+                      onChange={handleCheckoutInputChange}
+                      placeholder="Only last 4+ digits are validated"
+                    />
+                  </label>
+                </>
+              ) : null}
+
+              {isUpiPayment ? (
+                <label className="checkout-field checkout-field-full">
+                  <span>UPI ID</span>
+                  <input
+                    type="text"
+                    name="upiId"
+                    value={checkoutForm.upiId}
+                    onChange={handleCheckoutInputChange}
+                    placeholder="name@bank"
+                  />
+                </label>
+              ) : null}
+            </div>
 
             <button
               type="button"

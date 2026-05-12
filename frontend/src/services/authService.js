@@ -66,12 +66,7 @@ export const removeFromCart = ({ userId, productId }) =>
       productId,
     },
   });
-export const checkoutOrder = (userId) =>
-  api.post("/orders/checkout", null, {
-    params: {
-      userId,
-    },
-  });
+export const checkoutOrder = (data) => api.post("/orders/checkout", data);
 export const getCurrentUserOrders = () => api.get("/orders/my");
 
 export default api;
