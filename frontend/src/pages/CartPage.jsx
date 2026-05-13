@@ -45,8 +45,64 @@ function CartPage() {
   const [activeCartItemId, setActiveCartItemId] = useState(null);
   const [isCheckingOut, setIsCheckingOut] = useState(false);
   const [checkoutForm, setCheckoutForm] = useState(DEFAULT_CHECKOUT_FORM);
+  const [checkoutErrors, setCheckoutErrors] = useState({});
 
   const formatCurrency = (value) => `Rs. ${Number(value || 0).toFixed(2)}`;
+  const mandatoryFieldMessage = "Please fill this mandatory field.";
+
+  const validateCheckoutForm = (formValues) => {
+    const validationErrors = {};
+
+    if (!formValues.fullName.trim()) {
+      validationErrors.fullName = mandatoryFieldMessage;
+    }
+
+    if (!formValues.phone.trim()) {
+      validationErrors.phone = mandatoryFieldMessage;
+    }
+
+    if (!formValues.addressLine1.trim()) {
+      validationErrors.addressLine1 = mandatoryFieldMessage;
+    }
+
+    if (!formValues.city.trim()) {
+      validationErrors.city = mandatoryFieldMessage;
+    }
+
+    if (!formValues.state.trim()) {
+      validationErrors.state = mandatoryFieldMessage;
+    }
+
+    if (!formValues.postalCode.trim()) {
+      validationErrors.postalCode = mandatoryFieldMessage;
+    }
+
+    if (!formValues.country.trim()) {
+      validationErrors.country = mandatoryFieldMessage;
+    }
+
+    if (!formValues.paymentMethod.trim()) {
+      validationErrors.paymentMethod = mandatoryFieldMessage;
+    }
+
+    if (formValues.paymentMethod === "CARD") {
+      if (!formValues.cardHolderName.trim()) {
+        validationErrors.cardHolderName = mandatoryFieldMessage;
+      }
+
+      if (!formValues.cardNumber.trim()) {
+        validationErrors.cardNumber = mandatoryFieldMessage;
+      } else if (formValues.cardNumber.replace(/\D/g, "").length < 4) {
+        validationErrors.cardNumber = "Enter at least the last 4 digits of the card number.";
+      }
+    }
+
+    if (formValues.paymentMethod === "UPI" && !formValues.upiId.trim()) {
+      validationErrors.upiId = mandatoryFieldMessage;
+    }
+
+    return validationErrors;
+  };
 
   const loadCart = async () => {
     setLoading(true);
@@ -171,7 +227,16 @@ function CartPage() {
       return;
     }
 
+    const validationErrors = validateCheckoutForm(checkoutForm);
+    if (Object.keys(validationErrors).length > 0) {
+      setCheckoutErrors(validationErrors);
+      setActionStatus("error");
+      setActionMessage("Please fill this mandatory field.");
+      return;
+    }
+
     setIsCheckingOut(true);
+    setCheckoutErrors({});
     setActionMessage("");
     setActionStatus("success");
     setError("");
@@ -221,10 +286,37 @@ function CartPage() {
 
   const handleCheckoutInputChange = ({ target }) => {
     const { name, value } = target;
-    setCheckoutForm((currentForm) => ({
-      ...currentForm,
-      [name]: value,
-    }));
+    setCheckoutForm((currentForm) => {
+      const nextForm = {
+        ...currentForm,
+        [name]: value,
+      };
+
+      if (name === "paymentMethod") {
+        if (value === "CARD") {
+          nextForm.upiId = "";
+        }
+
+        if (value === "UPI") {
+          nextForm.cardHolderName = "";
+          nextForm.cardNumber = "";
+        }
+      }
+
+      return nextForm;
+    });
+    setCheckoutErrors((currentErrors) => {
+      const nextErrors = { ...currentErrors };
+      delete nextErrors[name];
+
+      if (name === "paymentMethod") {
+        delete nextErrors.cardHolderName;
+        delete nextErrors.cardNumber;
+        delete nextErrors.upiId;
+      }
+
+      return nextErrors;
+    });
   };
 
   const isCardPayment = checkoutForm.paymentMethod === "CARD";
@@ -418,7 +510,9 @@ function CartPage() {
                   value={checkoutForm.fullName}
                   onChange={handleCheckoutInputChange}
                   placeholder="Enter full name"
+                  className={checkoutErrors.fullName ? "checkout-input-error" : ""}
                 />
+                {checkoutErrors.fullName ? <small className="checkout-field-error">{checkoutErrors.fullName}</small> : null}
               </label>
 
               <label className="checkout-field">
@@ -429,7 +523,9 @@ function CartPage() {
                   value={checkoutForm.phone}
                   onChange={handleCheckoutInputChange}
                   placeholder="Enter phone number"
+                  className={checkoutErrors.phone ? "checkout-input-error" : ""}
                 />
+                {checkoutErrors.phone ? <small className="checkout-field-error">{checkoutErrors.phone}</small> : null}
               </label>
 
               <label className="checkout-field checkout-field-full">
@@ -440,7 +536,11 @@ function CartPage() {
                   value={checkoutForm.addressLine1}
                   onChange={handleCheckoutInputChange}
                   placeholder="House number, street, locality"
+                  className={checkoutErrors.addressLine1 ? "checkout-input-error" : ""}
                 />
+                {checkoutErrors.addressLine1 ? (
+                  <small className="checkout-field-error">{checkoutErrors.addressLine1}</small>
+                ) : null}
               </label>
 
               <label className="checkout-field checkout-field-full">
@@ -462,7 +562,9 @@ function CartPage() {
                   value={checkoutForm.city}
                   onChange={handleCheckoutInputChange}
                   placeholder="City"
+                  className={checkoutErrors.city ? "checkout-input-error" : ""}
                 />
+                {checkoutErrors.city ? <small className="checkout-field-error">{checkoutErrors.city}</small> : null}
               </label>
 
               <label className="checkout-field">
@@ -473,7 +575,9 @@ function CartPage() {
                   value={checkoutForm.state}
                   onChange={handleCheckoutInputChange}
                   placeholder="State"
+                  className={checkoutErrors.state ? "checkout-input-error" : ""}
                 />
+                {checkoutErrors.state ? <small className="checkout-field-error">{checkoutErrors.state}</small> : null}
               </label>
 
               <label className="checkout-field">
@@ -484,7 +588,11 @@ function CartPage() {
                   value={checkoutForm.postalCode}
                   onChange={handleCheckoutInputChange}
                   placeholder="PIN / ZIP code"
+                  className={checkoutErrors.postalCode ? "checkout-input-error" : ""}
                 />
+                {checkoutErrors.postalCode ? (
+                  <small className="checkout-field-error">{checkoutErrors.postalCode}</small>
+                ) : null}
               </label>
 
               <label className="checkout-field">
@@ -495,7 +603,9 @@ function CartPage() {
                   value={checkoutForm.country}
                   onChange={handleCheckoutInputChange}
                   placeholder="Country"
+                  className={checkoutErrors.country ? "checkout-input-error" : ""}
                 />
+                {checkoutErrors.country ? <small className="checkout-field-error">{checkoutErrors.country}</small> : null}
               </label>
 
               <label className="checkout-field checkout-field-full">
@@ -504,11 +614,14 @@ function CartPage() {
                   name="paymentMethod"
                   value={checkoutForm.paymentMethod}
                   onChange={handleCheckoutInputChange}
+                  className={checkoutErrors.paymentMethod ? "checkout-input-error" : ""}
                 >
                   <option value="CARD">Card</option>
                   <option value="UPI">UPI</option>
-                  <option value="COD">Cash on delivery</option>
                 </select>
+                {checkoutErrors.paymentMethod ? (
+                  <small className="checkout-field-error">{checkoutErrors.paymentMethod}</small>
+                ) : null}
               </label>
 
               {isCardPayment ? (
@@ -521,7 +634,11 @@ function CartPage() {
                       value={checkoutForm.cardHolderName}
                       onChange={handleCheckoutInputChange}
                       placeholder="Name on card"
+                      className={checkoutErrors.cardHolderName ? "checkout-input-error" : ""}
                     />
+                    {checkoutErrors.cardHolderName ? (
+                      <small className="checkout-field-error">{checkoutErrors.cardHolderName}</small>
+                    ) : null}
                   </label>
 
                   <label className="checkout-field">
@@ -532,7 +649,11 @@ function CartPage() {
                       value={checkoutForm.cardNumber}
                       onChange={handleCheckoutInputChange}
                       placeholder="Only last 4+ digits are validated"
+                      className={checkoutErrors.cardNumber ? "checkout-input-error" : ""}
                     />
+                    {checkoutErrors.cardNumber ? (
+                      <small className="checkout-field-error">{checkoutErrors.cardNumber}</small>
+                    ) : null}
                   </label>
                 </>
               ) : null}
@@ -546,7 +667,9 @@ function CartPage() {
                     value={checkoutForm.upiId}
                     onChange={handleCheckoutInputChange}
                     placeholder="name@bank"
+                    className={checkoutErrors.upiId ? "checkout-input-error" : ""}
                   />
+                  {checkoutErrors.upiId ? <small className="checkout-field-error">{checkoutErrors.upiId}</small> : null}
                 </label>
               ) : null}
             </div>

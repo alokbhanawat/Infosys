@@ -322,6 +322,17 @@
   box-shadow: 0 0 0 4px rgba(20, 184, 166, 0.12);
 }
 
+.checkout-field .checkout-input-error {
+  border-color: rgba(220, 38, 38, 0.72);
+  box-shadow: 0 0 0 4px rgba(248, 113, 113, 0.14);
+}
+
+.checkout-field-error {
+  color: #dc2626;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
 .cart-remove-btn {
   width: 44px;
   height: 44px;

@@ -109,34 +109,42 @@ public class OrderService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Checkout request is required.");
         }
 
-        requireText(request.getFullName(), "Full name is required.");
-        requireText(request.getPhone(), "Phone is required.");
-        requireText(request.getAddressLine1(), "Address line 1 is required.");
-        requireText(request.getCity(), "City is required.");
-        requireText(request.getState(), "State is required.");
-        requireText(request.getPostalCode(), "Postal code is required.");
-        requireText(request.getCountry(), "Country is required.");
-        requireText(request.getPaymentMethod(), "Payment method is required.");
+        requireMandatoryText(request.getFullName(), "Full name");
+        requireMandatoryText(request.getPhone(), "Phone number");
+        requireMandatoryText(request.getAddressLine1(), "Address line 1");
+        requireMandatoryText(request.getCity(), "City");
+        requireMandatoryText(request.getState(), "State");
+        requireMandatoryText(request.getPostalCode(), "Postal code");
+        requireMandatoryText(request.getCountry(), "Country");
+        requireMandatoryText(request.getPaymentMethod(), "Payment method");
 
         String paymentMethod = normalizePaymentMethod(request.getPaymentMethod());
+        if (!"CARD".equals(paymentMethod) && !"UPI".equals(paymentMethod)) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Please choose a valid payment method: card or UPI.");
+        }
+
         if ("CARD".equals(paymentMethod)) {
-            requireText(request.getCardHolderName(), "Card holder name is required for card payment.");
+            requireMandatoryText(request.getCardHolderName(), "Card holder name");
             String digitsOnly = digitsOnly(request.getCardNumber());
             if (digitsOnly.length() < 4) {
                 throw new ResponseStatusException(
                         HttpStatus.BAD_REQUEST,
-                        "Enter a valid card number with at least the last 4 digits.");
+                        "Card number is mandatory. Please fill this mandatory field with at least the last 4 digits.");
             }
         }
 
         if ("UPI".equals(paymentMethod)) {
-            requireText(request.getUpiId(), "UPI ID is required for UPI payment.");
+            requireMandatoryText(request.getUpiId(), "UPI ID");
         }
     }
 
-    private void requireText(String value, String message) {
+    private void requireMandatoryText(String value, String fieldName) {
         if (value == null || value.trim().isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, message);
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    fieldName + " is mandatory. Please fill this mandatory field.");
         }
     }
 
