@@ -3,6 +3,7 @@ package com.infosys.backend.controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -10,7 +11,10 @@ import java.security.Principal;
 
 import com.infosys.backend.dto.AuthResponse;
 import com.infosys.backend.dto.LoginRequest;
+import com.infosys.backend.dto.MessageResponse;
 import com.infosys.backend.dto.RegisterRequest;
+import com.infosys.backend.dto.UpdatePasswordRequest;
+import com.infosys.backend.dto.UpdateProfileRequest;
 import com.infosys.backend.dto.UserResponse;
 import com.infosys.backend.service.CurrentUserService;
 import com.infosys.backend.service.UserService;
@@ -46,5 +50,15 @@ public class UserController {
     @GetMapping("/me")
     public UserResponse getCurrentUser(Principal principal) {
         return currentUserService.getCurrentUser(principal.getName());
+    }
+
+    @PutMapping("/me")
+    public AuthResponse updateCurrentUser(@RequestBody UpdateProfileRequest request, Principal principal) {
+        return userService.updateProfile(principal.getName(), request);
+    }
+
+    @PutMapping("/me/password")
+    public MessageResponse updatePassword(@RequestBody UpdatePasswordRequest request, Principal principal) {
+        return userService.updatePassword(principal.getName(), request);
     }
 }

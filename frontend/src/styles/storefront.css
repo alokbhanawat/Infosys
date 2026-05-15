@@ -33,6 +33,7 @@
 .storefront-hero {
   position: relative;
   z-index: 1;
+  overflow: visible;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -125,6 +126,7 @@
   gap: 12px;
   width: 100%;
   max-width: 330px;
+  justify-items: stretch;
 }
 
 .storefront-cart-link {

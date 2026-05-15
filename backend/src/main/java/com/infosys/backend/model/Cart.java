@@ -1,5 +1,4 @@
 package com.infosys.backend.model;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;

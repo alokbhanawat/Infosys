@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
+import UserProfileMenu from "../components/UserProfileMenu";
 import { getCurrentUserOrders } from "../services/authService";
-import { clearStoredToken, getCurrentUser } from "../utils/auth";
+import { getCurrentUser } from "../utils/auth";
 import "../styles/dashboard.css";
 import "../styles/orders.css";
 
 function OrdersPage() {
-  const navigate = useNavigate();
   const location = useLocation();
   const [user] = useState(getCurrentUser());
   const [orders, setOrders] = useState([]);
@@ -52,11 +52,6 @@ function OrdersPage() {
     loadOrders();
   }, []);
 
-  const handleLogout = () => {
-    clearStoredToken();
-    navigate("/login", { replace: true });
-  };
-
   return (
     <div className="orders-page">
       <div className="orders-shell">
@@ -70,9 +65,7 @@ function OrdersPage() {
             <Link className="back-link" to="/products">
               Back to products
             </Link>
-            <button className="logout-btn" onClick={handleLogout}>
-              Logout
-            </button>
+            <UserProfileMenu user={user} />
           </div>
         </section>
 

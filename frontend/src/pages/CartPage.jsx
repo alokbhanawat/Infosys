@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import UserProfileMenu from "../components/UserProfileMenu";
 import {
   checkoutOrder,
   getCartByUserId,
@@ -8,7 +9,6 @@ import {
   updateCart,
 } from "../services/authService";
 import {
-  clearStoredToken,
   getCurrentUser,
   getStoredToken,
   getStoredUserId,
@@ -146,11 +146,6 @@ function CartPage() {
   useEffect(() => {
     loadCart();
   }, []);
-
-  const handleLogout = () => {
-    clearStoredToken();
-    navigate("/login", { replace: true });
-  };
 
   const handleUpdateQuantity = async (item, nextQuantity) => {
     if (!user?.userId || !item?.product?.id || nextQuantity < 1) {
@@ -342,12 +337,7 @@ function CartPage() {
             <Link className="back-link" to="/products">
               Continue shopping
             </Link>
-            <Link className="back-link" to="/orders">
-              View orders
-            </Link>
-            <button className="logout-btn" onClick={handleLogout}>
-              Logout
-            </button>
+            <UserProfileMenu user={user} />
           </div>
         </section>
 

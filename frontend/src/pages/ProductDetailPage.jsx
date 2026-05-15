@@ -1,12 +1,12 @@
 import { useEffect, useMemo, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
+import UserProfileMenu from "../components/UserProfileMenu";
 import { addToCart, getCurrentUserProfile, getProductById } from "../services/authService";
-import { clearStoredToken, getCurrentUser } from "../utils/auth";
+import { getCurrentUser } from "../utils/auth";
 import "../styles/product-detail.css";
 
 function ProductDetailPage() {
   const { productId } = useParams();
-  const navigate = useNavigate();
   const tokenUser = getCurrentUser();
   const [user, setUser] = useState(tokenUser);
   const [product, setProduct] = useState(null);
@@ -38,11 +38,6 @@ function ProductDetailPage() {
 
     loadProduct();
   }, [productId]);
-
-  const handleLogout = () => {
-    clearStoredToken();
-    navigate("/login", { replace: true });
-  };
 
   const stockLabel = useMemo(() => {
     if (!product) {
@@ -84,12 +79,7 @@ function ProductDetailPage() {
             Back to products
           </Link>
           <div className="product-detail-topbar-actions">
-            <Link className="back-link" to="/cart">
-              View cart
-            </Link>
-            <button className="logout-btn" onClick={handleLogout}>
-              Logout
-            </button>
+            <UserProfileMenu user={user} />
           </div>
         </div>
 

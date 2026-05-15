@@ -13,6 +13,8 @@
 }
 
 .cart-hero {
+  position: relative;
+  overflow: visible;
   display: flex;
   justify-content: space-between;
   gap: 24px;
@@ -56,6 +58,7 @@
   display: grid;
   gap: 12px;
   min-width: 220px;
+  justify-items: stretch;
 }
 
 .cart-hero-actions .back-link {

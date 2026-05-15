@@ -7,6 +7,7 @@ import PublicRoute from "./components/PublicRoute";
 import CartPage from "./pages/CartPage";
 import OrderSuccessPage from "./pages/OrderSuccessPage";
 import OrdersPage from "./pages/OrdersPage";
+import ProfilePage from "./pages/ProfilePage";
 import ProductDetailPage from "./pages/ProductDetailPage";
 import ProductsPage from "./pages/ProductsPage";
 
@@ -32,6 +33,10 @@ function App() {
         <Route path="/orders" element={<ProtectedRoute allowedRoles={["USER"]} />}>
           <Route index element={<OrdersPage />} />
           <Route path="success" element={<OrderSuccessPage />} />
+        </Route>
+
+        <Route path="/profile" element={<ProtectedRoute allowedRoles={["USER"]} />}>
+          <Route index element={<ProfilePage />} />
         </Route>
 
         <Route path="/admin" element={<ProtectedRoute allowedRoles={["ADMIN"]} />}>

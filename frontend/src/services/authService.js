@@ -20,6 +20,8 @@ export const registerUser = (data) => api.post("/users/register", data);
 export const loginUser = (data) => api.post("/users/login", data);
 export const getProtectedProductsMessage = () => api.get("/users/products");
 export const getCurrentUserProfile = () => api.get("/users/me");
+export const updateCurrentUserProfile = (data) => api.put("/users/me", data);
+export const updateCurrentUserPassword = (data) => api.put("/users/me/password", data);
 export const getProducts = (filters = {}) => {
   const params = Object.fromEntries(
     Object.entries(filters).filter(([, value]) => value !== "" && value !== null && value !== undefined),

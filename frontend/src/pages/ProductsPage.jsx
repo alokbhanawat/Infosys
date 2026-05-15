@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+import UserProfileMenu from "../components/UserProfileMenu";
 import ProductFilters from "../components/ProductFilters";
 import ProductCatalog from "../components/ProductCatalog";
 import { addToCart, getCurrentUserProfile, getProducts } from "../services/authService";
-import { clearStoredToken, getCurrentUser } from "../utils/auth";
+import { getCurrentUser } from "../utils/auth";
 import "../styles/storefront.css";
 
 function ProductsPage() {
-  const navigate = useNavigate();
   const tokenUser = getCurrentUser();
   const [user, setUser] = useState(tokenUser);
   const [products, setProducts] = useState([]);
@@ -53,11 +53,6 @@ function ProductsPage() {
 
     initializePage();
   }, []);
-
-  const handleLogout = () => {
-    clearStoredToken();
-    navigate("/login", { replace: true });
-  };
 
   const handleFilterChange = (e) => {
     const { name, type, checked, value } = e.target;
@@ -150,15 +145,7 @@ function ProductsPage() {
             </div>
 
             <div className="storefront-actions">
-              <Link className="back-link storefront-cart-link" to="/cart">
-                Open cart
-              </Link>
-              <Link className="back-link storefront-cart-link" to="/orders">
-                Orders
-              </Link>
-              <button className="logout-btn storefront-logout" onClick={handleLogout}>
-                Logout
-              </button>
+              <UserProfileMenu user={user} />
             </div>
           </div>
         </section>
