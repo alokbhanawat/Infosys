@@ -41,7 +41,12 @@ export const getProductById = async (id) => {
     return api.get(`/products/get/${id}`);
   }
 };
-export const addProduct = (data) => api.post("/products/add", data);
+export const addProduct = (data) =>
+  api.post("/products/add", data, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
 export const removeProduct = (id) => api.delete(`/products/${id}`);
 export const removeProducts = (productIds) => api.delete("/products/bulk", { data: { productIds } });
 export const addToCart = ({ userId, productId, quantity }) =>

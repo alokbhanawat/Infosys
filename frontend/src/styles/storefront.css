@@ -32,7 +32,7 @@
 
 .storefront-hero {
   position: relative;
-  z-index: 1;
+  z-index: 5;
   overflow: visible;
   display: flex;
   justify-content: space-between;
@@ -76,9 +76,11 @@
 }
 
 .storefront-hero-side {
+  position: relative;
+  z-index: 6;
   display: grid;
   justify-items: end;
-  gap: 12px;
+  gap: 14px;
 }
 
 .storefront-mini-panel {
@@ -125,7 +127,7 @@
   display: grid;
   gap: 12px;
   width: 100%;
-  max-width: 330px;
+  max-width: 340px;
   justify-items: stretch;
 }
 
@@ -141,6 +143,12 @@
   gap: 26px;
   margin-top: 24px;
   align-items: start;
+}
+
+@media (min-width: 1101px) {
+  .storefront-hero {
+    margin-bottom: 96px;
+  }
 }
 
 .storefront-layout .filter-card,

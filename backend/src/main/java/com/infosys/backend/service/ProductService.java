@@ -1,16 +1,27 @@
 package com.infosys.backend.service;
 
+import java.io.IOException;
 import java.math.BigDecimal;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.infosys.backend.dto.ProductCreateRequest;
 import com.infosys.backend.model.Product;
 import com.infosys.backend.repository.ProductRepository;
 
@@ -20,7 +31,23 @@ public class ProductService {
     @Autowired
     private ProductRepository productRepository;
 
+    @Value("${app.upload.dir:uploads}")
+    private String uploadDir;
+
     public Product addProduct(Product product) {
+        return productRepository.save(product);
+    }
+
+    public Product addProduct(ProductCreateRequest request) {
+        validateProductRequest(request);
+
+        Product product = new Product();
+        product.setName(request.getName().trim());
+        product.setDescription(request.getDescription());
+        product.setPrice(request.getPrice());
+        product.setStock(request.getStock());
+        product.setCategory(normalize(request.getCategory()));
+        product.setImageUrl(storeProductImage(request.getImage()));
         return productRepository.save(product);
     }
 
@@ -92,5 +119,67 @@ public class ProductService {
 
         String normalizedValue = value.trim();
         return normalizedValue.isEmpty() ? null : normalizedValue;
+    }
+
+    private void validateProductRequest(ProductCreateRequest request) {
+        if (request == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Product details are required.");
+        }
+
+        if (normalize(request.getName()) == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Product name is required.");
+        }
+
+        if (request.getPrice() == null || request.getPrice().signum() < 0) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Price must be zero or greater.");
+        }
+
+        if (request.getStock() == null || request.getStock() < 0) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Stock must be zero or greater.");
+        }
+
+        MultipartFile image = request.getImage();
+        if (image == null || image.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Product image is required.");
+        }
+    }
+
+    private String storeProductImage(MultipartFile image) {
+        try {
+            String originalFilename = image.getOriginalFilename();
+            String extension = getFileExtension(originalFilename);
+            String contentType = image.getContentType();
+
+            if (contentType == null || !contentType.toLowerCase(Locale.ROOT).startsWith("image/")) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Only image files are allowed.");
+            }
+
+            Path uploadPath = Paths.get(uploadDir).toAbsolutePath().normalize();
+            Files.createDirectories(uploadPath);
+
+            String storedFileName = UUID.randomUUID() + extension;
+            Path destination = uploadPath.resolve(storedFileName).normalize();
+            Files.copy(image.getInputStream(), destination, StandardCopyOption.REPLACE_EXISTING);
+
+            return ServletUriComponentsBuilder.fromCurrentContextPath()
+                    .path("/uploads/")
+                    .path(storedFileName)
+                    .toUriString();
+        } catch (IOException ex) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Unable to store product image.");
+        }
+    }
+
+    private String getFileExtension(String filename) {
+        if (filename == null) {
+            return "";
+        }
+
+        int extensionIndex = filename.lastIndexOf('.');
+        if (extensionIndex < 0) {
+            return "";
+        }
+
+        return filename.substring(extensionIndex);
     }
 }

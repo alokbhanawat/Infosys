@@ -5,9 +5,11 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import com.infosys.backend.dto.BulkProductActionRequest;
+import com.infosys.backend.dto.ProductCreateRequest;
 import com.infosys.backend.model.Product;
 import com.infosys.backend.service.ProductService;
 
@@ -19,13 +21,23 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
-    @PostMapping("/add")
-    public Product addProduct(@RequestBody Product product) {
+    @PostMapping(path = "/add", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public Product addProduct(@ModelAttribute ProductCreateRequest request) {
+        return productService.addProduct(request);
+    }
+
+    @PostMapping(path = "/add", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public Product addProductLegacy(@RequestBody Product product) {
         return productService.addProduct(product);
     }
 
-    @PostMapping
-    public Product addProductFromRoot(@RequestBody Product product) {
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public Product addProductFromRoot(@ModelAttribute ProductCreateRequest request) {
+        return productService.addProduct(request);
+    }
+
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    public Product addProductFromRootLegacy(@RequestBody Product product) {
         return productService.addProduct(product);
     }
 

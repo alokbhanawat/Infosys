@@ -51,14 +51,15 @@ function UserProfileMenu({ user }) {
         aria-expanded={isOpen}
         aria-label="Open profile options"
       >
-        <span className="profile-menu-avatar">{initials}</span>
+        <span className="profile-menu-avatar-wrap">
+          <span className="profile-menu-avatar">{initials}</span>
+          <span className="profile-menu-status" aria-hidden="true" />
+        </span>
         <span className="profile-menu-trigger-copy">
-          <strong>Profile</strong>
-          <small>Open menu</small>
+          <strong>{user?.name || "Profile"}</strong>
+          <small>Account and orders</small>
         </span>
-        <span className={`profile-menu-chevron ${isOpen ? "profile-menu-chevron-open" : ""}`}>
-          ▼
-        </span>
+        <span className={`profile-menu-chevron ${isOpen ? "profile-menu-chevron-open" : ""}`}>{"\u25BE"}</span>
       </button>
 
       {isOpen ? (

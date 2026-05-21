@@ -35,6 +35,7 @@ public class SecurityConfig {
 
                         // PUBLIC APIs
                         .requestMatchers("/api/users/register", "/api/users/login").permitAll()
+                        .requestMatchers("/uploads/**").permitAll()
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
                         // ADMIN ONLY

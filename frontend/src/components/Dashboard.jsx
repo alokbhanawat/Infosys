@@ -31,7 +31,7 @@ function Dashboard() {
     price: "",
     stock: "",
     category: "",
-    imageUrl: "",
+    image: null,
   });
   const [filters, setFilters] = useState({
     search: "",
@@ -93,9 +93,11 @@ function Dashboard() {
   };
 
   const handleProductChange = (e) => {
+    const { name, value, files, type } = e.target;
+
     setProductForm((current) => ({
       ...current,
-      [e.target.name]: e.target.value,
+      [name]: type === "file" ? files?.[0] || null : value,
     }));
   };
 
@@ -142,12 +144,23 @@ function Dashboard() {
       return;
     }
 
+    if (!productForm.image) {
+      setFeedback("Please upload a product image.");
+      setFeedbackType("error");
+      setIsSubmitting(false);
+      return;
+    }
+
     try {
-      await addProduct({
-        ...productForm,
-        price,
-        stock,
-      });
+      const formData = new FormData();
+      formData.append("name", productForm.name);
+      formData.append("description", productForm.description);
+      formData.append("price", String(price));
+      formData.append("stock", String(stock));
+      formData.append("category", productForm.category);
+      formData.append("image", productForm.image);
+
+      await addProduct(formData);
 
       await loadProducts(filters);
       setProductForm({
@@ -156,7 +169,7 @@ function Dashboard() {
         price: "",
         stock: "",
         category: "",
-        imageUrl: "",
+        image: null,
       });
       setFeedback("Product added successfully.");
       setFeedbackType("success");
@@ -293,12 +306,7 @@ function Dashboard() {
                       required
                     />
                   </div>
-                  <input
-                    name="imageUrl"
-                    placeholder="Image URL"
-                    value={productForm.imageUrl}
-                    onChange={handleProductChange}
-                  />
+                  <input type="file" name="image" accept="image/*" onChange={handleProductChange} required />
                   <button type="submit" className="primary-btn" disabled={isSubmitting}>
                     {isSubmitting ? "Saving..." : "Save product"}
                   </button>
