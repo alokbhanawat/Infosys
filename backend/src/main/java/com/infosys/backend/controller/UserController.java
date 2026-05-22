@@ -19,6 +19,8 @@ import com.infosys.backend.dto.UserResponse;
 import com.infosys.backend.service.CurrentUserService;
 import com.infosys.backend.service.UserService;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/api/users")
 @CrossOrigin("*")
@@ -33,12 +35,12 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public UserResponse registerUser(@RequestBody RegisterRequest request) {
+    public UserResponse registerUser(@Valid @RequestBody RegisterRequest request) {
         return new UserResponse(userService.registerUser(request));
     }
 
     @PostMapping("/login")
-    public AuthResponse loginUser(@RequestBody LoginRequest request) {
+    public AuthResponse loginUser(@Valid @RequestBody LoginRequest request) {
         return userService.loginUser(request.getEmail(), request.getPassword());
     }
 
@@ -53,7 +55,7 @@ public class UserController {
     }
 
     @PutMapping("/me")
-    public AuthResponse updateCurrentUser(@RequestBody UpdateProfileRequest request, Principal principal) {
+    public AuthResponse updateCurrentUser(@Valid @RequestBody UpdateProfileRequest request, Principal principal) {
         return userService.updateProfile(principal.getName(), request);
     }
 

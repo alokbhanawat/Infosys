@@ -22,6 +22,10 @@ export const getProtectedProductsMessage = () => api.get("/users/products");
 export const getCurrentUserProfile = () => api.get("/users/me");
 export const updateCurrentUserProfile = (data) => api.put("/users/me", data);
 export const updateCurrentUserPassword = (data) => api.put("/users/me/password", data);
+export const getUserAddresses = () => api.get("/users/addresses");
+export const createUserAddress = (data) => api.post("/users/addresses", data);
+export const updateUserAddress = (addressId, data) => api.put(`/users/addresses/${addressId}`, data);
+export const deleteUserAddress = (addressId) => api.delete(`/users/addresses/${addressId}`);
 export const getProducts = (filters = {}) => {
   const params = Object.fromEntries(
     Object.entries(filters).filter(([, value]) => value !== "" && value !== null && value !== undefined),

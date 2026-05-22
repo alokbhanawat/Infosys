@@ -5,6 +5,7 @@ import {
   checkoutOrder,
   getCartByUserId,
   getCurrentUserProfile,
+  getUserAddresses,
   removeFromCart,
   updateCart,
 } from "../services/authService";
@@ -46,6 +47,8 @@ function CartPage() {
   const [isCheckingOut, setIsCheckingOut] = useState(false);
   const [checkoutForm, setCheckoutForm] = useState(DEFAULT_CHECKOUT_FORM);
   const [checkoutErrors, setCheckoutErrors] = useState({});
+  const [savedAddresses, setSavedAddresses] = useState([]);
+  const [selectedAddressId, setSelectedAddressId] = useState("");
 
   const formatCurrency = (value) => `Rs. ${Number(value || 0).toFixed(2)}`;
   const mandatoryFieldMessage = "Please fill this mandatory field.";
@@ -53,31 +56,35 @@ function CartPage() {
   const validateCheckoutForm = (formValues) => {
     const validationErrors = {};
 
-    if (!formValues.fullName.trim()) {
+    const usingSavedAddress = Boolean(selectedAddressId);
+
+    if (!usingSavedAddress && !formValues.fullName.trim()) {
       validationErrors.fullName = mandatoryFieldMessage;
     }
 
-    if (!formValues.phone.trim()) {
+    if (!usingSavedAddress && !formValues.phone.trim()) {
       validationErrors.phone = mandatoryFieldMessage;
+    } else if (!usingSavedAddress && !/^\d{10}$/.test(formValues.phone.trim())) {
+      validationErrors.phone = "Enter a correct 10-digit phone number.";
     }
 
-    if (!formValues.addressLine1.trim()) {
+    if (!usingSavedAddress && !formValues.addressLine1.trim()) {
       validationErrors.addressLine1 = mandatoryFieldMessage;
     }
 
-    if (!formValues.city.trim()) {
+    if (!usingSavedAddress && !formValues.city.trim()) {
       validationErrors.city = mandatoryFieldMessage;
     }
 
-    if (!formValues.state.trim()) {
+    if (!usingSavedAddress && !formValues.state.trim()) {
       validationErrors.state = mandatoryFieldMessage;
     }
 
-    if (!formValues.postalCode.trim()) {
+    if (!usingSavedAddress && !formValues.postalCode.trim()) {
       validationErrors.postalCode = mandatoryFieldMessage;
     }
 
-    if (!formValues.country.trim()) {
+    if (!usingSavedAddress && !formValues.country.trim()) {
       validationErrors.country = mandatoryFieldMessage;
     }
 
@@ -133,6 +140,25 @@ function CartPage() {
         token: getStoredToken(),
         userId: activeUser?.userId,
       });
+
+      const addressesResponse = await getUserAddresses();
+      const availableAddresses = Array.isArray(addressesResponse.data) ? addressesResponse.data : [];
+      setSavedAddresses(availableAddresses);
+      const defaultAddress = availableAddresses.find((address) => address.defaultAddress) || availableAddresses[0];
+      if (defaultAddress) {
+        setSelectedAddressId(String(defaultAddress.id));
+        setCheckoutForm((currentForm) => ({
+          ...currentForm,
+          fullName: defaultAddress.fullName || currentForm.fullName,
+          phone: defaultAddress.phone || currentForm.phone,
+          addressLine1: defaultAddress.addressLine1 || "",
+          addressLine2: defaultAddress.addressLine2 || "",
+          city: defaultAddress.city || "",
+          state: defaultAddress.state || "",
+          postalCode: defaultAddress.postalCode || "",
+          country: defaultAddress.country || "India",
+        }));
+      }
 
       const cartResponse = await getCartByUserId(activeUser.userId);
       setCartItems(Array.isArray(cartResponse.data) ? cartResponse.data : []);
@@ -239,6 +265,7 @@ function CartPage() {
     try {
       const response = await checkoutOrder({
         userId: checkoutUserId,
+        addressId: selectedAddressId ? Number(selectedAddressId) : null,
         ...checkoutForm,
       });
       const orderDetails = response?.data;
@@ -310,6 +337,39 @@ function CartPage() {
         delete nextErrors.upiId;
       }
 
+      return nextErrors;
+    });
+  };
+
+  const handleAddressSelection = ({ target }) => {
+    const addressId = target.value;
+    setSelectedAddressId(addressId);
+    const selectedAddress = savedAddresses.find((address) => String(address.id) === addressId);
+
+    if (!selectedAddress) {
+      return;
+    }
+
+    setCheckoutForm((currentForm) => ({
+      ...currentForm,
+      fullName: selectedAddress.fullName || "",
+      phone: selectedAddress.phone || "",
+      addressLine1: selectedAddress.addressLine1 || "",
+      addressLine2: selectedAddress.addressLine2 || "",
+      city: selectedAddress.city || "",
+      state: selectedAddress.state || "",
+      postalCode: selectedAddress.postalCode || "",
+      country: selectedAddress.country || "India",
+    }));
+    setCheckoutErrors((currentErrors) => {
+      const nextErrors = { ...currentErrors };
+      delete nextErrors.fullName;
+      delete nextErrors.phone;
+      delete nextErrors.addressLine1;
+      delete nextErrors.city;
+      delete nextErrors.state;
+      delete nextErrors.postalCode;
+      delete nextErrors.country;
       return nextErrors;
     });
   };
@@ -490,6 +550,24 @@ function CartPage() {
             <p className="cart-overview-note">
               Review your items, enter delivery details, and choose how you want to pay before placing the order.
             </p>
+
+            {savedAddresses.length ? (
+              <div className="saved-address-picker">
+                <label className="checkout-field checkout-field-full">
+                  <span>Select saved address</span>
+                  <select value={selectedAddressId} onChange={handleAddressSelection}>
+                    {savedAddresses.map((address) => (
+                      <option key={address.id} value={address.id}>
+                        {address.label} - {address.addressLine1}, {address.city}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+                <Link className="back-link" to="/addresses">
+                  Manage addresses
+                </Link>
+              </div>
+            ) : null}
 
             <div className="checkout-form-grid">
               <label className="checkout-field">

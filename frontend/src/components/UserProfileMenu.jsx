@@ -81,6 +81,10 @@ function UserProfileMenu({ user }) {
             Profile update
             <span>Change name, email, phone and password</span>
           </Link>
+          <Link className="profile-menu-item" to="/addresses" onClick={() => setIsOpen(false)}>
+            Addresses
+            <span>Add and manage multiple delivery addresses</span>
+          </Link>
           <button
             type="button"
             className="profile-menu-item profile-menu-item-danger"

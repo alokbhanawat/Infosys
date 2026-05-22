@@ -7,6 +7,7 @@ import com.infosys.backend.model.Order;
 import com.infosys.backend.model.OrderItem;
 import com.infosys.backend.model.Product;
 import com.infosys.backend.model.User;
+import com.infosys.backend.model.UserAddress;
 import com.infosys.backend.repository.CartRepository;
 import com.infosys.backend.repository.OrderRepository;
 import com.infosys.backend.repository.ProductRepository;
@@ -27,24 +28,27 @@ public class OrderService {
     private final CartRepository cartRepository;
     private final ProductRepository productRepository;
     private final UserRepository userRepository;
+    private final UserAddressService userAddressService;
 
     public OrderService(
             OrderRepository orderRepository,
             CartRepository cartRepository,
             ProductRepository productRepository,
-            UserRepository userRepository) {
+            UserRepository userRepository,
+            UserAddressService userAddressService) {
         this.orderRepository = orderRepository;
         this.cartRepository = cartRepository;
         this.productRepository = productRepository;
         this.userRepository = userRepository;
+        this.userAddressService = userAddressService;
     }
 
     @Transactional
     public OrderResponse checkout(CheckoutRequest request, String email) {
-        validateCheckoutRequest(request);
-
         User user = getUserForCheckout(email, request.getUserId());
-        return createOrderForUser(user, request, null, null);
+        UserAddress selectedAddress = resolveSelectedAddress(user, request);
+        validateCheckoutRequest(request, selectedAddress);
+        return createOrderForUser(user, request, selectedAddress, null, null);
     }
 
     @Transactional(readOnly = true)
@@ -104,18 +108,21 @@ public class OrderService {
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
-    private void validateCheckoutRequest(CheckoutRequest request) {
+    private void validateCheckoutRequest(CheckoutRequest request, UserAddress selectedAddress) {
         if (request == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Checkout request is required.");
         }
 
-        requireMandatoryText(request.getFullName(), "Full name");
-        requireMandatoryText(request.getPhone(), "Phone number");
-        requireMandatoryText(request.getAddressLine1(), "Address line 1");
-        requireMandatoryText(request.getCity(), "City");
-        requireMandatoryText(request.getState(), "State");
-        requireMandatoryText(request.getPostalCode(), "Postal code");
-        requireMandatoryText(request.getCountry(), "Country");
+        if (selectedAddress == null) {
+            requireMandatoryText(request.getFullName(), "Full name");
+            requireMandatoryText(request.getPhone(), "Phone number");
+            requireTenDigitPhone(request.getPhone());
+            requireMandatoryText(request.getAddressLine1(), "Address line 1");
+            requireMandatoryText(request.getCity(), "City");
+            requireMandatoryText(request.getState(), "State");
+            requireMandatoryText(request.getPostalCode(), "Postal code");
+            requireMandatoryText(request.getCountry(), "Country");
+        }
         requireMandatoryText(request.getPaymentMethod(), "Payment method");
 
         String paymentMethod = normalizePaymentMethod(request.getPaymentMethod());
@@ -137,6 +144,12 @@ public class OrderService {
 
         if ("UPI".equals(paymentMethod)) {
             requireMandatoryText(request.getUpiId(), "UPI ID");
+        }
+    }
+
+    private void requireTenDigitPhone(String phone) {
+        if (digitsOnly(phone).length() != 10) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Enter a valid 10-digit phone number");
         }
     }
 
@@ -198,9 +211,18 @@ public class OrderService {
         return user;
     }
 
+    private UserAddress resolveSelectedAddress(User user, CheckoutRequest request) {
+        if (request == null || request.getAddressId() == null) {
+            return null;
+        }
+
+        return userAddressService.getAddressForCheckout(user.getEmail(), request.getAddressId());
+    }
+
     private OrderResponse createOrderForUser(
             User user,
             CheckoutRequest request,
+            UserAddress selectedAddress,
             BigDecimal expectedTotal,
             String externalPaymentReference) {
         List<Cart> cartItems = cartRepository.findByUser_UserId(user.getUserId());
@@ -219,14 +241,25 @@ public class OrderService {
         }
 
         Order order = new Order(user, totalPrice);
-        order.setShippingFullName(request.getFullName().trim());
-        order.setShippingPhone(request.getPhone().trim());
-        order.setShippingAddressLine1(request.getAddressLine1().trim());
-        order.setShippingAddressLine2(trimToNull(request.getAddressLine2()));
-        order.setShippingCity(request.getCity().trim());
-        order.setShippingState(request.getState().trim());
-        order.setShippingPostalCode(request.getPostalCode().trim());
-        order.setShippingCountry(request.getCountry().trim());
+        if (selectedAddress != null) {
+            order.setShippingFullName(selectedAddress.getFullName());
+            order.setShippingPhone(selectedAddress.getPhone());
+            order.setShippingAddressLine1(selectedAddress.getAddressLine1());
+            order.setShippingAddressLine2(selectedAddress.getAddressLine2());
+            order.setShippingCity(selectedAddress.getCity());
+            order.setShippingState(selectedAddress.getState());
+            order.setShippingPostalCode(selectedAddress.getPostalCode());
+            order.setShippingCountry(selectedAddress.getCountry());
+        } else {
+            order.setShippingFullName(request.getFullName().trim());
+            order.setShippingPhone(request.getPhone().trim());
+            order.setShippingAddressLine1(request.getAddressLine1().trim());
+            order.setShippingAddressLine2(trimToNull(request.getAddressLine2()));
+            order.setShippingCity(request.getCity().trim());
+            order.setShippingState(request.getState().trim());
+            order.setShippingPostalCode(request.getPostalCode().trim());
+            order.setShippingCountry(request.getCountry().trim());
+        }
         order.setPaymentMethod(normalizePaymentMethod(request.getPaymentMethod()));
         order.setPaymentCardHolderName(trimToNull(request.getCardHolderName()));
         order.setPaymentReference(externalPaymentReference != null

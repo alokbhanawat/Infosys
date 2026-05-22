@@ -11,6 +11,9 @@ import {
   removeProduct,
 } from "../services/authService";
 
+const ALLOWED_IMAGE_TYPES = ["image/png", "image/jpeg", "image/jpg", "image/webp", "image/gif"];
+const ALLOWED_IMAGE_EXTENSIONS = [".png", ".jpg", ".jpeg", ".webp", ".gif"];
+
 function Dashboard() {
   const navigate = useNavigate();
   const user = getCurrentUser();
@@ -95,10 +98,41 @@ function Dashboard() {
   const handleProductChange = (e) => {
     const { name, value, files, type } = e.target;
 
+    if (type === "file") {
+      const selectedFile = files?.[0] || null;
+
+      if (!selectedFile) {
+        setProductForm((current) => ({
+          ...current,
+          [name]: null,
+        }));
+        return;
+      }
+
+      const lowerName = selectedFile.name.toLowerCase();
+      const hasValidExtension = ALLOWED_IMAGE_EXTENSIONS.some((extension) => lowerName.endsWith(extension));
+      const hasValidType = ALLOWED_IMAGE_TYPES.includes((selectedFile.type || "").toLowerCase());
+
+      if (!hasValidExtension || !hasValidType) {
+        setFeedback("Upload a valid image only. PDF, EXE, and other files are not allowed.");
+        setFeedbackType("error");
+        e.target.value = "";
+        setProductForm((current) => ({
+          ...current,
+          [name]: null,
+        }));
+        return;
+      }
+    }
+
     setProductForm((current) => ({
       ...current,
       [name]: type === "file" ? files?.[0] || null : value,
     }));
+    if (feedback) {
+      setFeedback("");
+      setFeedbackType("");
+    }
   };
 
   const handleFilterChange = (e) => {
@@ -306,7 +340,7 @@ function Dashboard() {
                       required
                     />
                   </div>
-                  <input type="file" name="image" accept="image/*" onChange={handleProductChange} required />
+                  <input type="file" name="image" accept=".png,.jpg,.jpeg,.webp,.gif,image/png,image/jpeg,image/webp,image/gif" onChange={handleProductChange} required />
                   <button type="submit" className="primary-btn" disabled={isSubmitting}>
                     {isSubmitting ? "Saving..." : "Save product"}
                   </button>

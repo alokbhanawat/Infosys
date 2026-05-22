@@ -10,6 +10,7 @@ import OrdersPage from "./pages/OrdersPage";
 import ProfilePage from "./pages/ProfilePage";
 import ProductDetailPage from "./pages/ProductDetailPage";
 import ProductsPage from "./pages/ProductsPage";
+import AddressesPage from "./pages/AddressesPage";
 
 function App() {
   return (
@@ -37,6 +38,10 @@ function App() {
 
         <Route path="/profile" element={<ProtectedRoute allowedRoles={["USER"]} />}>
           <Route index element={<ProfilePage />} />
+        </Route>
+
+        <Route path="/addresses" element={<ProtectedRoute allowedRoles={["USER"]} />}>
+          <Route index element={<AddressesPage />} />
         </Route>
 
         <Route path="/admin" element={<ProtectedRoute allowedRoles={["ADMIN"]} />}>

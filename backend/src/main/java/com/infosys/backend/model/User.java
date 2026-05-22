@@ -31,6 +31,9 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<Order> orders = new ArrayList<>();
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<UserAddress> addresses = new ArrayList<>();
+
     public User() {}
 
     public User(String name, String email, String password, String phone, Role role) {
@@ -64,4 +67,7 @@ public class User {
 
     public List<Order> getOrders() { return orders; }
     public void setOrders(List<Order> orders) { this.orders = orders; }
+
+    public List<UserAddress> getAddresses() { return addresses; }
+    public void setAddresses(List<UserAddress> addresses) { this.addresses = addresses; }
 }

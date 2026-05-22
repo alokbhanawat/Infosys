@@ -28,6 +28,11 @@ import com.infosys.backend.repository.ProductRepository;
 @Service
 public class ProductService {
 
+    private static final Set<String> ALLOWED_IMAGE_TYPES =
+            Set.of("image/png", "image/jpeg", "image/jpg", "image/webp", "image/gif");
+    private static final Set<String> ALLOWED_IMAGE_EXTENSIONS =
+            Set.of(".png", ".jpg", ".jpeg", ".webp", ".gif");
+
     @Autowired
     private ProductRepository productRepository;
 
@@ -147,11 +152,17 @@ public class ProductService {
     private String storeProductImage(MultipartFile image) {
         try {
             String originalFilename = image.getOriginalFilename();
-            String extension = getFileExtension(originalFilename);
-            String contentType = image.getContentType();
+            String extension = getFileExtension(originalFilename).toLowerCase(Locale.ROOT);
+            String contentType = image.getContentType() == null
+                    ? null
+                    : image.getContentType().toLowerCase(Locale.ROOT);
 
-            if (contentType == null || !contentType.toLowerCase(Locale.ROOT).startsWith("image/")) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Only image files are allowed.");
+            if (contentType == null
+                    || !ALLOWED_IMAGE_TYPES.contains(contentType)
+                    || !ALLOWED_IMAGE_EXTENSIONS.contains(extension)) {
+                throw new ResponseStatusException(
+                        HttpStatus.BAD_REQUEST,
+                        "Upload a valid image file such as PNG, JPG, JPEG, WEBP, or GIF.");
             }
 
             Path uploadPath = Paths.get(uploadDir).toAbsolutePath().normalize();

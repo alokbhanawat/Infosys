@@ -11,6 +11,9 @@ function ProductFilters({
         <span>Search</span>
         <h2>Filter products</h2>
       </div>
+      <p className="filter-intro">
+        Refine the catalog by keyword, category, budget, or ready-to-ship availability.
+      </p>
 
       <form className="filter-form" onSubmit={onFilterSubmit}>
         <div className="input-grid filter-row">

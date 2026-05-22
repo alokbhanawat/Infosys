@@ -1,5 +1,7 @@
 import { jwtDecode } from "jwt-decode";
 
+const LEGACY_CART_STORAGE_KEY = "shopping-cart";
+
 export function getStoredToken() {
   return localStorage.getItem("token");
 }
@@ -30,6 +32,7 @@ export function clearStoredToken() {
   localStorage.removeItem("token");
   localStorage.removeItem("userId");
   localStorage.removeItem("role");
+  localStorage.removeItem(LEGACY_CART_STORAGE_KEY);
 }
 
 export function isTokenValid(token = getStoredToken()) {

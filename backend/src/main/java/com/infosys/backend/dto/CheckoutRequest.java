@@ -3,6 +3,7 @@ package com.infosys.backend.dto;
 public class CheckoutRequest {
 
     private Integer userId;
+    private Long addressId;
     private String fullName;
     private String phone;
     private String addressLine1;
@@ -18,6 +19,9 @@ public class CheckoutRequest {
 
     public Integer getUserId() { return userId; }
     public void setUserId(Integer userId) { this.userId = userId; }
+
+    public Long getAddressId() { return addressId; }
+    public void setAddressId(Long addressId) { this.addressId = addressId; }
 
     public String getFullName() { return fullName; }
     public void setFullName(String fullName) { this.fullName = fullName; }

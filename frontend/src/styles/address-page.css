@@ -1,0 +1,232 @@
+.address-page {
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at top left, rgba(20, 83, 116, 0.08), transparent 24%),
+    linear-gradient(180deg, #f7fafc 0%, #eef6ff 100%);
+  color: #172033;
+}
+
+.address-shell {
+  width: min(1180px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 36px 0 56px;
+}
+
+.address-hero {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 24px;
+  padding: 30px;
+  border-radius: 28px;
+  background: linear-gradient(135deg, rgba(16, 42, 67, 0.95), rgba(31, 138, 112, 0.88));
+  color: #f8fafc;
+}
+
+.address-badge {
+  display: inline-flex;
+  margin-bottom: 12px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.address-hero h1 {
+  margin: 0 0 10px;
+  font-size: clamp(2rem, 4vw, 3rem);
+}
+
+.address-hero p {
+  margin: 0;
+  max-width: 620px;
+  color: rgba(241, 245, 249, 0.82);
+}
+
+.address-hero-actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.address-grid {
+  display: grid;
+  grid-template-columns: 0.95fr 1.05fr;
+  gap: 22px;
+}
+
+.address-card {
+  padding: 28px;
+  border-radius: 28px;
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  box-shadow: 0 22px 50px rgba(15, 23, 42, 0.08);
+}
+
+.address-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 20px;
+}
+
+.address-card-header span {
+  color: #0f766e;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.address-card-header h2 {
+  margin: 8px 0 0;
+}
+
+.address-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.address-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.address-field-full,
+.address-form-grid .form-message,
+.address-actions,
+.address-checkbox {
+  grid-column: 1 / -1;
+}
+
+.address-field span {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #334155;
+}
+
+.address-field input {
+  width: 100%;
+  padding: 14px 16px;
+  border-radius: 16px;
+  border: 1px solid rgba(148, 163, 184, 0.28);
+  background: #fff;
+}
+
+.address-field input:focus {
+  outline: none;
+  border-color: rgba(20, 83, 116, 0.5);
+  box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.12);
+}
+
+.address-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #475569;
+}
+
+.address-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.address-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.address-item {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px;
+  border-radius: 20px;
+  background: #f8fafc;
+  border: 1px solid rgba(148, 163, 184, 0.2);
+}
+
+.address-item-copy p {
+  margin: 8px 0 0;
+  color: #475569;
+  line-height: 1.6;
+}
+
+.address-item-topline {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.address-default-pill {
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: rgba(15, 118, 110, 0.12);
+  color: #0f766e;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.address-item-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+@media (max-width: 980px) {
+  .address-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .address-hero {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .address-hero-actions {
+    width: 100%;
+    flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 640px) {
+  .address-shell {
+    width: min(100%, calc(100% - 20px));
+  }
+
+  .address-card,
+  .address-hero {
+    padding: 22px;
+    border-radius: 22px;
+  }
+
+  .address-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .address-actions,
+  .address-item-actions,
+  .address-hero-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .address-actions > *,
+  .address-item-actions > *,
+  .address-hero-actions > * {
+    width: 100%;
+  }
+
+  .address-item {
+    flex-direction: column;
+  }
+}

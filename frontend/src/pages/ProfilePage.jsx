@@ -3,10 +3,12 @@ import { Link } from "react-router-dom";
 import UserProfileMenu from "../components/UserProfileMenu";
 import {
   getCurrentUserProfile,
+  getUserAddresses,
   updateCurrentUserPassword,
   updateCurrentUserProfile,
 } from "../services/authService";
 import { getCurrentUser, setStoredSession } from "../utils/auth";
+import { validatePhone } from "../utils/authValidation";
 import "../styles/profile-page.css";
 
 const DEFAULT_PROFILE_FORM = {
@@ -32,6 +34,7 @@ function ProfilePage() {
   const [profileMessageType, setProfileMessageType] = useState("success");
   const [passwordMessage, setPasswordMessage] = useState("");
   const [passwordMessageType, setPasswordMessageType] = useState("success");
+  const [addressCount, setAddressCount] = useState(0);
 
   useEffect(() => {
     const loadProfile = async () => {
@@ -47,6 +50,8 @@ function ProfilePage() {
           email: profile?.email || "",
           phone: profile?.phone || "",
         });
+        const addressesResponse = await getUserAddresses();
+        setAddressCount(Array.isArray(addressesResponse.data) ? addressesResponse.data.length : 0);
       } catch (error) {
         setProfileMessage(error?.response?.data?.message || "Unable to load your profile.");
         setProfileMessageType("error");
@@ -80,6 +85,14 @@ function ProfilePage() {
     event.preventDefault();
     setProfileSaving(true);
     setProfileMessage("");
+
+    const phoneError = validatePhone(profileForm.phone);
+    if (phoneError) {
+      setProfileMessage(phoneError);
+      setProfileMessageType("error");
+      setProfileSaving(false);
+      return;
+    }
 
     try {
       const response = await updateCurrentUserProfile(profileForm);
@@ -156,6 +169,9 @@ function ProfilePage() {
                   <span>Basic details</span>
                   <h2>Profile update</h2>
                 </div>
+                <Link className="back-link" to="/addresses">
+                  Manage addresses ({addressCount})
+                </Link>
               </div>
 
               <form className="profile-form-grid" onSubmit={handleProfileSubmit}>

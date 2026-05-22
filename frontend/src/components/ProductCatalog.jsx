@@ -83,9 +83,24 @@ function ProductCatalog({
       )}
 
       <div className="product-list">
-        {products.length === 0 ? (
+        {catalogLoading ? (
+          Array.from({ length: 6 }).map((_, index) => (
+            <article key={`loading-${index}`} className="product-item product-item-loading" aria-hidden="true">
+              <div className="product-visual product-visual-loading"></div>
+              <div className="product-copy">
+                <span className="loading-line loading-line-title"></span>
+                <span className="loading-line"></span>
+                <span className="loading-line loading-line-short"></span>
+              </div>
+              <div className="product-meta">
+                <span className="loading-pill"></span>
+                <span className="loading-pill"></span>
+              </div>
+            </article>
+          ))
+        ) : products.length === 0 ? (
           <p className="empty-state">
-            {catalogLoading ? "Loading products..." : "No products matched the current filters."}
+            No products matched the current filters.
           </p>
         ) : (
           products.map((product) => (
