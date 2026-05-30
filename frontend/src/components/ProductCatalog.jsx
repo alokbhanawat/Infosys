@@ -111,36 +111,38 @@ function ProductCatalog({
                     {renderProductCardBody(product)}
                   </Link>
 
-                  <div className="product-card-actions">
-                    <div className={`quantity-picker ${compactQuantity ? "quantity-picker-compact" : ""}`}>
+                  {showAddToCart ? (
+                    <div className="product-card-actions">
+                      <div className={`quantity-picker ${compactQuantity ? "quantity-picker-compact" : ""}`}>
+                        <button
+                          type="button"
+                          className="quantity-btn"
+                          onClick={() => onDecreaseQuantity?.(product)}
+                          aria-label={`Decrease quantity for ${product.name}`}
+                        >
+                          -
+                        </button>
+                        <span className="quantity-value">{quantities[product.id] ?? 1}</span>
+                        <button
+                          type="button"
+                          className="quantity-btn"
+                          onClick={() => onIncreaseQuantity?.(product)}
+                          aria-label={`Increase quantity for ${product.name}`}
+                        >
+                          +
+                        </button>
+                      </div>
+
                       <button
                         type="button"
-                        className="quantity-btn"
-                        onClick={() => onDecreaseQuantity?.(product)}
-                        aria-label={`Decrease quantity for ${product.name}`}
+                        className="primary-btn product-cart-btn"
+                        onClick={() => onAddToCart?.(product)}
+                        disabled={Number(product.stock) <= 0}
                       >
-                        -
-                      </button>
-                      <span className="quantity-value">{quantities[product.id] ?? 1}</span>
-                      <button
-                        type="button"
-                        className="quantity-btn"
-                        onClick={() => onIncreaseQuantity?.(product)}
-                        aria-label={`Increase quantity for ${product.name}`}
-                      >
-                        +
+                        {Number(product.stock) > 0 ? "Add to cart" : "Out of stock"}
                       </button>
                     </div>
-
-                    <button
-                      type="button"
-                      className="primary-btn product-cart-btn"
-                      onClick={() => onAddToCart?.(product)}
-                      disabled={Number(product.stock) <= 0}
-                    >
-                      {Number(product.stock) > 0 ? "Add to cart" : "Out of stock"}
-                    </button>
-                  </div>
+                  ) : null}
                 </>
               ) : (
                 <>

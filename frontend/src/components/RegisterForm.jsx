@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { registerUser } from "../services/authService";
+import { useAppToast } from "../hooks/useAppToast";
 import { getRequiredFieldError, validateEmail, validatePhone } from "../utils/authValidation";
 import "../styles/register.css";
 
 function RegisterForm() {
   const navigate = useNavigate();
+  const toast = useAppToast();
 
   const [formData, setFormData] = useState({
     name: "",
@@ -15,8 +17,6 @@ function RegisterForm() {
     password: "",
     confirmPassword: "",
   });
-  const [message, setMessage] = useState("");
-  const [messageType, setMessageType] = useState("");
   const [fieldErrors, setFieldErrors] = useState({});
 
   const handleChange = (e) => {
@@ -41,10 +41,6 @@ function RegisterForm() {
       return nextErrors;
     });
 
-    if (message) {
-      setMessage("");
-      setMessageType("");
-    }
   };
 
   const handleBlur = (e) => {
@@ -85,8 +81,7 @@ function RegisterForm() {
     setFieldErrors(errors);
 
     if (Object.keys(errors).length > 0) {
-      setMessage("Please correct the highlighted fields.");
-      setMessageType("error");
+      toast.error("Please correct the highlighted fields.");
       return;
     }
 
@@ -101,21 +96,19 @@ function RegisterForm() {
 
       const res = await registerUser(payload);
       const role = res?.data?.role || "USER";
+      const successMessage = res?.data?.message || `Registration successful. Role assigned: ${role}.`;
 
-      setMessage(`Registration successful. Role assigned: ${role}.`);
-      setMessageType("success");
+      toast.success(successMessage);
       setTimeout(() => {
         navigate("/login");
       }, 800);
     } catch (err) {
       const apiFieldErrors = err?.response?.data?.fieldErrors;
+      const backendMessage = err?.response?.data?.message || "Error registering.";
       if (apiFieldErrors) {
         setFieldErrors(apiFieldErrors);
-        setMessage("Please correct the highlighted fields.");
-      } else {
-        setMessage(err?.response?.data?.message || "Error registering.");
       }
-      setMessageType("error");
+      toast.error(apiFieldErrors ? "Please correct the highlighted fields." : backendMessage);
     }
   };
 
@@ -224,10 +217,6 @@ function RegisterForm() {
 
             <button type="submit">Create account</button>
           </form>
-
-          {message && (
-            <p className={`form-message ${messageType}`}>{message}</p>
-          )}
 
           <p className="auth-switch">
             Already have an account? <Link to="/login">Login</Link>

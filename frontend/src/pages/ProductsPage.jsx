@@ -1,13 +1,15 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import UserProfileMenu from "../components/UserProfileMenu";
 import ProductFilters from "../components/ProductFilters";
 import ProductCatalog from "../components/ProductCatalog";
+import ProductThemeToggle from "../components/ProductThemeToggle";
 import { addToCart, getCurrentUserProfile, getProducts } from "../services/authService";
+import { useProductDarkMode } from "../hooks/useProductDarkMode";
 import { getCurrentUser } from "../utils/auth";
 import "../styles/storefront.css";
 
 function ProductsPage() {
+  const { isDarkMode, toggleDarkMode } = useProductDarkMode();
   const tokenUser = getCurrentUser();
   const [user, setUser] = useState(tokenUser);
   const [products, setProducts] = useState([]);
@@ -118,7 +120,7 @@ function ProductsPage() {
   };
 
   return (
-    <div className="storefront-page">
+    <div className={`storefront-page ${isDarkMode ? "product-page-dark" : ""}`}>
       <div className="storefront-shell">
         <section className="storefront-hero">
           <div className="storefront-hero-copy">
@@ -145,6 +147,7 @@ function ProductsPage() {
             </div>
 
             <div className="storefront-actions">
+              <ProductThemeToggle isDarkMode={isDarkMode} onToggle={toggleDarkMode} />
               <UserProfileMenu user={user} />
             </div>
           </div>

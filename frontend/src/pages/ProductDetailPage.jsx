@@ -1,12 +1,16 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
+import MagnifiedProductImage from "../components/MagnifiedProductImage";
+import ProductThemeToggle from "../components/ProductThemeToggle";
 import UserProfileMenu from "../components/UserProfileMenu";
 import { addToCart, getCurrentUserProfile, getProductById } from "../services/authService";
+import { useProductDarkMode } from "../hooks/useProductDarkMode";
 import { getCurrentUser } from "../utils/auth";
 import "../styles/product-detail.css";
 
 function ProductDetailPage() {
   const { productId } = useParams();
+  const { isDarkMode, toggleDarkMode } = useProductDarkMode();
   const tokenUser = getCurrentUser();
   const [user, setUser] = useState(tokenUser);
   const [product, setProduct] = useState(null);
@@ -72,13 +76,14 @@ function ProductDetailPage() {
   };
 
   return (
-    <div className="product-detail-page">
+    <div className={`product-detail-page ${isDarkMode ? "product-page-dark" : ""}`}>
       <div className="product-detail-shell">
         <div className="product-detail-topbar">
           <Link className="back-link" to="/products">
             Back to products
           </Link>
           <div className="product-detail-topbar-actions">
+            <ProductThemeToggle isDarkMode={isDarkMode} onToggle={toggleDarkMode} />
             <UserProfileMenu user={user} />
           </div>
         </div>
@@ -95,7 +100,7 @@ function ProductDetailPage() {
           <section className="product-detail-card">
             <div className="product-detail-media">
               {product?.imageUrl ? (
-                <img src={product.imageUrl} alt={product.name} />
+                <MagnifiedProductImage src={product.imageUrl} alt={product.name} />
               ) : (
                 <div className="product-detail-placeholder">
                   <span>{(product?.name || "P").slice(0, 1).toUpperCase()}</span>

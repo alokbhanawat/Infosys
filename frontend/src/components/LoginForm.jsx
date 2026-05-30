@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { loginUser } from "../services/authService";
+import { useAppToast } from "../hooks/useAppToast";
 import {
   clearStoredToken,
   getCurrentUser,
@@ -12,23 +13,18 @@ import "../styles/login.css";
 
 function LoginForm() {
   const navigate = useNavigate();
+  const toast = useAppToast();
 
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
-  const [message, setMessage] = useState("");
-  const [messageType, setMessageType] = useState("");
   const [fieldErrors, setFieldErrors] = useState({});
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
     if (fieldErrors[e.target.name]) {
       setFieldErrors((current) => ({ ...current, [e.target.name]: "" }));
-    }
-    if (message) {
-      setMessage("");
-      setMessageType("");
     }
   };
 
@@ -49,8 +45,7 @@ function LoginForm() {
     setFieldErrors(errors);
 
     if (Object.keys(errors).length > 0) {
-      setMessage("Please correct the highlighted fields.");
-      setMessageType("error");
+      toast.error("Please correct the highlighted fields.");
       return;
     }
 
@@ -69,20 +64,17 @@ function LoginForm() {
         role: res?.data?.role,
       });
       const user = getCurrentUser();
-      setMessage("Login successful.");
-      setMessageType("success");
+      toast.success(res?.data?.message || "Login successful.");
       setTimeout(() => {
         navigate(getHomeRoute(user), { replace: true });
       }, 800);
     } catch (err) {
       const apiFieldErrors = err?.response?.data?.fieldErrors;
+      const backendMessage = err?.response?.data?.message || "Invalid email or password.";
       if (apiFieldErrors) {
         setFieldErrors(apiFieldErrors);
-        setMessage("Please correct the highlighted fields.");
-      } else {
-        setMessage(err?.response?.data?.message || "Invalid email or password.");
       }
-      setMessageType("error");
+      toast.error(apiFieldErrors ? "Please correct the highlighted fields." : backendMessage);
     }
   };
 
@@ -125,10 +117,6 @@ function LoginForm() {
 
             <button type="submit">Login</button>
           </form>
-
-          {message && (
-            <p className={`form-message ${messageType}`}>{message}</p>
-          )}
 
           <p className="auth-switch">
             Don&apos;t have an account? <Link to="/register">Register</Link>
