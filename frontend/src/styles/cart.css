@@ -346,6 +346,17 @@
   font-weight: 600;
 }
 
+.razorpay-helper {
+  margin: 0;
+  padding: 13px 14px;
+  border-radius: 16px;
+  border: 1px solid rgba(13, 148, 136, 0.22);
+  background: rgba(240, 253, 250, 0.78);
+  color: #115e59;
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
+
 .cart-remove-btn {
   width: 44px;
   height: 44px;

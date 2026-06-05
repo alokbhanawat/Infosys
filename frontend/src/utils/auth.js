@@ -63,15 +63,19 @@ export function getCurrentUser() {
 
   try {
     const decodedToken = jwtDecode(token);
+    const normalizedUser = {
+      ...decodedToken,
+      email: decodedToken.email || decodedToken.sub,
+    };
 
-    if (!decodedToken?.role && storedRole) {
+    if (!normalizedUser?.role && storedRole) {
       return {
-        ...decodedToken,
+        ...normalizedUser,
         role: storedRole,
       };
     }
 
-    return decodedToken;
+    return normalizedUser;
   } catch {
     return null;
   }

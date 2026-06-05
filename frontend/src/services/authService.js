@@ -78,6 +78,8 @@ export const removeFromCart = ({ userId, productId }) =>
     },
   });
 export const checkoutOrder = (data) => api.post("/orders/checkout", data);
+export const createRazorpayOrder = (data) => api.post("/orders/razorpay/create-order", data);
+export const verifyRazorpayPayment = (data) => api.post("/orders/razorpay/verify", data);
 export const getCurrentUserOrders = () => api.get("/orders/my");
 
 export default api;

@@ -2,6 +2,8 @@ package com.infosys.backend.controller;
 
 import com.infosys.backend.dto.CheckoutRequest;
 import com.infosys.backend.dto.OrderResponse;
+import com.infosys.backend.dto.RazorpayOrderResponse;
+import com.infosys.backend.dto.RazorpayPaymentVerificationRequest;
 import com.infosys.backend.service.OrderService;
 import java.security.Principal;
 import java.util.List;
@@ -27,6 +29,18 @@ public class OrderController {
     @PostMapping("/checkout")
     public OrderResponse checkout(@RequestBody CheckoutRequest request, Principal principal) {
         return orderService.checkout(request, principal.getName());
+    }
+
+    @PostMapping("/razorpay/create-order")
+    public RazorpayOrderResponse createRazorpayOrder(@RequestBody CheckoutRequest request, Principal principal) {
+        return orderService.createRazorpayOrder(request, principal.getName());
+    }
+
+    @PostMapping("/razorpay/verify")
+    public OrderResponse verifyRazorpayPayment(
+            @RequestBody RazorpayPaymentVerificationRequest request,
+            Principal principal) {
+        return orderService.verifyRazorpayPayment(request, principal.getName());
     }
 
     @GetMapping("/my")

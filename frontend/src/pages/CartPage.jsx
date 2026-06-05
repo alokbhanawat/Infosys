@@ -2,12 +2,13 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import UserProfileMenu from "../components/UserProfileMenu";
 import {
-  checkoutOrder,
+  createRazorpayOrder,
   getCartByUserId,
   getCurrentUserProfile,
   getUserAddresses,
   removeFromCart,
   updateCart,
+  verifyRazorpayPayment,
 } from "../services/authService";
 import {
   getCurrentUser,
@@ -19,6 +20,7 @@ import "../styles/dashboard.css";
 import "../styles/cart.css";
 
 const ORDER_SUCCESS_STORAGE_KEY = "latestOrder";
+const RAZORPAY_PENDING_ORDER_KEY = "pendingRazorpayOrder";
 const DEFAULT_CHECKOUT_FORM = {
   fullName: "",
   phone: "",
@@ -33,6 +35,30 @@ const DEFAULT_CHECKOUT_FORM = {
   cardNumber: "",
   upiId: "",
 };
+
+const loadRazorpayCheckoutScript = () =>
+  new Promise((resolve, reject) => {
+    if (window.Razorpay) {
+      resolve(true);
+      return;
+    }
+
+    const existingScript = document.querySelector("script[src='https://checkout.razorpay.com/v1/checkout.js']");
+    if (existingScript) {
+      existingScript.addEventListener("load", () => resolve(true), { once: true });
+      existingScript.addEventListener("error", () => reject(new Error("Unable to load Razorpay checkout.")), {
+        once: true,
+      });
+      return;
+    }
+
+    const script = document.createElement("script");
+    script.src = "https://checkout.razorpay.com/v1/checkout.js";
+    script.async = true;
+    script.onload = () => resolve(true);
+    script.onerror = () => reject(new Error("Unable to load Razorpay checkout."));
+    document.body.appendChild(script);
+  });
 
 function CartPage() {
   const navigate = useNavigate();
@@ -52,6 +78,25 @@ function CartPage() {
 
   const formatCurrency = (value) => `Rs. ${Number(value || 0).toFixed(2)}`;
   const mandatoryFieldMessage = "Please fill this mandatory field.";
+  const customerEmail = user?.email || user?.sub || "";
+
+  const showOrderSuccess = (orderDetails) => {
+    setCartItems([]);
+    setActionMessage("Payment verified and order placed successfully.");
+    setActionStatus("success");
+    setCheckoutForm((currentForm) => ({
+      ...DEFAULT_CHECKOUT_FORM,
+      fullName: currentForm.fullName,
+      phone: currentForm.phone,
+      country: currentForm.country || "India",
+    }));
+    sessionStorage.removeItem(RAZORPAY_PENDING_ORDER_KEY);
+    sessionStorage.setItem(ORDER_SUCCESS_STORAGE_KEY, JSON.stringify(orderDetails));
+    navigate("/orders/success", {
+      replace: true,
+      state: orderDetails,
+    });
+  };
 
   const validateCheckoutForm = (formValues) => {
     const validationErrors = {};
@@ -90,22 +135,6 @@ function CartPage() {
 
     if (!formValues.paymentMethod.trim()) {
       validationErrors.paymentMethod = mandatoryFieldMessage;
-    }
-
-    if (formValues.paymentMethod === "CARD") {
-      if (!formValues.cardHolderName.trim()) {
-        validationErrors.cardHolderName = mandatoryFieldMessage;
-      }
-
-      if (!formValues.cardNumber.trim()) {
-        validationErrors.cardNumber = mandatoryFieldMessage;
-      } else if (formValues.cardNumber.replace(/\D/g, "").length < 4) {
-        validationErrors.cardNumber = "Enter at least the last 4 digits of the card number.";
-      }
-    }
-
-    if (formValues.paymentMethod === "UPI" && !formValues.upiId.trim()) {
-      validationErrors.upiId = mandatoryFieldMessage;
     }
 
     return validationErrors;
@@ -263,44 +292,104 @@ function CartPage() {
     setError("");
 
     try {
-      const response = await checkoutOrder({
+      await loadRazorpayCheckoutScript();
+      const checkoutPayload = {
         userId: checkoutUserId,
         addressId: selectedAddressId ? Number(selectedAddressId) : null,
         ...checkoutForm,
-      });
-      const orderDetails = response?.data;
+      };
+      const response = await createRazorpayOrder(checkoutPayload);
+      const razorpayOrder = response?.data;
 
-      if (!orderDetails?.orderId) {
-        throw new Error("Order ID missing in checkout response.");
+      if (!razorpayOrder?.razorpayOrderId || !razorpayOrder?.keyId) {
+        throw new Error("Razorpay order details missing in checkout response.");
       }
 
-      setCartItems([]);
-      setActionMessage("Order placed successfully");
-      setActionStatus("success");
-      setCheckoutForm((currentForm) => ({
-        ...DEFAULT_CHECKOUT_FORM,
-        fullName: currentForm.fullName,
-        phone: currentForm.phone,
-        country: currentForm.country || "India",
-      }));
-      sessionStorage.setItem(ORDER_SUCCESS_STORAGE_KEY, JSON.stringify(orderDetails));
+      sessionStorage.setItem(
+        RAZORPAY_PENDING_ORDER_KEY,
+        JSON.stringify({
+          razorpayOrderId: razorpayOrder.razorpayOrderId,
+          amount: razorpayOrder.amount,
+          currency: razorpayOrder.currency || "INR",
+          createdAt: new Date().toISOString(),
+        }),
+      );
 
-      window.setTimeout(() => {
-        navigate("/orders/success", {
-          replace: true,
-          state: orderDetails,
+      const orderDetails = await new Promise((resolve, reject) => {
+        const selectedMethod = checkoutForm.paymentMethod === "UPI" ? "upi" : "card";
+        let paymentSettled = false;
+        const rejectIfUnsettled = (error) => {
+          if (!paymentSettled) {
+            paymentSettled = true;
+            reject(error);
+          }
+        };
+        const checkout = new window.Razorpay({
+          key: razorpayOrder.keyId,
+          amount: razorpayOrder.amount,
+          currency: razorpayOrder.currency || "INR",
+          name: "INFI Store",
+          description: `Cart payment of ${formatCurrency(razorpayOrder.totalPrice)}`,
+          order_id: razorpayOrder.razorpayOrderId,
+          prefill: {
+            name: checkoutForm.fullName,
+            email: customerEmail,
+            contact: checkoutForm.phone,
+          },
+          method: {
+            card: selectedMethod === "card",
+            upi: selectedMethod === "upi",
+            netbanking: false,
+            wallet: false,
+            emi: false,
+            paylater: false,
+          },
+          handler: async (paymentResponse) => {
+            try {
+              paymentSettled = true;
+              const verificationResponse = await verifyRazorpayPayment({
+                razorpayOrderId: paymentResponse.razorpay_order_id,
+                razorpayPaymentId: paymentResponse.razorpay_payment_id,
+                razorpaySignature: paymentResponse.razorpay_signature,
+              });
+              resolve(verificationResponse?.data);
+            } catch (verificationError) {
+              reject(verificationError);
+            }
+          },
+          modal: {
+            ondismiss: () => {
+              rejectIfUnsettled(new Error("Payment was cancelled before completion."));
+            },
+          },
+          theme: {
+            color: "#0f766e",
+          },
         });
-      }, 700);
+
+        checkout.on("payment.failed", (paymentError) => {
+          rejectIfUnsettled(new Error(paymentError?.error?.description || "Razorpay payment failed."));
+        });
+
+        checkout.open();
+      });
+
+      if (!orderDetails?.orderId) {
+        throw new Error("Order ID missing after payment verification.");
+      }
+
+      showOrderSuccess(orderDetails);
     } catch (requestError) {
       const apiMessage = requestError?.response?.data?.message;
       const fallbackMessage =
         cartItems.length === 0
           ? "Your cart is empty. Add products before checkout."
-          : "Unable to place the order right now.";
+          : "Unable to complete payment right now.";
 
       setActionStatus("error");
       setActionMessage(apiMessage || requestError.message || fallbackMessage);
       window.alert(apiMessage || requestError.message || fallbackMessage);
+      sessionStorage.removeItem(RAZORPAY_PENDING_ORDER_KEY);
     } finally {
       setIsCheckingOut(false);
     }
@@ -373,9 +462,6 @@ function CartPage() {
       return nextErrors;
     });
   };
-
-  const isCardPayment = checkoutForm.paymentMethod === "CARD";
-  const isUpiPayment = checkoutForm.paymentMethod === "UPI";
 
   const totalItems = cartItems.reduce((sum, item) => sum + (Number(item.quantity) || 0), 0);
   const totalCartValue = cartItems.reduce(
@@ -548,7 +634,7 @@ function CartPage() {
             </div>
 
             <p className="cart-overview-note">
-              Review your items, enter delivery details, and choose how you want to pay before placing the order.
+              Review your items, enter delivery details, and choose a Razorpay payment mode before placing the order.
             </p>
 
             {savedAddresses.length ? (
@@ -692,54 +778,11 @@ function CartPage() {
                 ) : null}
               </label>
 
-              {isCardPayment ? (
-                <>
-                  <label className="checkout-field">
-                    <span>Card holder</span>
-                    <input
-                      type="text"
-                      name="cardHolderName"
-                      value={checkoutForm.cardHolderName}
-                      onChange={handleCheckoutInputChange}
-                      placeholder="Name on card"
-                      className={checkoutErrors.cardHolderName ? "checkout-input-error" : ""}
-                    />
-                    {checkoutErrors.cardHolderName ? (
-                      <small className="checkout-field-error">{checkoutErrors.cardHolderName}</small>
-                    ) : null}
-                  </label>
-
-                  <label className="checkout-field">
-                    <span>Card number</span>
-                    <input
-                      type="text"
-                      name="cardNumber"
-                      value={checkoutForm.cardNumber}
-                      onChange={handleCheckoutInputChange}
-                      placeholder="Only last 4+ digits are validated"
-                      className={checkoutErrors.cardNumber ? "checkout-input-error" : ""}
-                    />
-                    {checkoutErrors.cardNumber ? (
-                      <small className="checkout-field-error">{checkoutErrors.cardNumber}</small>
-                    ) : null}
-                  </label>
-                </>
-              ) : null}
-
-              {isUpiPayment ? (
-                <label className="checkout-field checkout-field-full">
-                  <span>UPI ID</span>
-                  <input
-                    type="text"
-                    name="upiId"
-                    value={checkoutForm.upiId}
-                    onChange={handleCheckoutInputChange}
-                    placeholder="name@bank"
-                    className={checkoutErrors.upiId ? "checkout-input-error" : ""}
-                  />
-                  {checkoutErrors.upiId ? <small className="checkout-field-error">{checkoutErrors.upiId}</small> : null}
-                </label>
-              ) : null}
+              <p className="checkout-field checkout-field-full razorpay-helper">
+                {checkoutForm.paymentMethod === "UPI"
+                  ? "UPI details will be entered securely in Razorpay Checkout."
+                  : "Card details will be entered securely in Razorpay Checkout."}
+              </p>
             </div>
 
             <button
@@ -748,7 +791,7 @@ function CartPage() {
               onClick={handleCheckout}
               disabled={loading || isCheckingOut || !cartItems.length}
             >
-              {isCheckingOut ? "Placing order..." : "Checkout"}
+              {isCheckingOut ? "Opening Razorpay..." : "Pay with Razorpay"}
             </button>
           </aside>
         </section>
