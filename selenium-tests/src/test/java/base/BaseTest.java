@@ -1,0 +1,48 @@
+package base;
+
+import org.openqa.selenium.Alert;
+import org.openqa.selenium.NoAlertPresentException;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
+import utilities.DriverFactory;
+
+import java.time.Duration;
+
+public class BaseTest {
+    protected static final String BASE_URL = System.getProperty("baseUrl", "http://localhost:5173");
+    protected WebDriver driver;
+    protected WebDriverWait wait;
+
+    @BeforeMethod
+    public void setUp() {
+        driver = DriverFactory.createChromeDriver();
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(3));
+        driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
+        wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+    }
+
+    protected void openHomePage() {
+        driver.get(BASE_URL + "/");
+    }
+
+    protected void acceptAlertIfPresent() {
+        try {
+            Alert alert = wait.until(ExpectedConditions.alertIsPresent());
+            alert.accept();
+        } catch (NoAlertPresentException ignored) {
+            // Some pages do not show browser alerts.
+        } catch (Exception ignored) {
+            // Continue when no alert or popup appears within the wait time.
+        }
+    }
+
+    @AfterMethod(alwaysRun = true)
+    public void tearDown() {
+        if (driver != null) {
+            driver.quit();
+        }
+    }
+}

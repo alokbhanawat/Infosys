@@ -1,0 +1,9 @@
+base\BaseTest.class
+tests\NavigationTest.class
+tests\RegisterTest.class
+tests\SampleTest.class
+pages\LoginPage.class
+pages\HomePage.class
+utilities\DriverFactory.class
+pages\RegisterPage.class
+tests\LoginTest.class
