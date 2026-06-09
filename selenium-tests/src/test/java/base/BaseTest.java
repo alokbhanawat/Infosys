@@ -19,9 +19,9 @@ public class BaseTest {
     @BeforeMethod
     public void setUp() {
         driver = DriverFactory.createChromeDriver();
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(3));
-        driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
-        wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+        driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(45));
+        wait = new WebDriverWait(driver, Duration.ofSeconds(25));
     }
 
     protected void openHomePage() {

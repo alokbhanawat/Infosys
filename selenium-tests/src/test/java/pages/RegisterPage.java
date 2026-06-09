@@ -1,18 +1,11 @@
 package pages;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.time.Duration;
-
-public class RegisterPage {
-    private final WebDriver driver;
-    private final WebDriverWait wait;
-
+public class RegisterPage extends BasePage {
     private final By nameInputByCss = By.cssSelector("input[name='name']");
     private final By emailInputByXpath = By.xpath("//input[@name='email']");
     private final By phoneInputByCss = By.cssSelector("input[name='phone']");
@@ -24,8 +17,7 @@ public class RegisterPage {
     private final By toastByCss = By.cssSelector(".toastify-fallback-toast, .app-toast, .toast, [role='alert']");
 
     public RegisterPage(WebDriver driver) {
-        this.driver = driver;
-        this.wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+        super(driver);
     }
 
     public RegisterPage open(String baseUrl) {
@@ -86,17 +78,15 @@ public class RegisterPage {
     }
 
     public String getToastMessage() {
-        return wait.until(ExpectedConditions.visibilityOfElementLocated(toastByCss)).getText();
+        WebElement toast = wait.until(ExpectedConditions.visibilityOfElementLocated(toastByCss));
+        String message = toast.getText();
+        pauseForDemo();
+        return message;
     }
 
     private void type(By locator, String value) {
         WebElement input = wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
         input.clear();
         input.sendKeys(value);
-    }
-
-    private void safeClick(WebElement element) {
-        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView({block: 'center'});", element);
-        ((JavascriptExecutor) driver).executeScript("arguments[0].click();", element);
     }
 }

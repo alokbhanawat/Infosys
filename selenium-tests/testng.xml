@@ -18,4 +18,10 @@
             <class name="tests.LoginTest"/>
         </classes>
     </test>
+
+    <test name="Session Handling Tests">
+        <classes>
+            <class name="tests.SessionHandlingTest"/>
+        </classes>
+    </test>
 </suite>

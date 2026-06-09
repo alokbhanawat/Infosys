@@ -1,9 +1,13 @@
 C:\Users\alokb\OneDrive\Desktop\infi\selenium-tests\src\test\java\base\BaseTest.java
+C:\Users\alokb\OneDrive\Desktop\infi\selenium-tests\src\test\java\pages\BasePage.java
 C:\Users\alokb\OneDrive\Desktop\infi\selenium-tests\src\test\java\pages\HomePage.java
 C:\Users\alokb\OneDrive\Desktop\infi\selenium-tests\src\test\java\pages\LoginPage.java
+C:\Users\alokb\OneDrive\Desktop\infi\selenium-tests\src\test\java\pages\ProductsPage.java
 C:\Users\alokb\OneDrive\Desktop\infi\selenium-tests\src\test\java\pages\RegisterPage.java
 C:\Users\alokb\OneDrive\Desktop\infi\selenium-tests\src\test\java\tests\LoginTest.java
 C:\Users\alokb\OneDrive\Desktop\infi\selenium-tests\src\test\java\tests\NavigationTest.java
 C:\Users\alokb\OneDrive\Desktop\infi\selenium-tests\src\test\java\tests\RegisterTest.java
 C:\Users\alokb\OneDrive\Desktop\infi\selenium-tests\src\test\java\tests\SampleTest.java
+C:\Users\alokb\OneDrive\Desktop\infi\selenium-tests\src\test\java\tests\SessionHandlingTest.java
 C:\Users\alokb\OneDrive\Desktop\infi\selenium-tests\src\test\java\utilities\DriverFactory.java
+C:\Users\alokb\OneDrive\Desktop\infi\selenium-tests\src\test\java\utilities\LoginUtils.java

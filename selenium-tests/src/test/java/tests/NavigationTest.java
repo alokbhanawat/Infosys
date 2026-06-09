@@ -9,7 +9,7 @@ import pages.RegisterPage;
 
 public class NavigationTest extends BaseTest {
 
-    @Test
+    @Test(priority = 1)
     public void openHomePage() {
         HomePage homePage = new HomePage(driver).open(BASE_URL);
 
@@ -17,21 +17,21 @@ public class NavigationTest extends BaseTest {
         Assert.assertTrue(driver.getCurrentUrl().startsWith(BASE_URL), "Home page should open on localhost.");
     }
 
-    @Test
+    @Test(priority = 2)
     public void verifyPageTitle() {
         new HomePage(driver).open(BASE_URL);
 
         Assert.assertEquals(driver.getTitle(), "frontend", "Page title should match frontend index title.");
     }
 
-    @Test
+    @Test(priority = 3)
     public void verifyCurrentUrl() {
         new HomePage(driver).open(BASE_URL);
 
         Assert.assertEquals(driver.getCurrentUrl(), BASE_URL + "/", "Home route should stay on the root URL.");
     }
 
-    @Test
+    @Test(priority = 4)
     public void navigateToLoginPage() {
         LoginPage loginPage = new LoginPage(driver).open(BASE_URL);
 
@@ -39,7 +39,7 @@ public class NavigationTest extends BaseTest {
         Assert.assertEquals(driver.getCurrentUrl(), BASE_URL + "/login");
     }
 
-    @Test
+    @Test(priority = 5)
     public void navigateToRegisterPage() {
         HomePage homePage = new HomePage(driver).open(BASE_URL);
         RegisterPage registerPage = homePage.goToRegisterPage();
@@ -48,7 +48,7 @@ public class NavigationTest extends BaseTest {
         Assert.assertEquals(driver.getCurrentUrl(), BASE_URL + "/register");
     }
 
-    @Test
+    @Test(priority = 6)
     public void navigateBackAndForward() {
         HomePage homePage = new HomePage(driver).open(BASE_URL);
         RegisterPage registerPage = homePage.goToRegisterPage();

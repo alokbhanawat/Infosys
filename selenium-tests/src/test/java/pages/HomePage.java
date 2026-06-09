@@ -1,26 +1,18 @@
 package pages;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.time.Duration;
-
-public class HomePage {
-    private final WebDriver driver;
-    private final WebDriverWait wait;
-
+public class HomePage extends BasePage {
     private final By appRootById = By.id("root");
     private final By loginHeadingByCss = By.cssSelector(".auth-card h2");
     private final By registerLinkByXpath = By.xpath("//a[@href='/register' and normalize-space()='Register']");
     private final By loginLinkByXpath = By.xpath("//a[@href='/login' and normalize-space()='Login']");
 
     public HomePage(WebDriver driver) {
-        this.driver = driver;
-        this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        super(driver);
     }
 
     public HomePage open(String baseUrl) {
@@ -60,10 +52,5 @@ public class HomePage {
 
     public void navigateForward() {
         driver.navigate().forward();
-    }
-
-    private void safeClick(WebElement element) {
-        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView({block: 'center'});", element);
-        ((JavascriptExecutor) driver).executeScript("arguments[0].click();", element);
     }
 }

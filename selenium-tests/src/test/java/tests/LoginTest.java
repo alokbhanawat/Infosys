@@ -4,18 +4,17 @@ import base.BaseTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import pages.LoginPage;
+import pages.ProductsPage;
+import utilities.LoginUtils;
 
 public class LoginTest extends BaseTest {
-    private static final String VALID_EMAIL = "mansi@gmail.com";
-    private static final String VALID_PASSWORD = "Mansi@1234";
 
     @Test
     public void loginWithValidCredentials() {
-        LoginPage loginPage = new LoginPage(driver).open(BASE_URL);
-        loginPage.login(VALID_EMAIL, VALID_PASSWORD);
+        ProductsPage productsPage = LoginUtils.loginAsDefaultUser(driver, BASE_URL);
         acceptAlertIfPresent();
 
-        Assert.assertTrue(loginPage.isProductsPageVisible(), "Valid login should navigate to products page.");
+        Assert.assertTrue(productsPage.isVisible(), "Valid login should navigate to products page.");
         Assert.assertTrue(driver.getCurrentUrl().contains("/products"), "Current URL should be products after login.");
     }
 
@@ -40,11 +39,10 @@ public class LoginTest extends BaseTest {
 
     @Test
     public void automateLogoutFlow() {
-        LoginPage loginPage = new LoginPage(driver).open(BASE_URL);
-        loginPage.login(VALID_EMAIL, VALID_PASSWORD);
-        Assert.assertTrue(loginPage.isProductsPageVisible(), "User should be logged in before logout.");
+        ProductsPage productsPage = LoginUtils.loginAsDefaultUser(driver, BASE_URL);
+        Assert.assertTrue(productsPage.isVisible(), "User should be logged in before logout.");
 
-        loginPage.logout();
+        LoginPage loginPage = productsPage.logout();
 
         Assert.assertTrue(loginPage.isLoginPageVisible(), "Login page should be visible after logout.");
         Assert.assertEquals(driver.getCurrentUrl(), BASE_URL + "/login");
