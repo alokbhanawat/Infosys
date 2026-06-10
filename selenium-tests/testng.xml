@@ -24,4 +24,10 @@
             <class name="tests.SessionHandlingTest"/>
         </classes>
     </test>
+
+    <test name="Product Listing Tests">
+        <classes>
+            <class name="tests.ProductListingTest"/>
+        </classes>
+    </test>
 </suite>
