@@ -30,4 +30,10 @@
             <class name="tests.ProductListingTest"/>
         </classes>
     </test>
+
+    <test name="Product Search Filter Tests">
+        <classes>
+            <class name="tests.ProductSearchFilterTest"/>
+        </classes>
+    </test>
 </suite>
