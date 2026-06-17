@@ -10,6 +10,7 @@ public class ProductDetailPage extends BasePage {
     private final By productNameByCss = By.cssSelector(".product-detail-copy h1");
     private final By productPriceByXpath = By.xpath("//div[contains(@class,'product-detail-meta')]//span[normalize-space()='Price']/following-sibling::strong[contains(normalize-space(),'Rs.')]");
     private final By addToCartButtonByCss = By.cssSelector(".product-detail-cart-btn");
+    private final By cartFeedbackByCss = By.cssSelector(".product-detail-purchase .form-message");
 
     public ProductDetailPage(WebDriver driver) {
         super(driver);
@@ -38,5 +39,15 @@ public class ProductDetailPage extends BasePage {
 
     public boolean isProductActionVisible() {
         return wait.until(ExpectedConditions.visibilityOfElementLocated(addToCartButtonByCss)).isDisplayed();
+    }
+
+    public String getProductName() {
+        return wait.until(ExpectedConditions.visibilityOfElementLocated(productNameByCss)).getText().trim();
+    }
+
+    public ProductDetailPage addToCart() {
+        safeClick(wait.until(ExpectedConditions.elementToBeClickable(addToCartButtonByCss)));
+        wait.until(ExpectedConditions.visibilityOfElementLocated(cartFeedbackByCss));
+        return this;
     }
 }

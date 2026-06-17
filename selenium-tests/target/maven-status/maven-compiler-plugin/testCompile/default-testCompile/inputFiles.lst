@@ -1,12 +1,14 @@
 C:\Users\alokb\OneDrive\Desktop\infi\selenium-tests\src\test\java\base\BaseTest.java
 C:\Users\alokb\OneDrive\Desktop\infi\selenium-tests\src\test\java\pages\AdminDashboardPage.java
 C:\Users\alokb\OneDrive\Desktop\infi\selenium-tests\src\test\java\pages\BasePage.java
+C:\Users\alokb\OneDrive\Desktop\infi\selenium-tests\src\test\java\pages\CartPage.java
 C:\Users\alokb\OneDrive\Desktop\infi\selenium-tests\src\test\java\pages\HomePage.java
 C:\Users\alokb\OneDrive\Desktop\infi\selenium-tests\src\test\java\pages\LoginPage.java
 C:\Users\alokb\OneDrive\Desktop\infi\selenium-tests\src\test\java\pages\ProductCatalogPage.java
 C:\Users\alokb\OneDrive\Desktop\infi\selenium-tests\src\test\java\pages\ProductDetailPage.java
 C:\Users\alokb\OneDrive\Desktop\infi\selenium-tests\src\test\java\pages\ProductsPage.java
 C:\Users\alokb\OneDrive\Desktop\infi\selenium-tests\src\test\java\pages\RegisterPage.java
+C:\Users\alokb\OneDrive\Desktop\infi\selenium-tests\src\test\java\tests\AddToCartTest.java
 C:\Users\alokb\OneDrive\Desktop\infi\selenium-tests\src\test\java\tests\LoginTest.java
 C:\Users\alokb\OneDrive\Desktop\infi\selenium-tests\src\test\java\tests\NavigationTest.java
 C:\Users\alokb\OneDrive\Desktop\infi\selenium-tests\src\test\java\tests\ProductListingTest.java
