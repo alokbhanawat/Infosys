@@ -5,6 +5,8 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
+import java.util.List;
+
 public class CartPage extends BasePage {
     private final By cartHeroByCss = By.cssSelector(".cart-hero");
     private final By loadingStateByXpath = By.xpath("//p[normalize-space()='Loading cart items...']");
@@ -27,6 +29,10 @@ public class CartPage extends BasePage {
 
     public boolean hasProduct(String productName) {
         return wait.until((webDriver) -> findCartItemByProductName(productName).isDisplayed());
+    }
+
+    public boolean isProductAbsent(String productName) {
+        return wait.until((webDriver) -> findCartItemsByProductName(productName).isEmpty());
     }
 
     public int getQuantityForProduct(String productName) {
@@ -52,11 +58,27 @@ public class CartPage extends BasePage {
         return this;
     }
 
+    public CartPage removeProduct(String productName) {
+        WebElement cartItem = wait.until((webDriver) -> findCartItemByProductName(productName));
+        WebElement removeButton = cartItem.findElement(By.cssSelector(".cart-remove-btn"));
+        safeClick(removeButton);
+        wait.until((webDriver) -> findCartItemsByProductName(productName).isEmpty());
+        return this;
+    }
+
     private WebElement findCartItemByProductName(String productName) {
-        return driver.findElement(By.xpath(
+        return driver.findElement(cartItemByProductName(productName));
+    }
+
+    private List<WebElement> findCartItemsByProductName(String productName) {
+        return driver.findElements(cartItemByProductName(productName));
+    }
+
+    private By cartItemByProductName(String productName) {
+        return By.xpath(
                 "//article[contains(@class,'cart-item')][.//strong[normalize-space()="
                         + xpathLiteral(productName) + "]]"
-        ));
+        );
     }
 
     private String xpathLiteral(String value) {
