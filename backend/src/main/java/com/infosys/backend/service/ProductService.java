@@ -12,7 +12,6 @@ import java.util.Locale;
 import java.util.Set;
 import java.util.UUID;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.http.HttpStatus;
@@ -33,11 +32,16 @@ public class ProductService {
     private static final Set<String> ALLOWED_IMAGE_EXTENSIONS =
             Set.of(".png", ".jpg", ".jpeg", ".webp", ".gif");
 
-    @Autowired
-    private ProductRepository productRepository;
+    private final ProductRepository productRepository;
 
-    @Value("${app.upload.dir:uploads}")
-    private String uploadDir;
+    private final String uploadDir;
+
+    public ProductService(
+            ProductRepository productRepository,
+            @Value("${app.upload.dir:uploads}") String uploadDir) {
+        this.productRepository = productRepository;
+        this.uploadDir = uploadDir;
+    }
 
     public Product addProduct(Product product) {
         return productRepository.save(product);
