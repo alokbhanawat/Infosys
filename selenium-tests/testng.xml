@@ -42,4 +42,10 @@
             <class name="tests.AddToCartTest"/>
         </classes>
     </test>
+
+    <test name="Checkout Tests">
+        <classes>
+            <class name="tests.CheckoutTest"/>
+        </classes>
+    </test>
 </suite>

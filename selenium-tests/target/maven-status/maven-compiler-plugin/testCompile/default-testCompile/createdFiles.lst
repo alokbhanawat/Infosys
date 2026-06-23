@@ -2,6 +2,7 @@ pages\ProductCatalogPage.class
 tests\SampleTest.class
 pages\BasePage.class
 pages\ProductsPage.class
+tests\CheckoutTest.class
 pages\LoginPage.class
 pages\HomePage.class
 tests\ProductListingTest.class

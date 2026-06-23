@@ -92,7 +92,7 @@
               <div class="suite-section-content">
                 <ul>
                   <li>
-                    <span class="method-stats">1 method,   1 passed</span>
+                    <span class="method-stats">3 methods,   3 passed</span>
                   </li>
                   <li>
                     <span class="method-list-title passed">Passed methods</span>
@@ -103,7 +103,17 @@
                     <div class="method-list-content passed suite-Surefire_suite">
                       <span>
                         <img src="passed.png" width="3%"/>
-                        <a href="#" panel-name="suite-Surefire_suite" title="tests.AddToCartTest" class="method navigator-link" hash-for-method="validateUserCanRemoveAnAddedProductFromCart">validateUserCanRemoveAnAddedProductFromCart</a> <!-- method navigator-link -->
+                        <a href="#" panel-name="suite-Surefire_suite" title="tests.CheckoutTest" class="method navigator-link" hash-for-method="validateCheckoutInitiationWithSuccessfulPaymentFlow">validateCheckoutInitiationWithSuccessfulPaymentFlow</a> <!-- method navigator-link -->
+                      </span>
+                      <br/>
+                      <span>
+                        <img src="passed.png" width="3%"/>
+                        <a href="#" panel-name="suite-Surefire_suite" title="tests.CheckoutTest" class="method navigator-link" hash-for-method="validateCheckoutRejectsInvalidPhoneNumber">validateCheckoutRejectsInvalidPhoneNumber</a> <!-- method navigator-link -->
+                      </span>
+                      <br/>
+                      <span>
+                        <img src="passed.png" width="3%"/>
+                        <a href="#" panel-name="suite-Surefire_suite" title="tests.CheckoutTest" class="method navigator-link" hash-for-method="validateCheckoutShowsMandatoryFieldErrors">validateCheckoutShowsMandatoryFieldErrors</a> <!-- method navigator-link -->
                       </span>
                       <br/>
                     </div> <!-- method-list-content passed suite-Surefire_suite -->
@@ -121,14 +131,28 @@
           <div class="suite-Surefire_suite-class-passed">
             <div class="main-panel-header rounded-window-top">
               <img src="passed.png"/>
-              <span class="class-name">tests.AddToCartTest</span>
+              <span class="class-name">tests.CheckoutTest</span>
             </div> <!-- main-panel-header rounded-window-top -->
             <div class="main-panel-content rounded-window-bottom">
               <div class="method">
                 <div class="method-content">
-                  <a name="validateUserCanRemoveAnAddedProductFromCart">
-                  </a> <!-- validateUserCanRemoveAnAddedProductFromCart -->
-                  <span class="method-name">validateUserCanRemoveAnAddedProductFromCart</span>
+                  <a name="validateCheckoutInitiationWithSuccessfulPaymentFlow">
+                  </a> <!-- validateCheckoutInitiationWithSuccessfulPaymentFlow -->
+                  <span class="method-name">validateCheckoutInitiationWithSuccessfulPaymentFlow</span>
+                </div> <!-- method-content -->
+              </div> <!-- method -->
+              <div class="method">
+                <div class="method-content">
+                  <a name="validateCheckoutRejectsInvalidPhoneNumber">
+                  </a> <!-- validateCheckoutRejectsInvalidPhoneNumber -->
+                  <span class="method-name">validateCheckoutRejectsInvalidPhoneNumber</span>
+                </div> <!-- method-content -->
+              </div> <!-- method -->
+              <div class="method">
+                <div class="method-content">
+                  <a name="validateCheckoutShowsMandatoryFieldErrors">
+                  </a> <!-- validateCheckoutShowsMandatoryFieldErrors -->
+                  <span class="method-name">validateCheckoutShowsMandatoryFieldErrors</span>
                 </div> <!-- method-content -->
               </div> <!-- method -->
             </div> <!-- main-panel-content rounded-window-bottom -->
@@ -143,13 +167,8 @@
 &lt;!DOCTYPE suite SYSTEM &quot;https://testng.org/testng-1.0.dtd&quot;&gt;
 &lt;suite name=&quot;Surefire suite&quot; verbose=&quot;0&quot;&gt;
   &lt;test thread-count=&quot;5&quot; name=&quot;Surefire test&quot; verbose=&quot;0&quot;&gt;
-    &lt;method-selectors&gt;
-      &lt;method-selector&gt;
-        &lt;selector-class name=&quot;org.apache.maven.surefire.testng.utils.MethodSelector&quot; priority=&quot;10000&quot;/&gt;
-      &lt;/method-selector&gt;
-    &lt;/method-selectors&gt;
     &lt;classes&gt;
-      &lt;class name=&quot;tests.AddToCartTest&quot;/&gt;
+      &lt;class name=&quot;tests.CheckoutTest&quot;/&gt;
     &lt;/classes&gt;
   &lt;/test&gt; &lt;!-- Surefire test --&gt;
 &lt;/suite&gt; &lt;!-- Surefire suite --&gt;
@@ -189,16 +208,24 @@ data.addColumn('number', 'Number');
 data.addColumn('string', 'Method');
 data.addColumn('string', 'Class');
 data.addColumn('number', 'Time (ms)');
-data.addRows(1);
+data.addRows(3);
 data.setCell(0, 0, 0)
-data.setCell(0, 1, 'validateUserCanRemoveAnAddedProductFromCart')
-data.setCell(0, 2, 'tests.AddToCartTest')
-data.setCell(0, 3, 49083);
+data.setCell(0, 1, 'validateCheckoutInitiationWithSuccessfulPaymentFlow')
+data.setCell(0, 2, 'tests.CheckoutTest')
+data.setCell(0, 3, 27664);
+data.setCell(1, 0, 1)
+data.setCell(1, 1, 'validateCheckoutRejectsInvalidPhoneNumber')
+data.setCell(1, 2, 'tests.CheckoutTest')
+data.setCell(1, 3, 23716);
+data.setCell(2, 0, 2)
+data.setCell(2, 1, 'validateCheckoutShowsMandatoryFieldErrors')
+data.setCell(2, 2, 'tests.CheckoutTest')
+data.setCell(2, 3, 21807);
 window.suiteTableData['Surefire_suite']= { tableData: data, tableDiv: 'times-div-Surefire_suite'}
 return data;
 }
               </script>
-              <span class="suite-total-time">Total running time: 49 seconds</span>
+              <span class="suite-total-time">Total running time: 1 minutes</span>
               <div id="times-div-Surefire_suite">
               </div> <!-- times-div-Surefire_suite -->
             </div> <!-- times-div -->
@@ -213,16 +240,9 @@ return data;
         </div> <!-- panel -->
         <div panel-name="ignored-methods-Surefire_suite" class="panel">
           <div class="main-panel-header rounded-window-top">
-            <span class="header-content">1 ignored method</span>
+            <span class="header-content">0 ignored methods</span>
           </div> <!-- main-panel-header rounded-window-top -->
           <div class="main-panel-content rounded-window-bottom">
-            <div class="ignored-class-div">
-              <span class="ignored-class-name">tests.AddToCartTest</span>
-              <div class="ignored-methods-div">
-                <span class="ignored-method-name">validateUserCanAddProductToCartAndIncreaseQuantityToTwo</span>
-                <br/>
-              </div> <!-- ignored-methods-div -->
-            </div> <!-- ignored-class-div -->
           </div> <!-- main-panel-content rounded-window-bottom -->
         </div> <!-- panel -->
         <div panel-name="chronological-Surefire_suite" class="panel">
@@ -231,18 +251,42 @@ return data;
           </div> <!-- main-panel-header rounded-window-top -->
           <div class="main-panel-content rounded-window-bottom">
             <div class="chronological-class">
-              <div class="chronological-class-name">tests.AddToCartTest</div> <!-- chronological-class-name -->
+              <div class="chronological-class-name">tests.CheckoutTest</div> <!-- chronological-class-name -->
               <div class="configuration-method before">
                 <span class="method-name">setUp</span>
                 <span class="method-start">0 ms</span>
               </div> <!-- configuration-method before -->
               <div class="test-method">
-                <span class="method-name">validateUserCanRemoveAnAddedProductFromCart</span>
-                <span class="method-start">29011 ms</span>
+                <span class="method-name">validateCheckoutInitiationWithSuccessfulPaymentFlow</span>
+                <span class="method-start">8643 ms</span>
               </div> <!-- test-method -->
               <div class="configuration-method after">
                 <span class="method-name">tearDown</span>
-                <span class="method-start">78107 ms</span>
+                <span class="method-start">36316 ms</span>
+              </div> <!-- configuration-method after -->
+              <div class="configuration-method before">
+                <span class="method-name">setUp</span>
+                <span class="method-start">46308 ms</span>
+              </div> <!-- configuration-method before -->
+              <div class="test-method">
+                <span class="method-name">validateCheckoutRejectsInvalidPhoneNumber</span>
+                <span class="method-start">48615 ms</span>
+              </div> <!-- test-method -->
+              <div class="configuration-method after">
+                <span class="method-name">tearDown</span>
+                <span class="method-start">72333 ms</span>
+              </div> <!-- configuration-method after -->
+              <div class="configuration-method before">
+                <span class="method-name">setUp</span>
+                <span class="method-start">73536 ms</span>
+              </div> <!-- configuration-method before -->
+              <div class="test-method">
+                <span class="method-name">validateCheckoutShowsMandatoryFieldErrors</span>
+                <span class="method-start">75191 ms</span>
+              </div> <!-- test-method -->
+              <div class="configuration-method after">
+                <span class="method-name">tearDown</span>
+                <span class="method-start">96998 ms</span>
               </div> <!-- configuration-method after -->
           </div> <!-- main-panel-content rounded-window-bottom -->
         </div> <!-- panel -->

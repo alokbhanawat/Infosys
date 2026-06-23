@@ -436,6 +436,17 @@ function CartPage() {
     const selectedAddress = savedAddresses.find((address) => String(address.id) === addressId);
 
     if (!selectedAddress) {
+      setCheckoutErrors((currentErrors) => {
+        const nextErrors = { ...currentErrors };
+        delete nextErrors.fullName;
+        delete nextErrors.phone;
+        delete nextErrors.addressLine1;
+        delete nextErrors.city;
+        delete nextErrors.state;
+        delete nextErrors.postalCode;
+        delete nextErrors.country;
+        return nextErrors;
+      });
       return;
     }
 
@@ -642,6 +653,7 @@ function CartPage() {
                 <label className="checkout-field checkout-field-full">
                   <span>Select saved address</span>
                   <select value={selectedAddressId} onChange={handleAddressSelection}>
+                    <option value="">Enter new address</option>
                     {savedAddresses.map((address) => (
                       <option key={address.id} value={address.id}>
                         {address.label} - {address.addressLine1}, {address.city}
