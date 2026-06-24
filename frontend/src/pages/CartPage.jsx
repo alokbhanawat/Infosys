@@ -21,6 +21,10 @@ import "../styles/cart.css";
 
 const ORDER_SUCCESS_STORAGE_KEY = "latestOrder";
 const RAZORPAY_PENDING_ORDER_KEY = "pendingRazorpayOrder";
+const RAZORPAY_CANCELLED_MESSAGE =
+  "Payment was not completed. You can try again, choose another UPI app, or use card payment.";
+const UPI_FAILURE_MESSAGE =
+  "UPI payment could not be completed. Please approve the request in your UPI app before it expires, then return to Razorpay.";
 const DEFAULT_CHECKOUT_FORM = {
   fullName: "",
   phone: "",
@@ -359,7 +363,7 @@ function CartPage() {
           },
           modal: {
             ondismiss: () => {
-              rejectIfUnsettled(new Error("Payment was cancelled before completion."));
+              rejectIfUnsettled(new Error(RAZORPAY_CANCELLED_MESSAGE));
             },
           },
           theme: {
@@ -368,7 +372,11 @@ function CartPage() {
         });
 
         checkout.on("payment.failed", (paymentError) => {
-          rejectIfUnsettled(new Error(paymentError?.error?.description || "Razorpay payment failed."));
+          const razorpayFailureMessage =
+            checkoutForm.paymentMethod === "UPI"
+              ? UPI_FAILURE_MESSAGE
+              : paymentError?.error?.description || "Razorpay payment failed. Please try again.";
+          rejectIfUnsettled(new Error(razorpayFailureMessage));
         });
 
         checkout.open();
@@ -388,7 +396,6 @@ function CartPage() {
 
       setActionStatus("error");
       setActionMessage(apiMessage || requestError.message || fallbackMessage);
-      window.alert(apiMessage || requestError.message || fallbackMessage);
       sessionStorage.removeItem(RAZORPAY_PENDING_ORDER_KEY);
     } finally {
       setIsCheckingOut(false);
@@ -529,7 +536,15 @@ function CartPage() {
               </button>
             </div>
 
-            {actionMessage ? <p className={`form-message ${actionStatus}`}>{actionMessage}</p> : null}
+            {actionMessage ? (
+              <div className={`cart-payment-alert ${actionStatus}`} role="status" aria-live="polite">
+                <span className="cart-payment-alert-icon">{actionStatus === "success" ? "✓" : "!"}</span>
+                <div>
+                  <strong>{actionStatus === "success" ? "Order update" : "Payment not completed"}</strong>
+                  <p>{actionMessage}</p>
+                </div>
+              </div>
+            ) : null}
 
             {loading ? (
               <p className="empty-state">Loading cart items...</p>
