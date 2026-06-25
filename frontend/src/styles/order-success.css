@@ -162,3 +162,42 @@
     width: 100%;
   }
 }
+
+/* Storefront visual alignment */
+.order-success-page {
+  color: #172033;
+  background:
+    linear-gradient(90deg, rgba(23, 96, 167, 0.06) 1px, transparent 1px),
+    linear-gradient(180deg, #f7fbff 0%, #eef4fb 42%, #f8fafc 100%);
+  background-size: 96px 96px, auto;
+}
+
+.order-success-card {
+  border-radius: 8px;
+  background:
+    linear-gradient(135deg, rgba(15, 23, 42, 0.92), rgba(29, 78, 216, 0.8)),
+    linear-gradient(120deg, #0f172a 0%, #1d4ed8 54%, #0f766e 100%);
+  box-shadow: 0 28px 70px rgba(15, 23, 42, 0.22);
+}
+
+.order-success-badge,
+.order-success-summary article,
+.order-success-item,
+.order-success-link {
+  border-radius: 8px;
+}
+
+.order-success-badge,
+.order-success-summary span,
+.order-success-item span {
+  letter-spacing: 0;
+}
+
+.order-success-summary article {
+  background: rgba(255, 255, 255, 0.94);
+  box-shadow: 0 18px 44px rgba(15, 23, 42, 0.12);
+}
+
+.order-success-link {
+  border-color: rgba(148, 163, 184, 0.22);
+}

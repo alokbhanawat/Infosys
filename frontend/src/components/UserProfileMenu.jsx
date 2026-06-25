@@ -5,12 +5,6 @@ import "../styles/profile-menu.css";
 
 function ProfileMenuIcon({ type }) {
   const icons = {
-    cart: (
-      <path d="M7.2 18.6a1.4 1.4 0 1 0 0 2.8 1.4 1.4 0 0 0 0-2.8Zm9.6 0a1.4 1.4 0 1 0 0 2.8 1.4 1.4 0 0 0 0-2.8ZM3 3.8h2.1l2.2 10.7a2 2 0 0 0 2 1.6h7.2a2 2 0 0 0 1.9-1.4l1.7-6.2H7.1" />
-    ),
-    orders: (
-      <path d="M6.5 3.8h11A1.5 1.5 0 0 1 19 5.3v14.9l-3-1.8-3 1.8-3-1.8-3 1.8V5.3a1.5 1.5 0 0 1 1.5-1.5Zm2 4.2h7m-7 4h7m-7 4h4" />
-    ),
     profile: (
       <path d="M12 12.2a4.1 4.1 0 1 0 0-8.2 4.1 4.1 0 0 0 0 8.2Zm-7 8a7 7 0 0 1 14 0" />
     ),
@@ -80,7 +74,7 @@ function UserProfileMenu({ user }) {
         </span>
         <span className="profile-menu-trigger-copy">
           <strong>{user?.name || "Profile"}</strong>
-          <small>Account and orders</small>
+          <small>Account settings</small>
         </span>
         <span className={`profile-menu-chevron ${isOpen ? "profile-menu-chevron-open" : ""}`}>{"\u25BE"}</span>
       </button>
@@ -92,14 +86,6 @@ function UserProfileMenu({ user }) {
             <span>{user?.email || "Signed in"}</span>
           </div>
 
-          <Link className="profile-menu-item" to="/cart" onClick={() => setIsOpen(false)}>
-            <ProfileMenuIcon type="cart" />
-            <span>Open cart</span>
-          </Link>
-          <Link className="profile-menu-item" to="/orders" onClick={() => setIsOpen(false)}>
-            <ProfileMenuIcon type="orders" />
-            <span>Orders</span>
-          </Link>
           <Link className="profile-menu-item" to="/profile" onClick={() => setIsOpen(false)}>
             <ProfileMenuIcon type="profile" />
             <span>Profile update</span>

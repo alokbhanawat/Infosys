@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import UserProfileMenu from "../components/UserProfileMenu";
 import ProductFilters from "../components/ProductFilters";
 import ProductCatalog from "../components/ProductCatalog";
@@ -8,7 +9,49 @@ import { useProductDarkMode } from "../hooks/useProductDarkMode";
 import { getCurrentUser } from "../utils/auth";
 import "../styles/storefront.css";
 
+const electronicCategories = [
+  {
+    name: "Mobiles",
+    filter: "Mobiles",
+    tone: "mobile",
+    text: "Latest 5G phones, fast charging, and sharp displays.",
+  },
+  {
+    name: "Laptops",
+    filter: "Laptops",
+    tone: "laptop",
+    text: "Work, study, and gaming laptops for every setup.",
+  },
+  {
+    name: "Headphones",
+    filter: "Headphones",
+    tone: "headphone",
+    text: "Wireless audio, noise cancellation, and studio sound.",
+  },
+  {
+    name: "Smart TVs",
+    filter: "Smart TVs",
+    tone: "tv",
+    text: "Big screen entertainment with crisp smart features.",
+  },
+  {
+    name: "Refrigerators",
+    filter: "Refrigerators",
+    tone: "refrigerator",
+    text: "Energy-efficient cooling for modern homes.",
+  },
+];
+
+const featureBanners = [
+  { title: "Mobiles", offer: "Up to 35% off", tone: "mobile", filter: "Mobiles" },
+  { title: "Laptops", offer: "Performance deals", tone: "laptop", filter: "Laptops" },
+  { title: "Headphones", offer: "Audio week picks", tone: "headphone", filter: "Headphones" },
+  { title: "Smart TVs", offer: "Cinema at home", tone: "tv", filter: "Smart TVs" },
+  { title: "Refrigerators", offer: "Fresh savings", tone: "refrigerator", filter: "Refrigerators" },
+];
+
 function ProductsPage() {
+  const navigate = useNavigate();
   const { isDarkMode, toggleDarkMode } = useProductDarkMode();
   const tokenUser = getCurrentUser();
   const [user, setUser] = useState(tokenUser);
@@ -83,6 +126,17 @@ function ProductsPage() {
     await loadProducts(resetFilters);
   };
 
+  const handleCategorySelect = async (category) => {
+    const nextFilters = {
+      ...filters,
+      category,
+    };
+
+    navigate("/products");
+    setFilters(nextFilters);
+    await loadProducts(nextFilters);
+  };
+
   const handleIncreaseQuantity = (product) => {
     setQuantities((current) => {
       const nextValue = Math.min((current[product.id] ?? 1) + 1, Number(product.stock) || 1);
@@ -122,15 +176,48 @@ function ProductsPage() {
   return (
     <div className={`storefront-page ${isDarkMode ? "product-page-dark" : ""}`}>
       <div className="storefront-shell">
+        <header className="storefront-navbar">
+          <Link className="storefront-brand" to="/products" aria-label="Go to products home">
+            <span className="storefront-brand-mark">IE</span>
+            <span>
+              <strong>Infi Electronics</strong>
+              <small>Smart shopping hub</small>
+            </span>
+          </Link>
+
+          <nav className="storefront-nav-links" aria-label="Store navigation">
+            <a href="#categories">Categories</a>
+            <a href="#products">Products</a>
+            <Link to="/orders">Orders</Link>
+            <Link to="/cart">Cart</Link>
+          </nav>
+
+          <div className="storefront-nav-actions">
+            <ProductThemeToggle isDarkMode={isDarkMode} onToggle={toggleDarkMode} />
+            <UserProfileMenu user={user} />
+          </div>
+        </header>
+
         <section className="storefront-hero">
           <div className="storefront-hero-copy">
-            <div>
-              <span className="storefront-eyebrow">Storefront</span>
-              <h1>Shop Products</h1>
+            <span className="storefront-eyebrow">Electronics megastore</span>
+            <h1>Upgrade your tech with deals that feel premium.</h1>
+            <p>
+              Shop mobiles, laptops, headphones, smart TVs, refrigerators, and everyday electronics from a clean, fast catalog.
+            </p>
+            <div className="storefront-hero-buttons">
+              <Link className="primary-btn storefront-shop-btn" to="/products">
+                Shop Now
+              </Link>
             </div>
           </div>
 
           <div className="storefront-hero-side">
+            <div className="storefront-hero-art" aria-hidden="true">
+              <span className="hero-device hero-device-phone" />
+              <span className="hero-device hero-device-laptop" />
+              <span className="hero-device hero-device-headphone" />
+            </div>
             <div className="storefront-mini-panel">
               <article>
                 <span>Visible</span>
@@ -145,11 +232,45 @@ function ProductsPage() {
                 <strong>{filters.inStock ? "In stock" : "All items"}</strong>
               </article>
             </div>
+          </div>
+        </section>
 
-            <div className="storefront-actions">
-              <ProductThemeToggle isDarkMode={isDarkMode} onToggle={toggleDarkMode} />
-              <UserProfileMenu user={user} />
-            </div>
+        <section className="storefront-banner-strip" id="deals" aria-label="Featured electronic deals">
+          {featureBanners.map((banner) => (
+            <button
+              type="button"
+              className={`deal-banner deal-banner-${banner.tone}`}
+              key={banner.title}
+              onClick={() => handleCategorySelect(banner.filter)}
+            >
+              <span className="deal-banner-copy">
+                <small>{banner.offer}</small>
+                <strong>{banner.title}</strong>
+              </span>
+              <span className="deal-banner-visual" aria-hidden="true" />
+            </button>
+          ))}
+        </section>
+
+        <section className="storefront-category-section" id="categories">
+          <div className="storefront-section-title">
+            <span>Shop by category</span>
+            <h2>Electronics for every room, desk, and commute.</h2>
+          </div>
+
+          <div className="category-card-grid">
+            {electronicCategories.map((category) => (
+              <button
+                type="button"
+                className={`category-card category-card-${category.tone}`}
+                key={category.name}
+                onClick={() => handleCategorySelect(category.filter)}
+              >
+                <span className="category-card-icon" aria-hidden="true" />
+                <strong>{category.name}</strong>
+                <small>{category.text}</small>
+              </button>
+            ))}
           </div>
         </section>
 
@@ -162,7 +283,7 @@ function ProductsPage() {
             onResetFilters={handleResetFilters}
           />
 
-          <div>
+          <div id="products" className="storefront-products-panel">
             {cartFeedback ? <p className="form-message success">{cartFeedback}</p> : null}
             <ProductCatalog
               isAdmin={false}
@@ -184,6 +305,19 @@ function ProductsPage() {
             />
           </div>
         </section>
+
+        <footer className="storefront-footer">
+          <div>
+            <strong>Infi Electronics</strong>
+            <p>Clean shopping experience for modern electronics.</p>
+          </div>
+          <nav aria-label="Footer links">
+            <Link to="/products">Products</Link>
+            <Link to="/cart">Cart</Link>
+            <Link to="/orders">Orders</Link>
+            <Link to="/profile">Profile</Link>
+          </nav>
+        </footer>
       </div>
     </div>
   );

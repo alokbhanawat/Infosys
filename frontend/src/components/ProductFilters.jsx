@@ -8,48 +8,61 @@ function ProductFilters({
   return (
     <section className="dashboard-card filter-card">
       <div className="section-heading">
-        <span>Search</span>
-        <h2>Filter products</h2>
+        <span>Search catalog</span>
+        <h2>Find your next device</h2>
       </div>
       <p className="filter-intro">
-        Refine the catalog by keyword, category, budget, or ready-to-ship availability.
+        Search by keyword, choose a category, set a budget, and keep ready-to-ship products in view.
       </p>
 
       <form className="filter-form" onSubmit={onFilterSubmit}>
-        <div className="input-grid filter-row">
+        <label className="filter-field filter-search-field">
+          <span>Search products</span>
           <input
             name="search"
-            placeholder="Search by name, description, or category"
+            placeholder="Search mobiles, laptops, TVs..."
             value={filters.search}
             onChange={onFilterChange}
           />
-          <input
-            name="category"
-            placeholder="Filter by category"
-            value={filters.category}
-            onChange={onFilterChange}
-          />
+        </label>
+
+        <div className="input-grid filter-row">
+          <label className="filter-field">
+            <span>Category</span>
+            <input
+              name="category"
+              placeholder="Mobiles, laptops, headphones..."
+              value={filters.category}
+              onChange={onFilterChange}
+            />
+          </label>
         </div>
 
         <div className="input-grid filter-row">
-          <input
-            type="number"
-            min="0"
-            step="0.01"
-            name="minPrice"
-            placeholder="Minimum price"
-            value={filters.minPrice}
-            onChange={onFilterChange}
-          />
-          <input
-            type="number"
-            min="0"
-            step="0.01"
-            name="maxPrice"
-            placeholder="Maximum price"
-            value={filters.maxPrice}
-            onChange={onFilterChange}
-          />
+          <label className="filter-field">
+            <span>Minimum price</span>
+            <input
+              type="number"
+              min="0"
+              step="0.01"
+              name="minPrice"
+              placeholder="Rs. 0"
+              value={filters.minPrice}
+              onChange={onFilterChange}
+            />
+          </label>
+          <label className="filter-field">
+            <span>Maximum price</span>
+            <input
+              type="number"
+              min="0"
+              step="0.01"
+              name="maxPrice"
+              placeholder="Rs. 100000"
+              value={filters.maxPrice}
+              onChange={onFilterChange}
+            />
+          </label>
         </div>
 
         <label className="checkbox-field">

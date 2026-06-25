@@ -22,6 +22,20 @@ function ProductCatalog({
   showAddToCart = false,
   onAddToCart,
 }) {
+  const formatPrice = (price) => {
+    const numericPrice = Number(price);
+
+    if (Number.isNaN(numericPrice)) {
+      return `Rs. ${price}`;
+    }
+
+    return new Intl.NumberFormat("en-IN", {
+      style: "currency",
+      currency: "INR",
+      maximumFractionDigits: 0,
+    }).format(numericPrice);
+  };
+
   const renderProductCardBody = (product) => (
     <>
       <div className="product-visual">
@@ -35,13 +49,14 @@ function ProductCatalog({
       </div>
 
       <div className="product-copy">
+        <span className="product-category-label">{product.category || "Electronics"}</span>
         <strong>{product.name}</strong>
         <p>{product.description || "No description provided."}</p>
       </div>
 
       <div className="product-meta">
         <span>{product.category || "Uncategorized"}</span>
-        <span>Rs. {product.price}</span>
+        <span className="product-price">{formatPrice(product.price)}</span>
         {isAdmin ? <span>Stock: {product.stock}</span> : null}
       </div>
     </>
@@ -141,6 +156,10 @@ function ProductCatalog({
                       >
                         {Number(product.stock) > 0 ? "Add to cart" : "Out of stock"}
                       </button>
+
+                      <Link className="secondary-btn product-detail-btn" to={`${detailBasePath}/${product.id}`}>
+                        View Details
+                      </Link>
                     </div>
                   ) : null}
                 </>

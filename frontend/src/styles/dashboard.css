@@ -858,3 +858,122 @@
     align-items: flex-start;
   }
 }
+
+/* Storefront visual alignment for admin */
+.dashboard-container {
+  color: #172033;
+  background:
+    linear-gradient(90deg, rgba(23, 96, 167, 0.06) 1px, transparent 1px),
+    linear-gradient(180deg, #f7fbff 0%, #eef4fb 42%, #f8fafc 100%);
+  background-size: 96px 96px, auto;
+}
+
+.dashboard-backdrop {
+  display: none;
+}
+
+.dashboard-layout {
+  max-width: 1440px;
+  padding-top: 18px;
+}
+
+.dashboard-hero-card {
+  border-radius: 8px;
+  background:
+    linear-gradient(135deg, rgba(15, 23, 42, 0.92), rgba(29, 78, 216, 0.8)),
+    linear-gradient(120deg, #0f172a 0%, #1d4ed8 54%, #0f766e 100%);
+  border-color: rgba(255, 255, 255, 0.18);
+  color: #fff;
+  box-shadow: 0 28px 70px rgba(15, 23, 42, 0.22);
+}
+
+.dashboard-label {
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.13);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: #dbeafe;
+  letter-spacing: 0;
+}
+
+.dashboard-hero-card h1,
+.dashboard-hero-card .dashboard-subtitle {
+  color: #fff;
+}
+
+.highlight-card,
+.dashboard-card,
+.admin-panel-card,
+.product-item,
+.filter-card,
+.catalog-card,
+.product-form input,
+.product-form textarea,
+.product-form select,
+.filter-form input,
+.checkbox-field,
+.quantity-picker,
+.empty-state {
+  border-radius: 8px;
+}
+
+.highlight-card,
+.dashboard-card,
+.admin-panel-card,
+.filter-card,
+.catalog-card,
+.product-item {
+  background: rgba(255, 255, 255, 0.94);
+  border-color: rgba(148, 163, 184, 0.22);
+  box-shadow: 0 18px 44px rgba(15, 23, 42, 0.08);
+}
+
+.spotlight {
+  background: rgba(255, 255, 255, 0.94);
+}
+
+.catalog-card::before,
+.filter-card::before {
+  background: linear-gradient(90deg, #2563eb, #0f766e);
+}
+
+.primary-btn,
+.secondary-btn,
+.logout-btn,
+.danger-btn {
+  border-radius: 8px;
+}
+
+.primary-btn {
+  background: linear-gradient(135deg, #f59e0b, #ef4444);
+}
+
+.secondary-btn {
+  background: linear-gradient(135deg, #0f172a, #2563eb);
+}
+
+.logout-btn,
+.danger-btn {
+  background: linear-gradient(135deg, #b91c1c, #ef4444);
+}
+
+.section-heading span,
+.admin-panel-label,
+.highlight-card span,
+.product-meta span {
+  letter-spacing: 0;
+}
+
+.section-heading span,
+.admin-panel-label {
+  color: #2563eb;
+}
+
+.product-meta span {
+  background: #eef6ff;
+  color: #1d4ed8;
+}
+
+.product-meta .product-price {
+  background: #ecfdf5;
+  color: #047857;
+}

@@ -230,3 +230,66 @@
     flex-direction: column;
   }
 }
+
+/* Storefront visual alignment */
+.address-page {
+  color: #172033;
+  background:
+    linear-gradient(90deg, rgba(23, 96, 167, 0.06) 1px, transparent 1px),
+    linear-gradient(180deg, #f7fbff 0%, #eef4fb 42%, #f8fafc 100%);
+  background-size: 96px 96px, auto;
+}
+
+.address-shell {
+  width: min(1440px, calc(100% - 32px));
+}
+
+.address-hero {
+  border-radius: 8px;
+  background:
+    linear-gradient(135deg, rgba(15, 23, 42, 0.92), rgba(29, 78, 216, 0.8)),
+    linear-gradient(120deg, #0f172a 0%, #1d4ed8 54%, #0f766e 100%);
+  color: #fff;
+  box-shadow: 0 28px 70px rgba(15, 23, 42, 0.22);
+}
+
+.address-badge {
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.13);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: #dbeafe;
+  letter-spacing: 0;
+}
+
+.address-hero h1,
+.address-hero p {
+  color: #fff;
+}
+
+.address-card,
+.address-item,
+.address-field input,
+.address-field select,
+.address-type-pill,
+.back-link {
+  border-radius: 8px;
+}
+
+.address-card,
+.address-item {
+  background: rgba(255, 255, 255, 0.94);
+  border-color: rgba(148, 163, 184, 0.22);
+  box-shadow: 0 18px 44px rgba(15, 23, 42, 0.08);
+}
+
+.address-card-header span,
+.address-field span,
+.address-item-copy span {
+  color: #64748b;
+  letter-spacing: 0;
+}
+
+.address-card-header h2,
+.address-item-copy strong {
+  color: #0f172a;
+}
