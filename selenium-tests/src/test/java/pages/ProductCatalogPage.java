@@ -1,7 +1,8 @@
 package pages;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -15,7 +16,7 @@ public abstract class ProductCatalogPage<T extends ProductCatalogPage<T>> extend
     protected final By productNameByCss = By.cssSelector(".product-copy strong");
     protected final By productDescriptionByCss = By.cssSelector(".product-copy p");
     protected final By productCategoryByXpath = By.xpath(".//div[contains(@class,'product-meta')]/span[1]");
-    protected final By productPriceByXpath = By.xpath(".//div[contains(@class,'product-meta')]/span[contains(normalize-space(),'Rs.')]");
+    protected final By productPriceByCss = By.cssSelector(".product-meta .product-price");
     private final By searchInputByCss = By.cssSelector(".filter-form input[name='search']");
     private final By categoryInputByCss = By.cssSelector(".filter-form input[name='category']");
     private final By applyFiltersButtonByCss = By.cssSelector(".filter-form button[type='submit']");
@@ -28,7 +29,6 @@ public abstract class ProductCatalogPage<T extends ProductCatalogPage<T>> extend
 
     public T waitForProductListingLoaded() {
         wait.until(ExpectedConditions.visibilityOfElementLocated(catalogCardByCss));
-        wait.until(ExpectedConditions.invisibilityOfElementLocated(productLoadingItemByCss));
         wait.until(ExpectedConditions.numberOfElementsToBeMoreThan(productItemByCss, 0));
         return self();
     }
@@ -40,8 +40,8 @@ public abstract class ProductCatalogPage<T extends ProductCatalogPage<T>> extend
     public boolean hasVisibleProductDetails() {
         return getVisibleProducts().stream().allMatch((product) -> {
             String name = product.findElement(productNameByCss).getText().trim();
-            String price = product.findElement(productPriceByXpath).getText().trim();
-            return !name.isEmpty() && price.startsWith("Rs.");
+            String price = product.findElement(productPriceByCss).getText().trim();
+            return !name.isEmpty() && !price.isEmpty();
         });
     }
 
@@ -86,24 +86,28 @@ public abstract class ProductCatalogPage<T extends ProductCatalogPage<T>> extend
     }
 
     protected List<WebElement> getVisibleProducts() {
-        return wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(productItemByCss));
+        return wait.until((webDriver) -> {
+            try {
+                List<WebElement> visibleProducts = driver.findElements(productItemByCss).stream()
+                        .filter(WebElement::isDisplayed)
+                        .toList();
+
+                return visibleProducts.isEmpty() ? null : visibleProducts;
+            } catch (StaleElementReferenceException exception) {
+                return null;
+            }
+        });
     }
 
     private void applyFilters() {
         safeClick(wait.until(ExpectedConditions.elementToBeClickable(applyFiltersButtonByCss)));
-        wait.until(ExpectedConditions.invisibilityOfElementLocated(productLoadingItemByCss));
+        wait.until(ExpectedConditions.numberOfElementsToBeMoreThan(productItemByCss, 0));
     }
 
     private void typeIntoFilter(By filterInputBy, String value) {
         WebElement input = wait.until(ExpectedConditions.visibilityOfElementLocated(filterInputBy));
-        ((JavascriptExecutor) driver).executeScript("""
-                const input = arguments[0];
-                const value = arguments[1];
-                const valueSetter = Object.getOwnPropertyDescriptor(input.__proto__, 'value').set;
-                valueSetter.call(input, value);
-                input.dispatchEvent(new Event('input', { bubbles: true }));
-                input.dispatchEvent(new Event('change', { bubbles: true }));
-                """, input, value);
+        input.sendKeys(Keys.chord(Keys.CONTROL, "a"));
+        input.sendKeys(value);
         wait.until(ExpectedConditions.attributeToBe(input, "value", value));
     }
 

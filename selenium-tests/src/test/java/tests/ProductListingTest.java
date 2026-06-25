@@ -37,6 +37,27 @@ public class ProductListingTest extends BaseTest {
     }
 
     @Test
+    public void validateUserCanOpenProductsCategoryAnchor() {
+        ProductsPage productsPage = LoginUtils.loginAsDefaultUser(driver, BASE_URL)
+                .openCategoriesSection(BASE_URL);
+
+        Assert.assertTrue(productsPage.isVisible(), "Products page should stay visible on categories anchor.");
+        Assert.assertTrue(productsPage.isCategoriesSectionVisible(), "Categories anchor should render the category section.");
+        Assert.assertTrue(driver.getCurrentUrl().endsWith("/products#categories"), "Categories link should keep the expected hash URL.");
+    }
+
+    @Test
+    public void validateUserCanOpenProductsCatalogAnchor() {
+        ProductsPage productsPage = LoginUtils.loginAsDefaultUser(driver, BASE_URL)
+                .openProductsSection(BASE_URL)
+                .waitForProductListingLoaded();
+
+        Assert.assertTrue(productsPage.isVisible(), "Products page should stay visible on products anchor.");
+        Assert.assertTrue(productsPage.isProductsSectionVisible(), "Products anchor should render the catalog section.");
+        Assert.assertTrue(driver.getCurrentUrl().endsWith("/products#products"), "Products link should keep the expected hash URL.");
+    }
+
+    @Test
     public void validateAdminCanViewProductListing() {
         AdminDashboardPage adminDashboardPage = LoginUtils.loginAsAdmin(driver, BASE_URL)
                 .waitForProductListingLoaded();

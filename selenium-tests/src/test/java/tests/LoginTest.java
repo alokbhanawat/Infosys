@@ -11,7 +11,10 @@ public class LoginTest extends BaseTest {
 
     @Test
     public void loginWithValidCredentials() {
-        ProductsPage productsPage = LoginUtils.loginAsDefaultUser(driver, BASE_URL);
+        LoginPage loginPage = new LoginPage(driver).open(BASE_URL);
+        ProductsPage productsPage = loginPage
+                .login(LoginUtils.VALID_EMAIL, LoginUtils.VALID_PASSWORD)
+                .waitForProductsPage();
         acceptAlertIfPresent();
 
         Assert.assertTrue(productsPage.isVisible(), "Valid login should navigate to products page.");

@@ -1,11 +1,11 @@
 .register-shell {
-  --bg-primary: #fff7ef;
-  --surface: rgba(255, 251, 245, 0.78);
-  --surface-border: rgba(192, 132, 87, 0.16);
-  --text-primary: #1f2937;
-  --text-soft: #6b7280;
-  --accent: #a75d36;
-  --hero-shadow: 0 34px 100px rgba(162, 95, 50, 0.16);
+  --bg-primary: #f7fbff;
+  --surface: rgba(255, 255, 255, 0.92);
+  --surface-border: rgba(148, 163, 184, 0.22);
+  --text-primary: #172033;
+  --text-soft: #64748b;
+  --accent: #2563eb;
+  --hero-shadow: 0 28px 70px rgba(15, 23, 42, 0.12);
 }
 
 .auth-shell {
@@ -13,9 +13,9 @@
   display: grid;
   grid-template-columns: 1.05fr 0.95fr;
   background:
-    radial-gradient(circle at top left, rgba(244, 114, 76, 0.16), transparent 26%),
-    radial-gradient(circle at bottom right, rgba(15, 118, 110, 0.08), transparent 22%),
-    linear-gradient(135deg, var(--bg-primary), #fff4e7 48%, #f6efe5 100%);
+    linear-gradient(90deg, rgba(23, 96, 167, 0.06) 1px, transparent 1px),
+    linear-gradient(180deg, #f7fbff 0%, #eef4fb 42%, #f8fafc 100%);
+  background-size: 96px 96px, auto;
 }
 
 .auth-hero,
@@ -32,8 +32,8 @@
 
 .register-hero {
   background:
-    linear-gradient(160deg, rgba(47, 36, 29, 0.82), rgba(124, 75, 45, 0.72)),
-    url("https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=1400&q=80")
+    linear-gradient(135deg, rgba(15, 23, 42, 0.82), rgba(15, 118, 110, 0.68)),
+    url("https://images.unsplash.com/photo-1498049794561-7780e7231661?auto=format&fit=crop&w=1400&q=80")
       center/cover;
 }
 
@@ -42,15 +42,12 @@
   position: absolute;
   inset: 24px;
   border: 1px solid rgba(255, 255, 255, 0.14);
-  border-radius: 32px;
+  border-radius: 8px;
   pointer-events: none;
 }
 
 .hero-orb {
-  position: absolute;
-  border-radius: 999px;
-  filter: blur(4px);
-  animation: floatUp 7s ease-in-out infinite;
+  display: none;
 }
 
 .hero-orb-one {
@@ -86,13 +83,13 @@
   display: inline-flex;
   width: fit-content;
   padding: 9px 14px;
-  border-radius: 999px;
+  border-radius: 8px;
   background: rgba(255, 255, 255, 0.12);
   border: 1px solid rgba(255, 255, 255, 0.18);
   color: rgba(255, 248, 240, 0.9);
   font-size: 0.8rem;
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0;
   text-transform: uppercase;
 }
 
@@ -118,7 +115,7 @@
 
 .auth-showcase-grid article {
   padding: 18px 20px;
-  border-radius: 22px;
+  border-radius: 8px;
   background: rgba(255, 255, 255, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.12);
   backdrop-filter: blur(14px);
@@ -149,7 +146,7 @@
 .auth-card {
   width: min(100%, 520px);
   padding: 42px;
-  border-radius: 34px;
+  border-radius: 8px;
   background: var(--surface);
   border: 1px solid var(--surface-border);
   box-shadow: var(--hero-shadow);
@@ -179,12 +176,12 @@
 .auth-badge {
   display: inline-flex;
   padding: 8px 12px;
-  border-radius: 999px;
-  background: rgba(167, 93, 54, 0.12);
-  color: #8a4f2e;
+  border-radius: 8px;
+  background: #eef6ff;
+  color: #1d4ed8;
   font-size: 0.75rem;
   font-weight: 700;
-  letter-spacing: 0.08em;
+  letter-spacing: 0;
   text-transform: uppercase;
 }
 
@@ -196,8 +193,8 @@
 .auth-dot {
   width: 6px;
   height: 6px;
-  border-radius: 999px;
-  background: rgba(167, 93, 54, 0.45);
+  border-radius: 8px;
+  background: rgba(37, 99, 235, 0.45);
 }
 
 .register-form {
@@ -221,8 +218,8 @@
 .register-form input {
   width: 100%;
   padding: 16px 18px;
-  border-radius: 18px;
-  border: 1px solid rgba(167, 93, 54, 0.14);
+  border-radius: 8px;
+  border: 1px solid rgba(148, 163, 184, 0.24);
   background: rgba(255, 255, 255, 0.92);
   color: var(--text-primary);
   font-size: 0.97rem;
@@ -238,8 +235,8 @@
 
 .register-form input:focus {
   outline: none;
-  border-color: rgba(167, 93, 54, 0.55);
-  box-shadow: 0 0 0 4px rgba(192, 132, 87, 0.15);
+  border-color: rgba(37, 99, 235, 0.55);
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
   transform: translateY(-1px);
 }
 
@@ -259,12 +256,12 @@
   margin-top: 6px;
   padding: 16px 20px;
   border: none;
-  border-radius: 20px;
-  background: linear-gradient(135deg, #7c4b2d, #c08457 55%, #f4b183);
+  border-radius: 8px;
+  background: linear-gradient(135deg, #f59e0b, #ef4444);
   color: #fff;
   font-size: 0.98rem;
   font-weight: 700;
-  letter-spacing: 0.03em;
+  letter-spacing: 0;
   cursor: pointer;
   transition:
     transform 0.25s ease,
@@ -274,14 +271,14 @@
 
 .register-form button:hover {
   transform: translateY(-2px);
-  box-shadow: 0 18px 30px rgba(124, 75, 45, 0.22);
+  box-shadow: 0 18px 30px rgba(239, 68, 68, 0.18);
   filter: saturate(1.04);
 }
 
 .form-message {
   margin-top: 16px;
   padding: 14px 16px;
-  border-radius: 16px;
+  border-radius: 8px;
   font-size: 0.92rem;
   font-weight: 600;
 }
@@ -361,7 +358,7 @@
 @media (max-width: 640px) {
   .auth-card {
     padding: 28px 20px;
-    border-radius: 24px;
+    border-radius: 8px;
   }
 
   .input-grid {
@@ -374,6 +371,6 @@
 
   .auth-hero::before {
     inset: 16px;
-    border-radius: 24px;
+    border-radius: 8px;
   }
 }

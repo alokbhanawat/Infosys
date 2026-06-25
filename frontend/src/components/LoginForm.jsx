@@ -83,12 +83,12 @@ function LoginForm() {
       <section className="auth-panel">
         <div className="auth-card">
           <div className="auth-badge-row">
-            <span className="auth-badge">Member access</span>
+            <span className="auth-badge">Infi Electronics</span>
             <span className="auth-dot"></span>
-            <span className="auth-badge auth-badge-soft">Fast checkout</span>
+            <span className="auth-badge auth-badge-soft">Secure checkout</span>
           </div>
           <h2>Welcome back</h2>
-          <p className="subtitle">Sign in to continue browsing collections, saved carts, and recent orders.</p>
+          <p className="subtitle">Sign in to shop mobiles, laptops, headphones, smart TVs, and home appliances from your saved account.</p>
 
           <form onSubmit={handleSubmit} className="register-form">
             <div className="field-group">
@@ -118,11 +118,9 @@ function LoginForm() {
             <button type="submit">Login</button>
           </form>
 
-          <p className="auth-switch">
-            Don&apos;t have an account? <Link to="/register">Register</Link>
-          </p>
+          <p className="auth-switch">New to Infi Electronics? <Link to="/register">Create an account</Link></p>
 
-          <p className="footer">2026 - All Rights Reserved</p>
+          <p className="footer">Infi Electronics online shopping</p>
         </div>
       </section>
 
@@ -130,27 +128,27 @@ function LoginForm() {
         <div className="hero-orb hero-orb-one"></div>
         <div className="hero-orb hero-orb-two"></div>
         <div className="hero-content auth-hero-content">
-          <span className="hero-kicker">Login to shop</span>
-          <h1>Step back into your ecommerce account and continue shopping products.</h1>
-          <p className="hero-copy">Sign in to revisit your cart, check recent orders, and move through the product catalog without losing your flow.</p>
+          <span className="hero-kicker">Online electronics store</span>
+          <h1>Shop premium tech deals from one clean account.</h1>
+          <p className="hero-copy">Continue your electronics shopping journey with quick access to product details, cart checkout, delivery addresses, and order history.</p>
           <div className="auth-feature-stack">
             <article className="auth-feature-card">
-              <strong>Product access</strong>
-              <span>Open the catalog and jump straight into the products you want to browse.</span>
+              <strong>Electronics catalog</strong>
+              <span>Browse mobiles, laptops, headphones, smart TVs, and refrigerators in one storefront.</span>
             </article>
             <article className="auth-feature-card">
-              <strong>Account continuity</strong>
-              <span>Return to your cart, profile, and orders with a single login flow.</span>
+              <strong>Fast shopping flow</strong>
+              <span>Return to saved cart items, delivery details, and checkout without starting over.</span>
             </article>
           </div>
           <div className="auth-metrics">
             <article>
-              <strong>Saved cart</strong>
-              <span>resume anytime</span>
+              <strong>500+</strong>
+              <span>stock-ready items</span>
             </article>
             <article>
-              <strong>Quick login</strong>
-              <span>shop without delay</span>
+              <strong>5</strong>
+              <span>electronics categories</span>
             </article>
           </div>
         </div>

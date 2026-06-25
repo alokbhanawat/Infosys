@@ -12,9 +12,17 @@ public class CheckoutTest extends BaseTest {
 
     @Test
     public void validateCheckoutInitiationWithSuccessfulPaymentFlow() {
-        CartPage cartPage = addFirstProductToCart();
-        String productName = driver.getTitle();
+        ProductsPage productsPage = LoginUtils.loginAsDefaultUser(driver, BASE_URL)
+                .waitForProductListingLoaded();
+        ProductDetailPage productDetailPage = productsPage.openFirstProductCard();
+        String productName = productDetailPage.getProductName();
+        productDetailPage.addToCart();
 
+        CartPage cartPage = new CartPage(driver)
+                .open(BASE_URL)
+                .waitUntilVisible();
+
+        Assert.assertTrue(cartPage.hasProduct(productName), "Product opened from product card should be visible in cart.");
         cartPage.fillCheckoutForm(
                         "Automation Checkout",
                         "9876543210",
@@ -27,6 +35,8 @@ public class CheckoutTest extends BaseTest {
                         "CARD")
                 .installSuccessfulRazorpayMock(productName)
                 .clickCheckout();
+
+        cartPage.completeRazorpayCardPayment("5555555555554444", "123");
 
         Assert.assertTrue(cartPage.isOrderSuccessVisible(), "Successful checkout should navigate to the order success page.");
         Assert.assertTrue(cartPage.wasRazorpayOpened(), "Checkout should initiate Razorpay before completing payment.");

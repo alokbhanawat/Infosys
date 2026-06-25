@@ -1,14 +1,15 @@
 .login-shell {
-  --bg-primary: #f3f6fb;
-  --surface: rgba(247, 250, 252, 0.76);
-  --surface-border: rgba(14, 116, 144, 0.12);
+  --bg-primary: #f7fbff;
+  --surface: rgba(255, 255, 255, 0.92);
+  --surface-border: rgba(148, 163, 184, 0.22);
   --text-primary: #172033;
   --text-soft: #5b667b;
-  --accent: #145374;
-  --hero-shadow: 0 34px 100px rgba(15, 118, 110, 0.12);
+  --accent: #2563eb;
+  --hero-shadow: 0 28px 70px rgba(15, 23, 42, 0.12);
   background:
-    radial-gradient(circle at top right, rgba(56, 189, 248, 0.16), transparent 24%),
-    linear-gradient(135deg, #f3f8ff, #f7fdff 44%, #eefbf7 100%);
+    linear-gradient(90deg, rgba(23, 96, 167, 0.06) 1px, transparent 1px),
+    linear-gradient(180deg, #f7fbff 0%, #eef4fb 42%, #f8fafc 100%);
+  background-size: 96px 96px, auto;
 }
 
 .login-shell .register-form input::placeholder {
@@ -21,7 +22,7 @@
 }
 
 .login-shell .register-form button {
-  background: linear-gradient(135deg, #102a43, #145374 52%, #1f8a70);
+  background: linear-gradient(135deg, #f59e0b, #ef4444);
 }
 
 .login-shell .register-form button:hover {
@@ -35,8 +36,8 @@
 
 .login-hero {
   background:
-    linear-gradient(160deg, rgba(7, 26, 43, 0.82), rgba(20, 83, 116, 0.72)),
-    url("https://images.unsplash.com/photo-1512436991641-6745cdb1723f?auto=format&fit=crop&w=1400&q=80")
+    linear-gradient(135deg, rgba(15, 23, 42, 0.82), rgba(29, 78, 216, 0.66)),
+    url("https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1400&q=80")
       center/cover;
 }
 
@@ -47,7 +48,7 @@
 
 .auth-feature-card {
   padding: 18px 20px;
-  border-radius: 22px;
+  border-radius: 8px;
   background: rgba(255, 255, 255, 0.08);
   border: 1px solid rgba(255, 255, 255, 0.12);
   backdrop-filter: blur(14px);
@@ -61,7 +62,7 @@
 
 .auth-metrics article {
   padding: 18px 20px;
-  border-radius: 22px;
+  border-radius: 8px;
   background: rgba(4, 120, 87, 0.18);
   border: 1px solid rgba(167, 243, 208, 0.14);
 }

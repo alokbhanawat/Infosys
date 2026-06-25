@@ -11,6 +11,12 @@ function ProfileMenuIcon({ type }) {
     addresses: (
       <path d="M12 21s6.2-5.3 6.2-10.8A6.2 6.2 0 1 0 5.8 10.2C5.8 15.7 12 21 12 21Zm0-8.2a2.6 2.6 0 1 0 0-5.2 2.6 2.6 0 0 0 0 5.2Z" />
     ),
+    orders: (
+      <path d="M7 4.5h10a1.5 1.5 0 0 1 1.5 1.5v13l-2.4-1.4-2.1 1.4-2-1.4-2.1 1.4-2-1.4L5.5 19V6A1.5 1.5 0 0 1 7 4.5Zm2 4h6m-6 4h6m-6 4h3" />
+    ),
+    cart: (
+      <path d="M5 5h1.8l1.6 9.2a1.8 1.8 0 0 0 1.8 1.5h5.5a1.8 1.8 0 0 0 1.7-1.2L19 8H8M10 20h.1M16 20h.1" />
+    ),
     logout: (
       <path d="M10 5H6.8A1.8 1.8 0 0 0 5 6.8v10.4A1.8 1.8 0 0 0 6.8 19H10m5-4 3-3-3-3m2.7 3H9.5" />
     ),
@@ -93,6 +99,14 @@ function UserProfileMenu({ user }) {
           <Link className="profile-menu-item" to="/addresses" onClick={() => setIsOpen(false)}>
             <ProfileMenuIcon type="addresses" />
             <span>Addresses</span>
+          </Link>
+          <Link className="profile-menu-item" to="/orders" onClick={() => setIsOpen(false)}>
+            <ProfileMenuIcon type="orders" />
+            <span>Orders</span>
+          </Link>
+          <Link className="profile-menu-item" to="/cart" onClick={() => setIsOpen(false)}>
+            <ProfileMenuIcon type="cart" />
+            <span>Cart</span>
           </Link>
           <button
             type="button"

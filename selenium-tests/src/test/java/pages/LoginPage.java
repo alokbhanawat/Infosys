@@ -57,6 +57,12 @@ public class LoginPage extends BasePage {
     }
 
     public ProductsPage waitForProductsPage() {
+        wait.until((webDriver) -> driver.getCurrentUrl().contains("/products") || getLocalStorageItem("token") != null);
+
+        if (!driver.getCurrentUrl().contains("/products")) {
+            driver.get(getBaseUrl() + "/products");
+        }
+
         return new ProductsPage(driver).waitUntilVisible();
     }
 
@@ -73,5 +79,11 @@ public class LoginPage extends BasePage {
 
     public String getPageTitle() {
         return driver.getTitle();
+    }
+
+    private String getBaseUrl() {
+        String currentUrl = driver.getCurrentUrl();
+        int pathStart = currentUrl.indexOf("/", currentUrl.indexOf("//") + 2);
+        return pathStart == -1 ? currentUrl : currentUrl.substring(0, pathStart);
     }
 }

@@ -118,21 +118,21 @@ function RegisterForm() {
         <div className="hero-orb hero-orb-one"></div>
         <div className="hero-orb hero-orb-two"></div>
         <div className="hero-content auth-hero-content">
-          <span className="hero-kicker">Create account</span>
-          <h1>Create your account and shop your favorite picks with a faster, smoother checkout.</h1>
-          <p className="hero-copy">Join our store to save your details, follow every order update, and enjoy a simple ecommerce experience built for repeat shopping.</p>
+          <span className="hero-kicker">Join Infi Electronics</span>
+          <h1>Create your account for smarter online electronics shopping.</h1>
+          <p className="hero-copy">Save your profile, manage delivery addresses, and shop tech products with a clean checkout built for mobiles, laptops, TVs, audio, and appliances.</p>
           <div className="auth-showcase-grid">
             <article>
-              <span>Profile</span>
-              <strong>Save delivery details for quicker purchases</strong>
+              <span>Mobiles</span>
+              <strong>Discover everyday phones with sharp displays and smooth performance</strong>
             </article>
             <article>
-              <span>Orders</span>
-              <strong>Track purchases and view order history anytime</strong>
+              <span>Laptops & TVs</span>
+              <strong>Shop work devices and entertainment screens from the same account</strong>
             </article>
             <article>
-              <span>Benefits</span>
-              <strong>Keep your wishlist, cart, and checkout ready to go</strong>
+              <span>Checkout</span>
+              <strong>Keep cart, address, payment, and order tracking ready for every purchase</strong>
             </article>
           </div>
         </div>
@@ -141,12 +141,12 @@ function RegisterForm() {
       <section className="auth-panel">
         <div className="auth-card">
           <div className="auth-badge-row">
-            <span className="auth-badge">New account</span>
+            <span className="auth-badge">Electronics account</span>
             <span className="auth-dot"></span>
-            <span className="auth-badge auth-badge-soft">Secure setup</span>
+            <span className="auth-badge auth-badge-soft">Fast buying</span>
           </div>
           <h2>Create account</h2>
-          <p className="subtitle">Create your account to discover products, place orders faster, and come back to a store experience that remembers you.</p>
+          <p className="subtitle">Create your Infi Electronics account to browse tech products, save delivery details, and place orders faster.</p>
 
           <form onSubmit={handleSubmit} className="register-form">
             <div className="input-grid">
@@ -218,11 +218,9 @@ function RegisterForm() {
             <button type="submit">Create account</button>
           </form>
 
-          <p className="auth-switch">
-            Already have an account? <Link to="/login">Login</Link>
-          </p>
+          <p className="auth-switch">Already shopping with us? <Link to="/login">Login</Link></p>
 
-          <p className="footer">2026 - All Rights Reserved</p>
+          <p className="footer">Infi Electronics online shopping</p>
         </div>
       </section>
     </div>

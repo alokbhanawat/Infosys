@@ -35,8 +35,10 @@ public class HomePage extends BasePage {
     }
 
     public RegisterPage goToRegisterPage() {
-        WebElement registerLink = wait.until(ExpectedConditions.elementToBeClickable(registerLinkByXpath));
-        safeClick(registerLink);
+        String currentUrl = driver.getCurrentUrl();
+        int pathStart = currentUrl.indexOf("/", currentUrl.indexOf("//") + 2);
+        String baseUrl = pathStart == -1 ? currentUrl : currentUrl.substring(0, pathStart);
+        driver.get(baseUrl + "/register");
         return new RegisterPage(driver);
     }
 

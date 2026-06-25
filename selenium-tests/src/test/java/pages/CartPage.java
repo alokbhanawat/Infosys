@@ -15,7 +15,11 @@ public class CartPage extends BasePage {
     private final By loadingStateByXpath = By.xpath("//p[normalize-space()='Loading cart items...']");
     private final By checkoutButtonByCss = By.cssSelector(".cart-checkout-btn");
     private final By checkoutFormByCss = By.cssSelector(".checkout-form-grid");
-    private final By checkoutMessageByCss = By.cssSelector(".form-message");
+    private final By checkoutMessageByCss = By.cssSelector(".form-message, .cart-payment-alert");
+    private final By razorpayMockModalByCss = By.cssSelector(".mock-razorpay-modal");
+    private final By razorpayCardNumberInputByCss = By.cssSelector(".mock-razorpay-card-number");
+    private final By razorpayCvvInputByCss = By.cssSelector(".mock-razorpay-cvv");
+    private final By razorpaySuccessButtonByCss = By.cssSelector(".mock-razorpay-success-button");
     private final By savedAddressSelectByCss = By.cssSelector(".saved-address-picker select");
     private final By fullNameInputByCss = By.cssSelector("input[name='fullName']");
     private final By phoneInputByCss = By.cssSelector("input[name='phone']");
@@ -86,8 +90,16 @@ public class CartPage extends BasePage {
     public CartPage useNewCheckoutAddressIfAvailable() {
         List<WebElement> savedAddressSelects = driver.findElements(savedAddressSelectByCss);
         if (!savedAddressSelects.isEmpty()) {
-            Select select = new Select(savedAddressSelects.get(0));
+            WebElement savedAddressSelect = savedAddressSelects.get(0);
+            Select select = new Select(savedAddressSelect);
             select.selectByValue("");
+            ((JavascriptExecutor) driver).executeScript("""
+                    const select = arguments[0];
+                    select.value = '';
+                    select.dispatchEvent(new Event('input', { bubbles: true }));
+                    select.dispatchEvent(new Event('change', { bubbles: true }));
+                    """, savedAddressSelect);
+            wait.until(ExpectedConditions.attributeToBe(savedAddressSelect, "value", ""));
         }
         return this;
     }
@@ -163,13 +175,42 @@ public class CartPage extends BasePage {
                   };
                   this.open = () => {
                     window.__checkoutRazorpayOpened = true;
-                    setTimeout(() => {
+                    const existingModal = document.querySelector('.mock-razorpay-modal');
+                    if (existingModal) {
+                      existingModal.remove();
+                    }
+
+                    const modal = document.createElement('section');
+                    modal.className = 'mock-razorpay-modal';
+                    modal.setAttribute('role', 'dialog');
+                    modal.setAttribute('aria-label', 'Mock Razorpay card payment');
+                    modal.innerHTML = `
+                      <div class="mock-razorpay-box" style="position:fixed;inset:0;z-index:99999;background:rgba(15,23,42,.45);display:grid;place-items:center;">
+                        <div style="width:min(420px, calc(100vw - 32px));background:#fff;color:#111827;border-radius:8px;padding:20px;box-shadow:0 24px 80px rgba(15,23,42,.28);">
+                          <h2 style="margin:0 0 12px;font-size:20px;">Razorpay test card payment</h2>
+                          <label style="display:grid;gap:6px;margin-bottom:12px;">
+                            <span>Card number</span>
+                            <input class="mock-razorpay-card-number" inputmode="numeric" autocomplete="cc-number" />
+                          </label>
+                          <label style="display:grid;gap:6px;margin-bottom:16px;">
+                            <span>CVV</span>
+                            <input class="mock-razorpay-cvv" inputmode="numeric" autocomplete="cc-csc" />
+                          </label>
+                          <button type="button" class="mock-razorpay-success-button">Success</button>
+                        </div>
+                      </div>
+                    `;
+                    document.body.appendChild(modal);
+                    modal.querySelector('.mock-razorpay-success-button').addEventListener('click', () => {
+                      window.__checkoutRazorpayCardNumber = modal.querySelector('.mock-razorpay-card-number').value;
+                      window.__checkoutRazorpayCvv = modal.querySelector('.mock-razorpay-cvv').value;
+                      modal.remove();
                       options.handler({
                         razorpay_order_id: 'order_test_checkout',
                         razorpay_payment_id: 'pay_test_checkout',
                         razorpay_signature: 'test_signature'
                       });
-                    }, 25);
+                    });
                   };
                 };
 
@@ -307,6 +348,16 @@ public class CartPage extends BasePage {
                 };
                 """;
         ((JavascriptExecutor) driver).executeScript(script, productName);
+        return this;
+    }
+
+    public CartPage completeRazorpayCardPayment(String cardNumber, String cvv) {
+        WebElement cardNumberInput = wait.until(ExpectedConditions.visibilityOfElementLocated(razorpayCardNumberInputByCss));
+        cardNumberInput.sendKeys(cardNumber);
+        WebElement cvvInput = wait.until(ExpectedConditions.visibilityOfElementLocated(razorpayCvvInputByCss));
+        cvvInput.sendKeys(cvv);
+        safeClick(wait.until(ExpectedConditions.elementToBeClickable(razorpaySuccessButtonByCss)));
+        wait.until(ExpectedConditions.invisibilityOfElementLocated(razorpayMockModalByCss));
         return this;
     }
 
