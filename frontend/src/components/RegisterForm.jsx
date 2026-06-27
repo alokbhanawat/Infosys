@@ -140,11 +140,7 @@ function RegisterForm() {
 
       <section className="auth-panel">
         <div className="auth-card">
-          <div className="auth-badge-row">
-            <span className="auth-badge">Electronics account</span>
-            <span className="auth-dot"></span>
-            <span className="auth-badge auth-badge-soft">Fast buying</span>
-          </div>
+          <img className="auth-logo" src="/brand-logo-full.png" alt="Infi Electronics" />
           <h2>Create account</h2>
           <p className="subtitle">Create your Infi Electronics account to browse tech products, save delivery details, and place orders faster.</p>
 

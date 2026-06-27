@@ -148,11 +148,7 @@ function ProductsPage() {
       <div className="storefront-shell">
         <header className="storefront-navbar">
           <Link className="storefront-brand" to="/products" aria-label="Go to products home">
-            <span className="storefront-brand-mark">IE</span>
-            <span>
-              <strong>Infi Electronics</strong>
-              <small>Smart shopping hub</small>
-            </span>
+            <img className="storefront-brand-logo" src="/brand-logo-mark.png" alt="Infi Electronics" />
           </Link>
 
           <nav className="storefront-nav-links" aria-label="Store navigation">

@@ -159,6 +159,13 @@
   color: var(--text-primary);
 }
 
+.auth-logo {
+  display: block;
+  width: min(100%, 310px);
+  height: auto;
+  margin-bottom: 24px;
+}
+
 .subtitle {
   margin-bottom: 28px;
   color: var(--text-soft);

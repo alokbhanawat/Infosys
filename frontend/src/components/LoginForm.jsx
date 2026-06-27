@@ -82,11 +82,7 @@ function LoginForm() {
     <div className="auth-shell login-shell">
       <section className="auth-panel">
         <div className="auth-card">
-          <div className="auth-badge-row">
-            <span className="auth-badge">Infi Electronics</span>
-            <span className="auth-dot"></span>
-            <span className="auth-badge auth-badge-soft">Secure checkout</span>
-          </div>
+          <img className="auth-logo" src="/brand-logo-full.png" alt="Infi Electronics" />
           <h2>Welcome back</h2>
           <p className="subtitle">Sign in to shop mobiles, laptops, headphones, smart TVs, and home appliances from your saved account.</p>
 
