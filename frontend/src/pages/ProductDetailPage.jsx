@@ -109,7 +109,6 @@ function ProductDetailPage() {
             </div>
 
             <div className="product-detail-copy">
-              <span className="product-detail-id">Product ID: {product?.id}</span>
               <h1>{product?.name}</h1>
               <p className="product-detail-description">
                 {product?.description || "No description provided for this product yet."}
@@ -158,8 +157,7 @@ function ProductDetailPage() {
               <div className="product-detail-purchase">
                 <strong>{stockLabel}</strong>
                 <p>
-                  Product detail loaded for item <code>{productId}</code>. Choose the quantity and
-                  use the button below for the product action.
+                  Choose the quantity and use the button below for the product action.
                 </p>
                 {cartFeedback ? <p className="form-message success">{cartFeedback}</p> : null}
                 <button

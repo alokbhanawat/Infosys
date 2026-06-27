@@ -7,40 +7,8 @@ import ProductThemeToggle from "../components/ProductThemeToggle";
 import { addToCart, getCurrentUserProfile, getProducts } from "../services/authService";
 import { useProductDarkMode } from "../hooks/useProductDarkMode";
 import { getCurrentUser } from "../utils/auth";
+import { PRODUCT_CATEGORIES, applyProductFilters, getProductApiFilters } from "../utils/productCategories";
 import "../styles/storefront.css";
-
-const electronicCategories = [
-  {
-    name: "Mobiles",
-    filter: "Mobiles",
-    tone: "mobile",
-    text: "Latest 5G phones, fast charging, and sharp displays.",
-  },
-  {
-    name: "Laptops",
-    filter: "Laptops",
-    tone: "laptop",
-    text: "Work, study, and gaming laptops for every setup.",
-  },
-  {
-    name: "Headphones",
-    filter: "Headphones",
-    tone: "headphone",
-    text: "Wireless audio, noise cancellation, and studio sound.",
-  },
-  {
-    name: "Smart TVs",
-    filter: "Smart TVs",
-    tone: "tv",
-    text: "Big screen entertainment with crisp smart features.",
-  },
-  {
-    name: "Refrigerators",
-    filter: "Refrigerators",
-    tone: "refrigerator",
-    text: "Energy-efficient cooling for modern homes.",
-  },
-];
 
 const featureBanners = [
   { title: "Mobiles", offer: "Up to 35% off", tone: "mobile", filter: "Mobiles" },
@@ -72,8 +40,10 @@ function ProductsPage() {
     setCatalogLoading(true);
 
     try {
-      const productsRes = await getProducts(appliedFilters);
-      setProducts(Array.isArray(productsRes.data) ? productsRes.data : []);
+      const productsRes = await getProducts(getProductApiFilters(appliedFilters));
+      const productList = Array.isArray(productsRes.data) ? productsRes.data : [];
+
+      setProducts(applyProductFilters(productList, appliedFilters));
       setCatalogFeedback("");
     } catch (error) {
       setCatalogFeedback(error?.response?.data?.message || "Unable to load products.");
@@ -259,12 +229,12 @@ function ProductsPage() {
           </div>
 
           <div className="category-card-grid">
-            {electronicCategories.map((category) => (
+            {PRODUCT_CATEGORIES.map((category) => (
               <button
                 type="button"
                 className={`category-card category-card-${category.tone}`}
                 key={category.name}
-                onClick={() => handleCategorySelect(category.filter)}
+                onClick={() => handleCategorySelect(category.value)}
               >
                 <span className="category-card-icon" aria-hidden="true" />
                 <strong>{category.name}</strong>

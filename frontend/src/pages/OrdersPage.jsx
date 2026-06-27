@@ -186,7 +186,6 @@ function OrdersPage() {
                         <div className="ordered-product-copy">
                           <span>Product name</span>
                           <strong>{item.productName}</strong>
-                          <p>Product ID: {item.productId}</p>
                         </div>
 
                         <div className="ordered-product-meta">

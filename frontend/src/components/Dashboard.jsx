@@ -5,6 +5,12 @@ import ProductCatalog from "./ProductCatalog";
 import ProductFilters from "./ProductFilters";
 import { clearStoredToken, getCurrentUser } from "../utils/auth";
 import {
+  PRODUCT_CATEGORIES,
+  applyProductFilters,
+  getProductApiFilters,
+  normalizeProductCategory,
+} from "../utils/productCategories";
+import {
   addProduct,
   getProtectedProductsMessage,
   getProducts,
@@ -65,8 +71,10 @@ function Dashboard() {
   const loadProducts = async (appliedFilters = filters) => {
     setCatalogLoading(true);
     try {
-      const productsRes = await getProducts(appliedFilters);
-      setProducts(Array.isArray(productsRes.data) ? productsRes.data : []);
+      const productsRes = await getProducts(getProductApiFilters(appliedFilters));
+      const productList = Array.isArray(productsRes.data) ? productsRes.data : [];
+
+      setProducts(applyProductFilters(productList, appliedFilters));
       setCatalogFeedback("");
     } catch (error) {
       setCatalogFeedback(getErrorMessage(error, "Unable to load products."));
@@ -191,7 +199,7 @@ function Dashboard() {
       formData.append("description", productForm.description);
       formData.append("price", String(price));
       formData.append("stock", String(stock));
-      formData.append("category", productForm.category);
+      formData.append("category", normalizeProductCategory(productForm.category));
       formData.append("image", productForm.image);
 
       await addProduct(formData);
@@ -305,12 +313,18 @@ function Dashboard() {
                       onChange={handleProductChange}
                       required
                     />
-                    <input
+                    <select
                       name="category"
-                      placeholder="Category"
                       value={productForm.category}
                       onChange={handleProductChange}
-                    />
+                    >
+                      <option value="">Select category</option>
+                      {PRODUCT_CATEGORIES.map((category) => (
+                        <option key={category.value} value={category.value}>
+                          {category.name}
+                        </option>
+                      ))}
+                    </select>
                   </div>
                   <textarea
                     name="description"

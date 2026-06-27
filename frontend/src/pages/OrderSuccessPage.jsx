@@ -103,7 +103,6 @@ function OrderSuccessPage() {
                   <div>
                     <span>Product</span>
                     <strong>{item.productName}</strong>
-                    <p>Product ID: {item.productId}</p>
                   </div>
                   <div>
                     <span>Quantity</span>

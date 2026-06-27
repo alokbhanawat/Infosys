@@ -575,7 +575,6 @@ function CartPage() {
                         <div className="cart-item-copy">
                           <span className="cart-item-label">Product</span>
                           <strong>{item.product?.name || `Product #${item.product?.id}`}</strong>
-                          <p>Product ID: {item.product?.id}</p>
                         </div>
                       </div>
 
