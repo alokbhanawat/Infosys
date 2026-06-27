@@ -5,6 +5,8 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 import pages.RegisterPage;
 
+import java.time.Duration;
+
 public class RegisterTest extends BaseTest {
     private static final String VALID_PASSWORD = "Mansi@1234";
 
@@ -55,8 +57,13 @@ public class RegisterTest extends BaseTest {
         registerPage.register("Selenium User", uniqueEmail, "9876543210", VALID_PASSWORD, VALID_PASSWORD);
         acceptAlertIfPresent();
 
+        wait.withTimeout(Duration.ofSeconds(30)).until(driver ->
+                driver.getCurrentUrl().contains("/login")
+                        || registerPage.hasSuccessfulFeedback()
+        );
+
         Assert.assertTrue(
-                driver.getCurrentUrl().contains("/login") || registerPage.getToastMessage().toLowerCase().contains("successful"),
+                driver.getCurrentUrl().contains("/login") || registerPage.hasSuccessfulFeedback(),
                 "Valid registration should show success feedback or redirect to login."
         );
     }

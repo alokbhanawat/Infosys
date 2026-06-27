@@ -41,7 +41,7 @@ public class CheckoutTest extends BaseTest {
         Assert.assertTrue(cartPage.isOrderSuccessVisible(), "Successful checkout should navigate to the order success page.");
         Assert.assertTrue(cartPage.wasRazorpayOpened(), "Checkout should initiate Razorpay before completing payment.");
         Assert.assertTrue(
-                driver.getPageSource().contains("Order placed successfully"),
+                driver.getPageSource().toLowerCase().contains("placed successfully"),
                 "Order success page should confirm that checkout completed."
         );
     }

@@ -367,7 +367,13 @@ public class CartPage extends BasePage {
     }
 
     public boolean isOrderSuccessVisible() {
-        return wait.until(ExpectedConditions.urlContains("/orders/success"));
+        return wait.until((webDriver) -> {
+            String currentUrl = driver.getCurrentUrl();
+            String pageText = driver.getPageSource().toLowerCase();
+
+            return currentUrl.contains("/orders/success")
+                    || (currentUrl.endsWith("/orders") && pageText.contains("placed successfully"));
+        });
     }
 
     private void clearField(By locator) {

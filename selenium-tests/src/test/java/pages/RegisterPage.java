@@ -1,6 +1,7 @@
 package pages;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -82,6 +83,16 @@ public class RegisterPage extends BasePage {
         String message = toast.getText();
         pauseForDemo();
         return message;
+    }
+
+    public boolean hasSuccessfulFeedback() {
+        try {
+            return driver.findElements(toastByCss).stream()
+                    .filter(WebElement::isDisplayed)
+                    .anyMatch(toast -> toast.getText().toLowerCase().contains("successful"));
+        } catch (NoSuchElementException ignored) {
+            return false;
+        }
     }
 
     private void type(By locator, String value) {
