@@ -30,7 +30,8 @@ public class BaseTest {
 
     protected void acceptAlertIfPresent() {
         try {
-            Alert alert = wait.until(ExpectedConditions.alertIsPresent());
+            WebDriverWait alertWait = new WebDriverWait(driver, Duration.ofSeconds(1));
+            Alert alert = alertWait.until(ExpectedConditions.alertIsPresent());
             alert.accept();
         } catch (NoAlertPresentException ignored) {
             // Some pages do not show browser alerts.

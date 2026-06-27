@@ -109,6 +109,7 @@ function ProductDetailPage() {
             </div>
 
             <div className="product-detail-copy">
+              <p className="product-detail-id">Product ID: {product?.id}</p>
               <h1>{product?.name}</h1>
               <p className="product-detail-description">
                 {product?.description || "No description provided for this product yet."}
