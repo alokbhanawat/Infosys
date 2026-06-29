@@ -1,0 +1,40 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "https://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="https://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+<title>TestNG Report</title>
+<style type="text/css">table {margin-bottom:10px;border-collapse:collapse;empty-cells:show}th,td {border:1px solid #009;padding:.25em .5em}th {vertical-align:bottom}td {vertical-align:top}table a {font-weight:bold}.stripe td {background-color: #E6EBF9}.num {text-align:right}.passedodd td {background-color: #3F3}.passedeven td {background-color: #0A0}.skippedodd td {background-color: #DDD}.skippedeven td {background-color: #CCC}.failedodd td,.attn {background-color: #F33}.failedeven td,.stripe .attn {background-color: #D00}.stacktrace {white-space:pre;font-family:monospace}.totop {font-size:85%;text-align:center;border-bottom:2px solid #000}.invisible {display:none}</style>
+</head>
+<body>
+<table>
+<tr><th>Test</th><th># Passed</th><th># Skipped</th><th># Retried</th><th># Failed</th><th>Time (ms)</th><th>Included Groups</th><th>Excluded Groups</th></tr>
+<tr><th colspan="8">INFI Localhost Selenium Test Suite</th></tr>
+<tr><td><a href="#t0">Registration Tests</a></td><td class="num">2</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">48,013</td><td></td><td></td></tr>
+<tr class="stripe"><td><a href="#t1">Login Tests</a></td><td class="num">4</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">41,943</td><td></td><td></td></tr>
+<tr><td><a href="#t2">Product Listing Tests</a></td><td class="num">2</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">27,133</td><td></td><td></td></tr>
+<tr class="stripe"><td><a href="#t3">Product Search Filter Tests</a></td><td class="num">2</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">38,560</td><td></td><td></td></tr>
+<tr><td><a href="#t4">Add To Cart Tests</a></td><td class="num">1</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">30,374</td><td></td><td></td></tr>
+<tr class="stripe"><td><a href="#t5">Checkout Tests</a></td><td class="num">1</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">40,305</td><td></td><td></td></tr>
+<tr><th>Total</th><th class="num">12</th><th class="num">0</th><th class="num">0</th><th class="num">0</th><th class="num">226,328</th><th colspan="2"></th></tr>
+</table>
+<table id='summary'><thead><tr><th>Class</th><th>Method</th><th>Start</th><th>Time (ms)</th></tr></thead><tbody><tr><th colspan="4">INFI Localhost Selenium Test Suite</th></tr></tbody><tbody id="t0"><tr><th colspan="4">Registration Tests &#8212; passed</th></tr><tr class="passedeven"><td rowspan="2">tests.RegisterTest</td><td><a href="#m0">automateUserRegistrationFlow</a></td><td rowspan="1">1782737666424</td><td rowspan="1">23917</td></tr><tr class="passedeven"><td><a href="#m1">validateRegistrationRejectsEmptyRequiredFields</a></td><td rowspan="1">1782737693286</td><td rowspan="1">6500</td></tr></tbody>
+<tbody id="t1"><tr><th colspan="4">Login Tests &#8212; passed</th></tr><tr class="passedeven"><td rowspan="4">tests.LoginTest</td><td><a href="#m2">automateLogoutFlow</a></td><td rowspan="1">1782737702085</td><td rowspan="1">9157</td></tr><tr class="passedeven"><td><a href="#m3">loginWithInvalidCredentials</a></td><td rowspan="1">1782737713783</td><td rowspan="1">5614</td></tr><tr class="passedeven"><td><a href="#m4">loginWithValidCredentials</a></td><td rowspan="1">1782737721606</td><td rowspan="1">14615</td></tr><tr class="passedeven"><td><a href="#m5">validateLoginErrorMessages</a></td><td rowspan="1">1782737738504</td><td rowspan="1">3149</td></tr></tbody>
+<tbody id="t2"><tr><th colspan="4">Product Listing Tests &#8212; passed</th></tr><tr class="passedeven"><td rowspan="2">tests.ProductListingTest</td><td><a href="#m6">validateUserCanOpenProductCardFromListing</a></td><td rowspan="1">1782737744089</td><td rowspan="1">11381</td></tr><tr class="passedeven"><td><a href="#m7">validateUserCanViewProductListing</a></td><td rowspan="1">1782737759005</td><td rowspan="1">9511</td></tr></tbody>
+<tbody id="t3"><tr><th colspan="4">Product Search Filter Tests &#8212; passed</th></tr><tr class="passedeven"><td rowspan="2">tests.ProductSearchFilterTest</td><td><a href="#m8">validateUserCanFilterProductsThroughCategoryAfterLogin</a></td><td rowspan="1">1782737772238</td><td rowspan="1">14333</td></tr><tr class="passedeven"><td><a href="#m9">validateUserCanFindProductThroughNameAfterLogin</a></td><td rowspan="1">1782737791039</td><td rowspan="1">15493</td></tr></tbody>
+<tbody id="t4"><tr><th colspan="4">Add To Cart Tests &#8212; passed</th></tr><tr class="passedeven"><td rowspan="1">tests.AddToCartTest</td><td><a href="#m10">validateUserCanAddProductToCartAndIncreaseQuantityToTwo</a></td><td rowspan="1">1782737810690</td><td rowspan="1">27006</td></tr></tbody>
+<tbody id="t5"><tr><th colspan="4">Checkout Tests &#8212; passed</th></tr><tr class="passedeven"><td rowspan="1">tests.CheckoutTest</td><td><a href="#m11">validateCheckoutInitiationWithSuccessfulPaymentFlow</a></td><td rowspan="1">1782737840357</td><td rowspan="1">36775</td></tr></tbody>
+</table>
+<h2>Registration Tests</h2><h3 id="m0">tests.RegisterTest#automateUserRegistrationFlow</h3><table class="result"><tr><th class="invisible"/></tr></table><p class="totop"><a href="#summary">back to summary</a></p>
+<h3 id="m1">tests.RegisterTest#validateRegistrationRejectsEmptyRequiredFields</h3><table class="result"><tr><th class="invisible"/></tr></table><p class="totop"><a href="#summary">back to summary</a></p>
+<h2>Login Tests</h2><h3 id="m2">tests.LoginTest#automateLogoutFlow</h3><table class="result"><tr><th class="invisible"/></tr></table><p class="totop"><a href="#summary">back to summary</a></p>
+<h3 id="m3">tests.LoginTest#loginWithInvalidCredentials</h3><table class="result"><tr><th class="invisible"/></tr></table><p class="totop"><a href="#summary">back to summary</a></p>
+<h3 id="m4">tests.LoginTest#loginWithValidCredentials</h3><table class="result"><tr><th class="invisible"/></tr></table><p class="totop"><a href="#summary">back to summary</a></p>
+<h3 id="m5">tests.LoginTest#validateLoginErrorMessages</h3><table class="result"><tr><th class="invisible"/></tr></table><p class="totop"><a href="#summary">back to summary</a></p>
+<h2>Product Listing Tests</h2><h3 id="m6">tests.ProductListingTest#validateUserCanOpenProductCardFromListing</h3><table class="result"><tr><th class="invisible"/></tr></table><p class="totop"><a href="#summary">back to summary</a></p>
+<h3 id="m7">tests.ProductListingTest#validateUserCanViewProductListing</h3><table class="result"><tr><th class="invisible"/></tr></table><p class="totop"><a href="#summary">back to summary</a></p>
+<h2>Product Search Filter Tests</h2><h3 id="m8">tests.ProductSearchFilterTest#validateUserCanFilterProductsThroughCategoryAfterLogin</h3><table class="result"><tr><th class="invisible"/></tr></table><p class="totop"><a href="#summary">back to summary</a></p>
+<h3 id="m9">tests.ProductSearchFilterTest#validateUserCanFindProductThroughNameAfterLogin</h3><table class="result"><tr><th class="invisible"/></tr></table><p class="totop"><a href="#summary">back to summary</a></p>
+<h2>Add To Cart Tests</h2><h3 id="m10">tests.AddToCartTest#validateUserCanAddProductToCartAndIncreaseQuantityToTwo</h3><table class="result"><tr><th class="invisible"/></tr></table><p class="totop"><a href="#summary">back to summary</a></p>
+<h2>Checkout Tests</h2><h3 id="m11">tests.CheckoutTest#validateCheckoutInitiationWithSuccessfulPaymentFlow</h3><table class="result"><tr><th class="invisible"/></tr></table><p class="totop"><a href="#summary">back to summary</a></p>
+</body>
+</html>
