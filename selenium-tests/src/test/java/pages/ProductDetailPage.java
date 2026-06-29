@@ -20,6 +20,7 @@ public class ProductDetailPage extends BasePage {
         wait.until(ExpectedConditions.urlContains("/products/"));
         wait.until(ExpectedConditions.visibilityOfElementLocated(productDetailCardByCss));
         wait.until(ExpectedConditions.visibilityOfElementLocated(productIdByCss));
+        pauseForDemo();
         return this;
     }
 
@@ -47,7 +48,7 @@ public class ProductDetailPage extends BasePage {
 
     public ProductDetailPage addToCart() {
         safeClick(wait.until(ExpectedConditions.elementToBeClickable(addToCartButtonByCss)));
-        wait.until(ExpectedConditions.visibilityOfElementLocated(cartFeedbackByCss));
+        waitForVisibleAndPause(cartFeedbackByCss);
         return this;
     }
 }

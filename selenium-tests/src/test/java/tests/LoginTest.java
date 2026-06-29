@@ -44,10 +44,12 @@ public class LoginTest extends BaseTest {
     public void automateLogoutFlow() {
         ProductsPage productsPage = LoginUtils.loginAsDefaultUser(driver, BASE_URL);
         Assert.assertTrue(productsPage.isVisible(), "User should be logged in before logout.");
+        Assert.assertTrue(productsPage.hasActiveSession(), "Login should store token, userId, and role before logout.");
 
         LoginPage loginPage = productsPage.logout();
 
         Assert.assertTrue(loginPage.isLoginPageVisible(), "Login page should be visible after logout.");
+        Assert.assertTrue(productsPage.isSessionCleared(), "Logout should clear token, userId, and role from local storage.");
         Assert.assertEquals(driver.getCurrentUrl(), BASE_URL + "/login");
     }
 }

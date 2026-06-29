@@ -35,6 +35,7 @@ public class ProductsPage extends ProductCatalogPage<ProductsPage> {
     public ProductsPage waitUntilVisible() {
         wait.until(ExpectedConditions.visibilityOfElementLocated(storefrontPageByCss));
         wait.until(ExpectedConditions.visibilityOfElementLocated(productsHeadingByXpath));
+        pauseForDemo();
         return this;
     }
 
@@ -84,8 +85,8 @@ public class ProductsPage extends ProductCatalogPage<ProductsPage> {
         safeClick(wait.until(ExpectedConditions.elementToBeClickable(profileMenuButtonByCss)));
         pauseForDemo();
         safeClick(wait.until(ExpectedConditions.elementToBeClickable(logoutButtonByXpath)));
-        pauseForDemo();
         wait.until(ExpectedConditions.urlToBe(getBaseUrl() + "/login"));
+        pauseForDemo();
         return new LoginPage(driver);
     }
 

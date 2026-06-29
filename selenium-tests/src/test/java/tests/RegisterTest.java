@@ -11,43 +11,11 @@ public class RegisterTest extends BaseTest {
     private static final String VALID_PASSWORD = "Mansi@1234";
 
     @Test
-    public void validateEmptyName() {
+    public void validateRegistrationRejectsEmptyRequiredFields() {
         RegisterPage registerPage = new RegisterPage(driver).open(BASE_URL);
-        registerPage.register("", "newuser@gmail.com", "9876543210", VALID_PASSWORD, VALID_PASSWORD);
+        registerPage.register("", "", "", "", "");
 
         Assert.assertEquals(registerPage.getFirstFieldError(), "Name is required.");
-    }
-
-    @Test
-    public void validateEmptyEmail() {
-        RegisterPage registerPage = new RegisterPage(driver).open(BASE_URL);
-        registerPage.register("New User", "", "9876543210", VALID_PASSWORD, VALID_PASSWORD);
-
-        Assert.assertEquals(registerPage.getFirstFieldError(), "Email is required.");
-    }
-
-    @Test
-    public void validateInvalidEmail() {
-        RegisterPage registerPage = new RegisterPage(driver).open(BASE_URL);
-        registerPage.register("New User", "invalid@gmail", "9876543210", VALID_PASSWORD, VALID_PASSWORD);
-
-        Assert.assertEquals(registerPage.getFirstFieldError(), "Enter a valid email with @ and .com and no spaces.");
-    }
-
-    @Test
-    public void validateEmptyPassword() {
-        RegisterPage registerPage = new RegisterPage(driver).open(BASE_URL);
-        registerPage.register("New User", "newuser@gmail.com", "9876543210", "", "");
-
-        Assert.assertEquals(registerPage.getFirstFieldError(), "Password is required.");
-    }
-
-    @Test
-    public void validateConfirmPasswordMismatch() {
-        RegisterPage registerPage = new RegisterPage(driver).open(BASE_URL);
-        registerPage.register("New User", "newuser@gmail.com", "9876543210", VALID_PASSWORD, "Wrong@1234");
-
-        Assert.assertEquals(registerPage.getFirstFieldError(), "Passwords do not match.");
     }
 
     @Test

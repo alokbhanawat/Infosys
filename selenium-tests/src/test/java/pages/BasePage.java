@@ -1,6 +1,7 @@
 package pages;
 
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -9,7 +10,7 @@ import java.time.Duration;
 
 public abstract class BasePage {
     protected static final Duration DEFAULT_WAIT = Duration.ofSeconds(25);
-    protected static final long DEMO_PAUSE_MILLIS = Long.getLong("demoPauseMillis", 4000L);
+    protected static final long DEMO_PAUSE_MILLIS = Long.getLong("demoPauseMillis", 1500L);
     protected final WebDriver driver;
     protected final WebDriverWait wait;
 
@@ -21,6 +22,16 @@ public abstract class BasePage {
     protected void safeClick(WebElement element) {
         ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView({block: 'center'});", element);
         ((JavascriptExecutor) driver).executeScript("arguments[0].click();", element);
+    }
+
+    protected WebElement waitForVisibleAndPause(By locator) {
+        WebElement element = wait.until((webDriver) -> {
+            WebElement visibleElement = webDriver.findElement(locator);
+            String text = visibleElement.getText().trim();
+            return visibleElement.isDisplayed() && !text.isEmpty() ? visibleElement : null;
+        });
+        pauseForDemo();
+        return element;
     }
 
     protected void pauseForDemo() {

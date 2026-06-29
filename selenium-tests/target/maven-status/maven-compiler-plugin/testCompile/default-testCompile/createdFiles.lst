@@ -1,5 +1,4 @@
 pages\ProductCatalogPage.class
-tests\SampleTest.class
 pages\BasePage.class
 pages\ProductsPage.class
 tests\AddToCartTest.class
@@ -12,11 +11,9 @@ utilities\LoginUtils$Session.class
 pages\RegisterPage.class
 tests\LoginTest.class
 base\BaseTest.class
-tests\NavigationTest.class
 tests\RegisterTest.class
 utilities\LoginUtils.class
 utilities\DriverFactory.class
 pages\AdminDashboardPage.class
 tests\ProductSearchFilterTest.class
-tests\SessionHandlingTest.class
 pages\ProductDetailPage.class

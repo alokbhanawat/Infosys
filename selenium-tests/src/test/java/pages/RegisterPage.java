@@ -75,21 +75,22 @@ public class RegisterPage extends BasePage {
     }
 
     public String getFirstFieldError() {
-        return wait.until(ExpectedConditions.visibilityOfElementLocated(fieldErrorByCss)).getText();
+        return waitForVisibleAndPause(fieldErrorByCss).getText();
     }
 
     public String getToastMessage() {
-        WebElement toast = wait.until(ExpectedConditions.visibilityOfElementLocated(toastByCss));
-        String message = toast.getText();
-        pauseForDemo();
-        return message;
+        return waitForVisibleAndPause(toastByCss).getText();
     }
 
     public boolean hasSuccessfulFeedback() {
         try {
-            return driver.findElements(toastByCss).stream()
+            boolean successfulFeedbackVisible = driver.findElements(toastByCss).stream()
                     .filter(WebElement::isDisplayed)
                     .anyMatch(toast -> toast.getText().toLowerCase().contains("successful"));
+            if (successfulFeedbackVisible) {
+                pauseForDemo();
+            }
+            return successfulFeedbackVisible;
         } catch (NoSuchElementException ignored) {
             return false;
         }

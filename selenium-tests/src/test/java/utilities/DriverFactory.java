@@ -19,6 +19,7 @@ public final class DriverFactory {
         options.addArguments("--disable-popup-blocking");
         options.addArguments("--disable-gpu");
         options.addArguments("--disable-dev-shm-usage");
+        options.addArguments("--force-device-scale-factor=0.90");
         options.addArguments("--start-maximized");
 
         return new ChromeDriver(options);

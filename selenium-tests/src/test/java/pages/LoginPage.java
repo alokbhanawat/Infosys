@@ -63,18 +63,17 @@ public class LoginPage extends BasePage {
             driver.get(getBaseUrl() + "/products");
         }
 
-        return new ProductsPage(driver).waitUntilVisible();
+        ProductsPage productsPage = new ProductsPage(driver).waitUntilVisible();
+        pauseForDemo();
+        return productsPage;
     }
 
     public String getFirstFieldError() {
-        return wait.until(ExpectedConditions.visibilityOfElementLocated(fieldErrorByCss)).getText();
+        return waitForVisibleAndPause(fieldErrorByCss).getText();
     }
 
     public String getToastMessage() {
-        WebElement toast = wait.until(ExpectedConditions.visibilityOfElementLocated(toastByCss));
-        String message = toast.getText();
-        pauseForDemo();
-        return message;
+        return waitForVisibleAndPause(toastByCss).getText();
     }
 
     public String getPageTitle() {

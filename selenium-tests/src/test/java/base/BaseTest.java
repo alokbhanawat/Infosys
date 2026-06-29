@@ -30,11 +30,14 @@ public class BaseTest {
 
     protected void acceptAlertIfPresent() {
         try {
-            WebDriverWait alertWait = new WebDriverWait(driver, Duration.ofSeconds(1));
+            WebDriverWait alertWait = new WebDriverWait(driver, Duration.ofSeconds(5));
             Alert alert = alertWait.until(ExpectedConditions.alertIsPresent());
+            Thread.sleep(Long.getLong("demoPauseMillis", 1500L));
             alert.accept();
         } catch (NoAlertPresentException ignored) {
             // Some pages do not show browser alerts.
+        } catch (InterruptedException exception) {
+            Thread.currentThread().interrupt();
         } catch (Exception ignored) {
             // Continue when no alert or popup appears within the wait time.
         }

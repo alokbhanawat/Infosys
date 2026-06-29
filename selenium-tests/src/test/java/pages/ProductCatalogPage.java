@@ -30,6 +30,7 @@ public abstract class ProductCatalogPage<T extends ProductCatalogPage<T>> extend
     public T waitForProductListingLoaded() {
         wait.until(ExpectedConditions.visibilityOfElementLocated(catalogCardByCss));
         wait.until(ExpectedConditions.numberOfElementsToBeMoreThan(productItemByCss, 0));
+        pauseForDemo();
         return self();
     }
 
@@ -61,6 +62,7 @@ public abstract class ProductCatalogPage<T extends ProductCatalogPage<T>> extend
         typeIntoFilter(searchInputByCss, productName);
         applyFilters();
         wait.until((webDriver) -> hasVisibleProducts() && allCurrentProductsMatchSearchTerm(productName));
+        pauseForDemo();
         return self();
     }
 
@@ -68,6 +70,7 @@ public abstract class ProductCatalogPage<T extends ProductCatalogPage<T>> extend
         typeIntoFilter(categoryInputByCss, category);
         applyFilters();
         wait.until((webDriver) -> hasVisibleProducts() && allCurrentProductsHaveCategory(category));
+        pauseForDemo();
         return self();
     }
 

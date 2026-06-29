@@ -45,6 +45,7 @@ public class CartPage extends BasePage {
         wait.until(ExpectedConditions.visibilityOfElementLocated(cartHeroByCss));
         wait.until(ExpectedConditions.invisibilityOfElementLocated(loadingStateByXpath));
         wait.until(ExpectedConditions.visibilityOfElementLocated(checkoutFormByCss));
+        pauseForDemo();
         return this;
     }
 
@@ -141,6 +142,7 @@ public class CartPage extends BasePage {
 
     public CartPage clickCheckout() {
         safeClick(wait.until(ExpectedConditions.elementToBeClickable(checkoutButtonByCss)));
+        pauseForDemo();
         return this;
     }
 
@@ -149,9 +151,11 @@ public class CartPage extends BasePage {
     }
 
     public boolean hasCheckoutMessage(String expectedMessage) {
-        return wait.until((webDriver) -> driver.findElements(checkoutMessageByCss).stream()
+        boolean messageVisible = wait.until((webDriver) -> driver.findElements(checkoutMessageByCss).stream()
                 .anyMatch((message) -> message.isDisplayed()
                         && message.getText().trim().contains(expectedMessage)));
+        pauseForDemo();
+        return messageVisible;
     }
 
     public boolean hasFieldError(String fieldName, String expectedMessage) {
@@ -356,8 +360,10 @@ public class CartPage extends BasePage {
         cardNumberInput.sendKeys(cardNumber);
         WebElement cvvInput = wait.until(ExpectedConditions.visibilityOfElementLocated(razorpayCvvInputByCss));
         cvvInput.sendKeys(cvv);
+        pauseForDemo();
         safeClick(wait.until(ExpectedConditions.elementToBeClickable(razorpaySuccessButtonByCss)));
         wait.until(ExpectedConditions.invisibilityOfElementLocated(razorpayMockModalByCss));
+        pauseForDemo();
         return this;
     }
 

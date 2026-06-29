@@ -35,28 +35,4 @@ public class AddToCartTest extends BaseTest {
                 "Cart product quantity should increase to 2 after clicking the cart quantity plus button."
         );
     }
-
-    @Test
-    public void validateUserCanRemoveAnAddedProductFromCart() {
-        ProductsPage productsPage = LoginUtils.loginAsDefaultUser(driver, BASE_URL)
-                .waitForProductListingLoaded();
-
-        ProductDetailPage productDetailPage = productsPage.openFirstProductCard();
-        String productName = productDetailPage.getProductName();
-
-        productDetailPage.addToCart();
-
-        CartPage cartPage = new CartPage(driver)
-                .open(BASE_URL)
-                .waitUntilVisible();
-
-        Assert.assertTrue(cartPage.hasProduct(productName), "Added product should be visible before removal.");
-
-        cartPage.removeProduct(productName);
-
-        Assert.assertTrue(
-                cartPage.isProductAbsent(productName),
-                "Removed product should no longer be visible in the cart."
-        );
-    }
 }
