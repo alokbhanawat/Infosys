@@ -51,6 +51,27 @@ export const addProduct = (data) =>
       "Content-Type": "multipart/form-data",
     },
   });
+export const updateProductPrice = async (id, price) => {
+  try {
+    return await api.patch(`/products/${id}/price`, { price });
+  } catch (error) {
+    if (![404, 405].includes(error?.response?.status)) {
+      throw error;
+    }
+  }
+
+  try {
+    return await api.put(`/products/${id}/price`, null, {
+      params: { price },
+    });
+  } catch (error) {
+    if (![404, 405].includes(error?.response?.status)) {
+      throw error;
+    }
+  }
+
+  return api.put(`/products/${id}`, { price });
+};
 export const removeProduct = (id) => api.delete(`/products/${id}`);
 export const removeProducts = (productIds) => api.delete("/products/bulk", { data: { productIds } });
 export const addToCart = ({ userId, productId, quantity }) =>

@@ -25,6 +25,8 @@ const RAZORPAY_CANCELLED_MESSAGE =
   "Payment was not completed. You can try again, choose another UPI app, or use card payment.";
 const UPI_FAILURE_MESSAGE =
   "UPI payment could not be completed. Please approve the request in your UPI app before it expires, then return to Razorpay.";
+const AMOUNT_LIMIT_FAILURE_MESSAGE =
+  "This payment is above the limit for the selected card or Razorpay account. Try UPI/netbanking, a different card with a higher limit, or use live Razorpay keys for real payments.";
 const DEFAULT_CHECKOUT_FORM = {
   fullName: "",
   phone: "",
@@ -320,7 +322,12 @@ function CartPage() {
       );
 
       const orderDetails = await new Promise((resolve, reject) => {
-        const selectedMethod = checkoutForm.paymentMethod === "UPI" ? "upi" : "card";
+        const selectedMethod =
+          checkoutForm.paymentMethod === "UPI"
+            ? "upi"
+            : checkoutForm.paymentMethod === "NETBANKING"
+              ? "netbanking"
+              : "card";
         let paymentSettled = false;
         const rejectIfUnsettled = (error) => {
           if (!paymentSettled) {
@@ -343,7 +350,7 @@ function CartPage() {
           method: {
             card: selectedMethod === "card",
             upi: selectedMethod === "upi",
-            netbanking: false,
+            netbanking: selectedMethod === "netbanking",
             wallet: false,
             emi: false,
             paylater: false,
@@ -372,10 +379,13 @@ function CartPage() {
         });
 
         checkout.on("payment.failed", (paymentError) => {
-          const razorpayFailureMessage =
-            checkoutForm.paymentMethod === "UPI"
+          const failureDescription = paymentError?.error?.description || "";
+          const isAmountLimitFailure = failureDescription.toLowerCase().includes("maximum amount");
+          const razorpayFailureMessage = isAmountLimitFailure
+            ? AMOUNT_LIMIT_FAILURE_MESSAGE
+            : checkoutForm.paymentMethod === "UPI"
               ? UPI_FAILURE_MESSAGE
-              : paymentError?.error?.description || "Razorpay payment failed. Please try again.";
+              : failureDescription || "Razorpay payment failed. Please try again.";
           rejectIfUnsettled(new Error(razorpayFailureMessage));
         });
 
@@ -798,6 +808,7 @@ function CartPage() {
                 >
                   <option value="CARD">Card</option>
                   <option value="UPI">UPI</option>
+                  <option value="NETBANKING">Netbanking</option>
                 </select>
                 {checkoutErrors.paymentMethod ? (
                   <small className="checkout-field-error">{checkoutErrors.paymentMethod}</small>
@@ -807,6 +818,8 @@ function CartPage() {
               <p className="checkout-field checkout-field-full razorpay-helper">
                 {checkoutForm.paymentMethod === "UPI"
                   ? "UPI details will be entered securely in Razorpay Checkout."
+                  : checkoutForm.paymentMethod === "NETBANKING"
+                    ? "Bank details will be selected securely in Razorpay Checkout."
                   : "Card details will be entered securely in Razorpay Checkout."}
               </p>
             </div>

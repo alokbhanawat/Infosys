@@ -5,7 +5,6 @@ import ProductCatalog from "./ProductCatalog";
 import ProductFilters from "./ProductFilters";
 import { clearStoredToken, getCurrentUser } from "../utils/auth";
 import {
-  PRODUCT_CATEGORIES,
   applyProductFilters,
   getProductApiFilters,
   normalizeProductCategory,
@@ -15,6 +14,7 @@ import {
   getProtectedProductsMessage,
   getProducts,
   removeProduct,
+  updateProductPrice,
 } from "../services/authService";
 
 const ALLOWED_IMAGE_TYPES = ["image/png", "image/jpeg", "image/jpg", "image/webp", "image/gif"];
@@ -33,7 +33,10 @@ function Dashboard() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showProductForm, setShowProductForm] = useState(false);
   const [adminRemoveMode, setAdminRemoveMode] = useState(false);
+  const [adminPriceUpdateMode, setAdminPriceUpdateMode] = useState(false);
   const [deletingProductId, setDeletingProductId] = useState(null);
+  const [updatingPriceProductId, setUpdatingPriceProductId] = useState(null);
+  const [priceUpdates, setPriceUpdates] = useState({});
   const [productForm, setProductForm] = useState({
     name: "",
     description: "",
@@ -170,6 +173,16 @@ function Dashboard() {
     await loadProducts(resetFilters);
   };
 
+  const handlePriceUpdateChange = (productId, value) => {
+    setPriceUpdates((current) => ({
+      ...current,
+      [productId]: value,
+    }));
+    if (catalogFeedback) {
+      setCatalogFeedback("");
+    }
+  };
+
   const handleProductSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -251,6 +264,40 @@ function Dashboard() {
     }
   };
 
+  const handleUpdateProductPrice = async (product) => {
+    if (!product?.id) {
+      setCatalogFeedback("Unable to update this product right now.");
+      return;
+    }
+
+    const enteredPrice = priceUpdates[product.id] ?? product.price ?? "";
+    const price = Number(enteredPrice);
+
+    if (enteredPrice === "" || Number.isNaN(price) || price < 0) {
+      setCatalogFeedback("Enter a valid price before updating.");
+      return;
+    }
+
+    setUpdatingPriceProductId(product.id);
+    setCatalogFeedback("");
+
+    try {
+      await updateProductPrice(product.id, price);
+      await loadProducts(filters);
+      setPriceUpdates((current) => {
+        const next = { ...current };
+        delete next[product.id];
+        return next;
+      });
+      setFeedback(`Price updated for "${product.name}".`);
+      setFeedbackType("success");
+    } catch (error) {
+      setCatalogFeedback(getErrorMessage(error, "Unable to update product price."));
+    } finally {
+      setUpdatingPriceProductId(null);
+    }
+  };
+
   return (
     <div className="dashboard-container">
       <div className="dashboard-backdrop"></div>
@@ -313,18 +360,13 @@ function Dashboard() {
                       onChange={handleProductChange}
                       required
                     />
-                    <select
+                    <input
                       name="category"
+                      placeholder="Category"
                       value={productForm.category}
                       onChange={handleProductChange}
-                    >
-                      <option value="">Select category</option>
-                      {PRODUCT_CATEGORIES.map((category) => (
-                        <option key={category.value} value={category.value}>
-                          {category.name}
-                        </option>
-                      ))}
-                    </select>
+                      required
+                    />
                   </div>
                   <textarea
                     name="description"
@@ -381,9 +423,21 @@ function Dashboard() {
             catalogFeedback={catalogFeedback}
             onRefresh={() => loadProducts(filters)}
             adminRemoveMode={adminRemoveMode}
-            onToggleAdminRemoveMode={() => setAdminRemoveMode((current) => !current)}
+            adminPriceUpdateMode={adminPriceUpdateMode}
+            onToggleAdminRemoveMode={() => {
+              setAdminRemoveMode((current) => !current);
+              setAdminPriceUpdateMode(false);
+            }}
+            onToggleAdminPriceUpdateMode={() => {
+              setAdminPriceUpdateMode((current) => !current);
+              setAdminRemoveMode(false);
+            }}
             onRemoveProduct={handleRemoveProduct}
             deletingProductId={deletingProductId}
+            priceUpdates={priceUpdates}
+            onPriceUpdateChange={handlePriceUpdateChange}
+            onUpdateProductPrice={handleUpdateProductPrice}
+            updatingPriceProductId={updatingPriceProductId}
           />
         </div>
       </div>

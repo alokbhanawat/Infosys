@@ -100,7 +100,7 @@ export const applyProductFilters = (products, filters = {}) => {
 };
 
 export const getProductApiFilters = (filters = {}) => {
-  const { category, ...apiFilters } = filters;
+  const { category: _CATEGORY, ...apiFilters } = filters;
 
   return apiFilters;
 };

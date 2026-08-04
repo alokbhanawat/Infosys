@@ -250,10 +250,10 @@ public class OrderService {
         requireMandatoryText(request.getPaymentMethod(), "Payment method");
 
         String paymentMethod = normalizePaymentMethod(request.getPaymentMethod());
-        if (!"CARD".equals(paymentMethod) && !"UPI".equals(paymentMethod)) {
+        if (!"CARD".equals(paymentMethod) && !"UPI".equals(paymentMethod) && !"NETBANKING".equals(paymentMethod)) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
-                    "Please choose a valid payment method: card or UPI.");
+                    "Please choose a valid payment method: card, UPI or netbanking.");
         }
 
         if ("CARD".equals(paymentMethod)) {
@@ -297,6 +297,10 @@ public class OrderService {
 
         if ("UPI".equals(paymentMethod)) {
             return "UPI-" + request.getUpiId().trim().toLowerCase();
+        }
+
+        if ("NETBANKING".equals(paymentMethod)) {
+            return "NETBANKING";
         }
 
         return paymentMethod;

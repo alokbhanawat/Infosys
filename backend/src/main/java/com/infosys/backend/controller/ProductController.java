@@ -83,6 +83,11 @@ public class ProductController {
         return productService.getAllProductsForAdmin();
     }
 
+    @PatchMapping("/{id}/price")
+    public Product updateProductPrice(@PathVariable Long id, @RequestBody Map<String, BigDecimal> request) {
+        return productService.updateProductPrice(id, request.get("price"));
+    }
+
     @DeleteMapping("/{id}")
     public Map<String, String> removeProduct(@PathVariable Long id) {
         productService.deactivateProduct(id);

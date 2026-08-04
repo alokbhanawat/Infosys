@@ -96,6 +96,18 @@ public class ProductService {
     }
 
     @Transactional
+    public Product updateProductPrice(Long id, BigDecimal price) {
+        if (price == null || price.signum() < 0) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Price must be zero or greater.");
+        }
+
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found."));
+        product.setPrice(price);
+        return productRepository.save(product);
+    }
+
+    @Transactional
     public void deactivateProduct(Long id) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found."));

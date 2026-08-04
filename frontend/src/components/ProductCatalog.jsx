@@ -7,9 +7,15 @@ function ProductCatalog({
   catalogFeedback,
   onRefresh,
   adminRemoveMode = false,
+  adminPriceUpdateMode = false,
   onToggleAdminRemoveMode,
+  onToggleAdminPriceUpdateMode,
   onRemoveProduct,
   deletingProductId = null,
+  priceUpdates = {},
+  onPriceUpdateChange,
+  onUpdateProductPrice,
+  updatingPriceProductId = null,
   detailBasePath,
   heading,
   subheading,
@@ -77,13 +83,23 @@ function ProductCatalog({
             </button>
 
             {isAdmin ? (
-              <button
-                type="button"
-                className={`header-btn ${adminRemoveMode ? "danger-btn" : "secondary-btn"}`}
-                onClick={onToggleAdminRemoveMode}
-              >
-                {adminRemoveMode ? "Hide remove products" : "Remove products"}
-              </button>
+              <>
+                <button
+                  type="button"
+                  className={`header-btn ${adminPriceUpdateMode ? "primary-btn" : "secondary-btn"}`}
+                  onClick={onToggleAdminPriceUpdateMode}
+                >
+                  {adminPriceUpdateMode ? "Hide price updates" : "Update prices"}
+                </button>
+
+                <button
+                  type="button"
+                  className={`header-btn ${adminRemoveMode ? "danger-btn" : "secondary-btn"}`}
+                  onClick={onToggleAdminRemoveMode}
+                >
+                  {adminRemoveMode ? "Hide remove products" : "Remove products"}
+                </button>
+              </>
             ) : null}
           </div>
         </div>
@@ -166,6 +182,32 @@ function ProductCatalog({
               ) : (
                 <>
                   {renderProductCardBody(product)}
+
+                  {isAdmin && adminPriceUpdateMode ? (
+                    <form
+                      className="product-price-update-form"
+                      onSubmit={(event) => {
+                        event.preventDefault();
+                        onUpdateProductPrice?.(product);
+                      }}
+                    >
+                      <input
+                        type="number"
+                        min="0"
+                        step="0.01"
+                        value={priceUpdates[product.id] ?? product.price ?? ""}
+                        onChange={(event) => onPriceUpdateChange?.(product.id, event.target.value)}
+                        aria-label={`New price for ${product.name}`}
+                      />
+                      <button
+                        type="submit"
+                        className="primary-btn"
+                        disabled={updatingPriceProductId === product.id}
+                      >
+                        {updatingPriceProductId === product.id ? "Updating..." : "Update price"}
+                      </button>
+                    </form>
+                  ) : null}
 
                   {isAdmin && adminRemoveMode ? (
                     <div className="product-card-actions product-card-actions-admin">
