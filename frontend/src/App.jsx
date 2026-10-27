@@ -24,25 +24,25 @@ function App() {
             <Route path="/register" element={<RegisterForm />} />
           </Route>
 
-          <Route path="/products" element={<ProtectedRoute allowedRoles={["USER"]} />}>
+          <Route path="/products" element={<ProtectedRoute allowedRoles={["USER", "ADMIN"]} />}>
             <Route element={<ProductsPage />} index />
             <Route path=":productId" element={<ProductDetailPage />} />
           </Route>
 
-          <Route path="/cart" element={<ProtectedRoute allowedRoles={["USER"]} />}>
+          <Route path="/cart" element={<ProtectedRoute allowedRoles={["USER", "ADMIN"]} />}>
             <Route index element={<CartPage />} />
           </Route>
 
-          <Route path="/orders" element={<ProtectedRoute allowedRoles={["USER"]} />}>
+          <Route path="/orders" element={<ProtectedRoute allowedRoles={["USER", "ADMIN"]} />}>
             <Route index element={<OrdersPage />} />
             <Route path="success" element={<OrderSuccessPage />} />
           </Route>
 
-          <Route path="/profile" element={<ProtectedRoute allowedRoles={["USER"]} />}>
+          <Route path="/profile" element={<ProtectedRoute allowedRoles={["USER", "ADMIN"]} />}>
             <Route index element={<ProfilePage />} />
           </Route>
 
-          <Route path="/addresses" element={<ProtectedRoute allowedRoles={["USER"]} />}>
+          <Route path="/addresses" element={<ProtectedRoute allowedRoles={["USER", "ADMIN"]} />}>
             <Route index element={<AddressesPage />} />
           </Route>
 
