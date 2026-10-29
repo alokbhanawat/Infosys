@@ -1,0 +1,1083 @@
+/* ============================================================
+   MOBILE RESPONSIVE — Smartphones only (max-width: 480px)
+   This file ONLY adds @media overrides. No desktop styles touched.
+   ============================================================ */
+
+/* ----------------------------------------------------------
+   0. Viewport meta helper (ensure touch-friendly tap targets)
+   ---------------------------------------------------------- */
+@media (max-width: 480px) {
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+
+  body {
+    font-size: 15px;
+  }
+
+  /* Ensure tap targets are at least 44px */
+  button,
+  a,
+  input,
+  select,
+  textarea {
+    min-height: 44px;
+  }
+}
+
+/* ----------------------------------------------------------
+   1. STOREFRONT PAGE — Navbar, Hero, Banners, Categories,
+      Product Grid, Filter, Footer
+   ---------------------------------------------------------- */
+@media (max-width: 480px) {
+  /* --- Navbar --- */
+  .storefront-shell {
+    padding: 10px 12px 0;
+  }
+
+  .storefront-navbar {
+    grid-template-columns: 1fr;
+    gap: 10px;
+    padding: 10px;
+    border-radius: 8px;
+    top: 6px;
+  }
+
+  .storefront-brand-logo {
+    width: 40px;
+    height: 40px;
+  }
+
+  .storefront-nav-links {
+    gap: 4px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding-bottom: 4px;
+  }
+
+  .storefront-nav-links::-webkit-scrollbar {
+    display: none;
+  }
+
+  .storefront-nav-links a {
+    padding: 8px 10px;
+    font-size: 0.82rem;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .storefront-nav-actions {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .storefront-nav-actions .profile-menu-trigger {
+    min-width: 0;
+    min-height: 48px;
+    width: 100%;
+  }
+
+  /* --- Hero --- */
+  .storefront-hero {
+    grid-template-columns: 1fr;
+    gap: 18px;
+    padding: 18px 14px;
+    min-height: 0;
+    margin-top: 12px;
+  }
+
+  .storefront-hero h1 {
+    font-size: 2rem;
+    line-height: 1.05;
+  }
+
+  .storefront-hero p {
+    font-size: 0.92rem;
+    line-height: 1.6;
+  }
+
+  .storefront-eyebrow {
+    font-size: 0.7rem;
+    padding: 6px 10px;
+  }
+
+  .storefront-hero-buttons {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .storefront-shop-btn {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .storefront-hero-art {
+    min-height: 180px;
+  }
+
+  .storefront-mini-panel {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .storefront-mini-panel article {
+    padding: 10px 12px;
+  }
+
+  .storefront-mini-panel strong {
+    font-size: 0.92rem;
+  }
+
+  /* --- Banners --- */
+  .storefront-banner-strip {
+    grid-template-columns: 1fr;
+    margin-top: 14px;
+    gap: 10px;
+  }
+
+  .deal-banner {
+    min-height: 100px;
+    padding: 14px;
+  }
+
+  .deal-banner-copy strong {
+    font-size: 1.1rem;
+  }
+
+  /* --- Categories --- */
+  .storefront-category-section,
+  .storefront-layout,
+  .storefront-footer {
+    margin-top: 20px;
+  }
+
+  .storefront-section-title {
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+
+  .storefront-section-title h2 {
+    font-size: 1.4rem;
+  }
+
+  .category-card-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .category-card {
+    min-height: 120px;
+    padding: 14px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .category-card strong {
+    font-size: 1rem;
+  }
+
+  .category-card small {
+    font-size: 0.82rem;
+  }
+
+  /* --- Sidebar + Product Grid --- */
+  .storefront-layout {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .filter-card {
+    position: static;
+  }
+
+  .dashboard-card {
+    padding: 16px;
+  }
+
+  .section-heading h2 {
+    font-size: 1.3rem;
+  }
+
+  .filter-form {
+    gap: 12px;
+  }
+
+  .input-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .filter-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .filter-actions .primary-btn,
+  .filter-actions .secondary-btn {
+    width: 100%;
+  }
+
+  .catalog-header {
+    flex-direction: column;
+    gap: 10px;
+    align-items: stretch;
+  }
+
+  .catalog-header-actions,
+  .catalog-action-stack {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .catalog-action-stack .header-btn {
+    width: 100%;
+  }
+
+  .product-list {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .product-item {
+    padding: 12px;
+  }
+
+  .product-copy strong {
+    min-height: auto;
+    font-size: 0.96rem;
+  }
+
+  .product-copy p {
+    min-height: auto;
+    font-size: 0.86rem;
+  }
+
+  .product-card-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .product-cart-btn,
+  .product-detail-btn {
+    flex: none;
+    width: 100%;
+  }
+
+  .quantity-picker {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* --- Footer --- */
+  .storefront-footer {
+    flex-direction: column;
+    gap: 14px;
+    padding: 18px 0 24px;
+    text-align: center;
+  }
+
+  .storefront-footer nav {
+    justify-content: center;
+    gap: 10px;
+  }
+}
+
+/* ----------------------------------------------------------
+   2. AUTH — Login & Register pages
+   ---------------------------------------------------------- */
+@media (max-width: 480px) {
+  .auth-shell {
+    grid-template-columns: 1fr;
+  }
+
+  .auth-hero,
+  .auth-panel {
+    padding: 20px 14px;
+  }
+
+  .auth-hero {
+    min-height: 320px;
+  }
+
+  .auth-hero::before {
+    inset: 10px;
+  }
+
+  .hero-content h1 {
+    font-size: 2.2rem;
+  }
+
+  .hero-copy {
+    font-size: 0.92rem;
+  }
+
+  .auth-card {
+    padding: 22px 16px;
+  }
+
+  .auth-card h2 {
+    font-size: 2.2rem;
+  }
+
+  .auth-logo {
+    width: min(100%, 240px);
+    margin-bottom: 18px;
+  }
+
+  .subtitle {
+    font-size: 0.9rem;
+    margin-bottom: 20px;
+  }
+
+  .auth-badge-row {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .register-form input {
+    padding: 14px 14px;
+    font-size: 0.94rem;
+  }
+
+  .register-form button {
+    padding: 14px 16px;
+  }
+
+  .input-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .auth-showcase-grid article,
+  .auth-feature-card {
+    padding: 14px 16px;
+  }
+
+  .auth-metrics {
+    grid-template-columns: 1fr;
+  }
+
+  .auth-switch {
+    font-size: 0.88rem;
+    text-align: center;
+  }
+}
+
+/* ----------------------------------------------------------
+   3. DASHBOARD — Admin panel, catalog, product management
+   ---------------------------------------------------------- */
+@media (max-width: 480px) {
+  .dashboard-layout {
+    padding: 14px 12px 32px;
+  }
+
+  .dashboard-hero-card {
+    padding: 18px 16px;
+    border-radius: 8px;
+  }
+
+  .dashboard-hero-card h1 {
+    font-size: 1.9rem;
+  }
+
+  .dashboard-subtitle {
+    font-size: 0.88rem;
+  }
+
+  .dashboard-label {
+    font-size: 0.72rem;
+    padding: 6px 10px;
+  }
+
+  .dashboard-topbar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .dashboard-highlight-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .highlight-card {
+    padding: 14px 16px;
+  }
+
+  .catalog-layout {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .admin-panel-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .admin-panel-copy h2 {
+    font-size: 1.3rem;
+  }
+
+  .compact-btn {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .compact-form .input-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .profile-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .logout-btn {
+    width: 100%;
+  }
+
+  .product-price-update-form {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+}
+
+/* ----------------------------------------------------------
+   4. CART PAGE
+   ---------------------------------------------------------- */
+@media (max-width: 480px) {
+  .cart-shell {
+    padding: 14px 12px 32px;
+  }
+
+  .cart-hero {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 18px 14px;
+    gap: 16px;
+  }
+
+  .cart-hero h1 {
+    font-size: 2rem;
+  }
+
+  .cart-hero p {
+    font-size: 0.9rem;
+  }
+
+  .cart-badge {
+    font-size: 0.75rem;
+    padding: 6px 10px;
+  }
+
+  .cart-hero-actions {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .cart-hero-actions .back-link,
+  .cart-hero-actions .secondary-btn,
+  .cart-hero-actions .primary-btn {
+    width: 100%;
+  }
+
+  .cart-summary-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .cart-summary-grid article {
+    padding: 14px 16px;
+  }
+
+  .cart-content-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .cart-card {
+    padding: 16px 14px;
+  }
+
+  .cart-card-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+
+  .cart-card-header h2 {
+    font-size: 1.4rem;
+  }
+
+  .cart-item {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    padding: 16px 14px;
+  }
+
+  .cart-item-main {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .cart-item-media img,
+  .cart-item-placeholder {
+    width: 64px;
+    height: 64px;
+    border-radius: 12px;
+  }
+
+  .cart-item-copy strong {
+    font-size: 1rem;
+  }
+
+  .cart-item-meta {
+    gap: 4px;
+  }
+
+  .cart-item-actions {
+    justify-content: flex-start;
+  }
+
+  .cart-overview-card {
+    position: static;
+  }
+
+  .cart-overview-row {
+    padding: 12px;
+  }
+
+  .checkout-form-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .checkout-field-full {
+    grid-column: auto;
+  }
+
+  .checkout-field input,
+  .checkout-field select {
+    padding: 12px;
+  }
+
+  .cart-checkout-btn {
+    margin-top: 16px;
+  }
+
+  .cart-payment-alert {
+    padding: 14px 12px;
+    gap: 10px;
+  }
+
+  .saved-address-picker {
+    margin-top: 14px;
+  }
+}
+
+/* ----------------------------------------------------------
+   5. PRODUCT DETAIL PAGE
+   ---------------------------------------------------------- */
+@media (max-width: 480px) {
+  .product-detail-shell {
+    padding: 14px 12px 32px;
+  }
+
+  .product-detail-topbar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+
+  .product-detail-topbar-actions {
+    flex-direction: column;
+  }
+
+  .product-detail-topbar-actions > * {
+    width: 100%;
+  }
+
+  .back-link {
+    justify-content: center;
+    width: 100%;
+  }
+
+  .product-detail-card {
+    grid-template-columns: 1fr;
+    gap: 20px;
+    padding: 16px;
+  }
+
+  .product-detail-media {
+    min-height: 240px;
+  }
+
+  .magnified-product-image,
+  .magnified-product-stage,
+  .magnified-product-stage img {
+    min-height: 240px;
+  }
+
+  .magnified-product-preview {
+    display: none;
+  }
+
+  .magnify-lens {
+    width: 80px;
+    height: 80px;
+  }
+
+  .magnify-hint {
+    font-size: 0.72rem;
+    padding: 7px 10px;
+  }
+
+  .product-detail-copy h1 {
+    font-size: 1.8rem;
+  }
+
+  .product-detail-description {
+    font-size: 0.92rem;
+  }
+
+  .product-detail-meta {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .product-detail-meta article,
+  .product-detail-purchase,
+  .product-detail-quantity {
+    padding: 14px;
+  }
+
+  .product-detail-quantity {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .product-detail-cart-btn {
+    width: 100%;
+  }
+}
+
+/* ----------------------------------------------------------
+   6. ORDERS PAGE
+   ---------------------------------------------------------- */
+@media (max-width: 480px) {
+  .orders-page {
+    padding: 14px 12px 28px;
+  }
+
+  .orders-hero {
+    display: grid;
+    grid-template-columns: 1fr;
+    padding: 18px 14px;
+    gap: 14px;
+  }
+
+  .orders-hero h1 {
+    font-size: 1.8rem;
+  }
+
+  .orders-hero p {
+    font-size: 0.9rem;
+  }
+
+  .orders-hero-actions {
+    width: 100%;
+  }
+
+  .orders-hero-actions > * {
+    width: 100%;
+  }
+
+  .orders-summary-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .orders-content {
+    padding: 16px;
+    gap: 16px;
+  }
+
+  .orders-card-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .orders-card-header h2 {
+    font-size: 1.3rem;
+  }
+
+  .order-card {
+    padding: 16px;
+    gap: 14px;
+  }
+
+  .order-card-top {
+    grid-template-columns: 1fr;
+  }
+
+  .order-card-top h3 {
+    font-size: 1.2rem;
+  }
+
+  .order-meta-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .ordered-product-row {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .ordered-product-row strong,
+  .order-meta-grid strong {
+    font-size: 0.95rem;
+  }
+}
+
+/* ----------------------------------------------------------
+   7. ORDER SUCCESS PAGE
+   ---------------------------------------------------------- */
+@media (max-width: 480px) {
+  .order-success-page {
+    padding: 12px;
+  }
+
+  .order-success-card {
+    padding: 20px 14px;
+  }
+
+  .order-success-card h1 {
+    font-size: 2rem;
+  }
+
+  .order-success-copy {
+    font-size: 0.9rem;
+  }
+
+  .order-success-badge {
+    font-size: 0.72rem;
+    padding: 6px 10px;
+  }
+
+  .order-success-summary {
+    grid-template-columns: 1fr;
+    gap: 10px;
+    margin-top: 20px;
+  }
+
+  .order-success-summary article {
+    padding: 16px;
+  }
+
+  .order-success-summary strong {
+    font-size: 1.3rem;
+  }
+
+  .order-success-item {
+    grid-template-columns: 1fr;
+    gap: 10px;
+    padding: 14px;
+  }
+
+  .order-success-actions {
+    flex-direction: column;
+    align-items: stretch;
+    margin-top: 20px;
+  }
+
+  .order-success-btn,
+  .order-success-link {
+    width: 100%;
+    min-width: 0;
+  }
+}
+
+/* ----------------------------------------------------------
+   8. PROFILE PAGE
+   ---------------------------------------------------------- */
+@media (max-width: 480px) {
+  .profile-page {
+    padding: 14px 12px 24px;
+  }
+
+  .profile-hero {
+    flex-direction: column;
+    padding: 18px 14px;
+    gap: 14px;
+    margin-bottom: 14px;
+  }
+
+  .profile-hero h1 {
+    font-size: 2rem;
+  }
+
+  .profile-hero-actions {
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .profile-hero-actions > * {
+    width: 100%;
+  }
+
+  .profile-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .profile-card {
+    padding: 16px 14px;
+  }
+
+  .profile-card-header h2 {
+    font-size: 1.3rem;
+  }
+
+  .profile-form-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .profile-field input {
+    padding: 12px 14px;
+  }
+
+  .profile-submit-btn {
+    width: 100%;
+  }
+}
+
+/* ----------------------------------------------------------
+   9. ADDRESS PAGE
+   ---------------------------------------------------------- */
+@media (max-width: 480px) {
+  .address-shell {
+    width: calc(100% - 16px);
+    padding: 14px 0 32px;
+  }
+
+  .address-hero {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 18px 14px;
+    gap: 14px;
+    margin-bottom: 16px;
+  }
+
+  .address-hero h1 {
+    font-size: 1.8rem;
+  }
+
+  .address-hero-actions {
+    width: 100%;
+    flex-wrap: wrap;
+  }
+
+  .address-hero-actions > * {
+    width: 100%;
+  }
+
+  .address-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .address-card {
+    padding: 16px 14px;
+  }
+
+  .address-card-header h2 {
+    font-size: 1.3rem;
+  }
+
+  .address-form-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .address-field input {
+    padding: 12px 14px;
+  }
+
+  .address-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .address-actions > * {
+    width: 100%;
+  }
+
+  .address-item {
+    flex-direction: column;
+    gap: 12px;
+    padding: 14px;
+  }
+
+  .address-item-actions {
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+  }
+
+  .address-item-actions > * {
+    width: 100%;
+  }
+}
+
+/* ----------------------------------------------------------
+   10. PROFILE MENU (dropdown)
+   ---------------------------------------------------------- */
+@media (max-width: 480px) {
+  .profile-menu {
+    width: 100%;
+  }
+
+  .profile-menu-trigger {
+    width: 100%;
+    min-width: 0;
+    min-height: 52px;
+    padding: 0.6rem 0.75rem;
+    gap: 0.7rem;
+  }
+
+  .profile-menu-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    font-size: 0.88rem;
+  }
+
+  .profile-menu-trigger-copy strong {
+    font-size: 0.9rem;
+  }
+
+  .profile-menu-trigger-copy small {
+    font-size: 0.72rem;
+  }
+
+  .profile-menu-dropdown {
+    width: calc(100vw - 24px);
+    min-width: 0;
+    right: 0;
+    left: auto;
+    max-width: 100vw;
+    border-radius: 16px;
+    padding: 0.75rem;
+  }
+
+  .profile-menu-item {
+    padding: 0.7rem 0.75rem;
+    font-size: 0.9rem;
+    border-radius: 12px;
+  }
+
+  .profile-menu-item-icon {
+    width: 30px;
+    height: 30px;
+    border-radius: 10px;
+  }
+
+  .profile-menu-item-icon svg {
+    width: 17px;
+    height: 17px;
+  }
+}
+
+/* ----------------------------------------------------------
+   11. GLOBAL BUTTON & FORM ELEMENT SIZING
+   ---------------------------------------------------------- */
+@media (max-width: 480px) {
+  .primary-btn,
+  .secondary-btn,
+  .danger-btn,
+  .logout-btn {
+    min-height: 46px;
+    padding: 12px 14px;
+    font-size: 0.9rem;
+  }
+
+  .product-theme-toggle {
+    width: 62px;
+    height: 36px;
+  }
+
+  .product-theme-toggle-thumb {
+    width: 24px;
+    height: 24px;
+  }
+
+  .product-page-dark .product-theme-toggle-thumb {
+    transform: translateX(24px);
+  }
+
+  .product-theme-toggle-thumb svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  /* Toast notifications */
+  .toastify-fallback-container {
+    top: 10px;
+    right: 10px;
+    width: calc(100vw - 20px);
+  }
+
+  .toastify-fallback-toast {
+    padding: 12px;
+    border-radius: 12px;
+  }
+
+  /* Loading skeleton */
+  .loading-state {
+    min-height: 200px;
+  }
+}
+
+/* ----------------------------------------------------------
+   12. DARK MODE on Mobile (storefront + product detail)
+   ---------------------------------------------------------- */
+@media (max-width: 480px) {
+  .product-page-dark .storefront-navbar {
+    padding: 10px;
+  }
+
+  .product-page-dark .storefront-hero {
+    padding: 18px 14px;
+  }
+
+  .product-page-dark .product-detail-card {
+    padding: 16px;
+  }
+}
+
+/* ----------------------------------------------------------
+   13. SAFE AREA INSETS for notched phones
+   ---------------------------------------------------------- */
+@supports (padding-top: env(safe-area-inset-top)) {
+  @media (max-width: 480px) {
+    body {
+      padding-top: env(safe-area-inset-top);
+      padding-bottom: env(safe-area-inset-bottom);
+      padding-left: env(safe-area-inset-left);
+      padding-right: env(safe-area-inset-right);
+    }
+  }
+}
